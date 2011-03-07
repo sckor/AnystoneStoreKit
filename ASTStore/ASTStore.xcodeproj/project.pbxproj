@@ -16,6 +16,7 @@
 		812FF141132561F00070074B /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 812FF13F132561F00070074B /* MainWindow.xib */; };
 		812FF144132561F00070074B /* ASTStoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 812FF143132561F00070074B /* ASTStoreViewController.m */; };
 		812FF147132561F00070074B /* ASTStoreViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 812FF145132561F00070074B /* ASTStoreViewController.xib */; };
+		81E8F2D7132577AD004C0957 /* libASTStoreController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 81E8F2D6132577AD004C0957 /* libASTStoreController.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		812FF146132561F00070074B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ASTStoreViewController.xib; sourceTree = "<group>"; };
 		81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ASTStoreController.xcodeproj; path = ../ASTStoreController/ASTStoreController.xcodeproj; sourceTree = "<group>"; };
 		81BD898013256C4E0041A29D /* ASTStoreController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASTStoreController.h; path = /Users/skormilo/Development/GIT/github/AnystoneStoreKit/ASTStoreController/ASTStoreController/ASTStoreController.h; sourceTree = "<absolute>"; };
+		81E8F2D6132577AD004C0957 /* libASTStoreController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libASTStoreController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81E8F2D7132577AD004C0957 /* libASTStoreController.a in Frameworks */,
 				812FF12E132561F00070074B /* UIKit.framework in Frameworks */,
 				812FF130132561F00070074B /* Foundation.framework in Frameworks */,
 				812FF132132561F00070074B /* CoreGraphics.framework in Frameworks */,
@@ -71,6 +74,7 @@
 		812FF11E132561F00070074B = {
 			isa = PBXGroup;
 			children = (
+				81E8F2D6132577AD004C0957 /* libASTStoreController.a */,
 				812FF133132561F00070074B /* ASTStore */,
 				812FF12C132561F00070074B /* Frameworks */,
 				812FF12A132561F00070074B /* Products */,

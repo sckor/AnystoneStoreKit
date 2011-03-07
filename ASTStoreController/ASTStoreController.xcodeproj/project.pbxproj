@@ -38,7 +38,6 @@
 		812FF1061325607F0070074B = {
 			isa = PBXGroup;
 			children = (
-				81BD898313256EAC0041A29D /* StoreKit.framework */,
 				812FF1161325607F0070074B /* ASTStoreController */,
 				812FF1131325607F0070074B /* Frameworks */,
 				812FF1121325607F0070074B /* Products */,
@@ -56,6 +55,7 @@
 		812FF1131325607F0070074B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				81BD898313256EAC0041A29D /* StoreKit.framework */,
 				812FF1141325607F0070074B /* Foundation.framework */,
 			);
 			name = Frameworks;
