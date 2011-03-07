@@ -8,12 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		812FF1151325607F0070074B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 812FF1141325607F0070074B /* Foundation.framework */; };
+		812FF15B132563000070074B /* ASTStoreController.h in Headers */ = {isa = PBXBuildFile; fileRef = 812FF159132563000070074B /* ASTStoreController.h */; };
+		812FF15C132563000070074B /* ASTStoreController.m in Sources */ = {isa = PBXBuildFile; fileRef = 812FF15A132563000070074B /* ASTStoreController.m */; };
+		81BD898413256EAC0041A29D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81BD898313256EAC0041A29D /* StoreKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		812FF1111325607F0070074B /* libASTStoreController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libASTStoreController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		812FF1141325607F0070074B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		812FF1181325607F0070074B /* ASTStoreController-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ASTStoreController-Prefix.pch"; sourceTree = "<group>"; };
+		812FF159132563000070074B /* ASTStoreController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreController.h; sourceTree = "<group>"; };
+		812FF15A132563000070074B /* ASTStoreController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreController.m; sourceTree = "<group>"; };
+		81BD898313256EAC0041A29D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -21,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81BD898413256EAC0041A29D /* StoreKit.framework in Frameworks */,
 				812FF1151325607F0070074B /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -31,6 +38,7 @@
 		812FF1061325607F0070074B = {
 			isa = PBXGroup;
 			children = (
+				81BD898313256EAC0041A29D /* StoreKit.framework */,
 				812FF1161325607F0070074B /* ASTStoreController */,
 				812FF1131325607F0070074B /* Frameworks */,
 				812FF1121325607F0070074B /* Products */,
@@ -56,6 +64,8 @@
 		812FF1161325607F0070074B /* ASTStoreController */ = {
 			isa = PBXGroup;
 			children = (
+				812FF159132563000070074B /* ASTStoreController.h */,
+				812FF15A132563000070074B /* ASTStoreController.m */,
 				812FF1171325607F0070074B /* Supporting Files */,
 			);
 			path = ASTStoreController;
@@ -76,6 +86,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				812FF15B132563000070074B /* ASTStoreController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,6 +140,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				812FF15C132563000070074B /* ASTStoreController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,9 +158,11 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -160,9 +174,11 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -209,6 +225,7 @@
 				812FF11D1325607F0070074B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

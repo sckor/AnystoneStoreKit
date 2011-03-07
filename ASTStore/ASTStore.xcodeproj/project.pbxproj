@@ -1,0 +1,363 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		812FF12E132561F00070074B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 812FF12D132561F00070074B /* UIKit.framework */; };
+		812FF130132561F00070074B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 812FF12F132561F00070074B /* Foundation.framework */; };
+		812FF132132561F00070074B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 812FF131132561F00070074B /* CoreGraphics.framework */; };
+		812FF138132561F00070074B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 812FF136132561F00070074B /* InfoPlist.strings */; };
+		812FF13B132561F00070074B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 812FF13A132561F00070074B /* main.m */; };
+		812FF13E132561F00070074B /* ASTStoreAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 812FF13D132561F00070074B /* ASTStoreAppDelegate.m */; };
+		812FF141132561F00070074B /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 812FF13F132561F00070074B /* MainWindow.xib */; };
+		812FF144132561F00070074B /* ASTStoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 812FF143132561F00070074B /* ASTStoreViewController.m */; };
+		812FF147132561F00070074B /* ASTStoreViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 812FF145132561F00070074B /* ASTStoreViewController.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		81BD897913256AB60041A29D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 812FF1111325607F0070074B;
+			remoteInfo = ASTStoreController;
+		};
+		81BD897B13256AC20041A29D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 812FF1101325607F0070074B;
+			remoteInfo = ASTStoreController;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		812FF129132561F00070074B /* ASTStore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ASTStore.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		812FF12D132561F00070074B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		812FF12F132561F00070074B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		812FF131132561F00070074B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		812FF135132561F00070074B /* ASTStore-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ASTStore-Info.plist"; sourceTree = "<group>"; };
+		812FF137132561F00070074B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		812FF139132561F00070074B /* ASTStore-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ASTStore-Prefix.pch"; sourceTree = "<group>"; };
+		812FF13A132561F00070074B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		812FF13C132561F00070074B /* ASTStoreAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTStoreAppDelegate.h; sourceTree = "<group>"; };
+		812FF13D132561F00070074B /* ASTStoreAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ASTStoreAppDelegate.m; sourceTree = "<group>"; };
+		812FF140132561F00070074B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		812FF142132561F00070074B /* ASTStoreViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTStoreViewController.h; sourceTree = "<group>"; };
+		812FF143132561F00070074B /* ASTStoreViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ASTStoreViewController.m; sourceTree = "<group>"; };
+		812FF146132561F00070074B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ASTStoreViewController.xib; sourceTree = "<group>"; };
+		81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ASTStoreController.xcodeproj; path = ../ASTStoreController/ASTStoreController.xcodeproj; sourceTree = "<group>"; };
+		81BD898013256C4E0041A29D /* ASTStoreController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASTStoreController.h; path = /Users/skormilo/Development/GIT/github/AnystoneStoreKit/ASTStoreController/ASTStoreController/ASTStoreController.h; sourceTree = "<absolute>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		812FF126132561F00070074B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				812FF12E132561F00070074B /* UIKit.framework in Frameworks */,
+				812FF130132561F00070074B /* Foundation.framework in Frameworks */,
+				812FF132132561F00070074B /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		812FF11E132561F00070074B = {
+			isa = PBXGroup;
+			children = (
+				812FF133132561F00070074B /* ASTStore */,
+				812FF12C132561F00070074B /* Frameworks */,
+				812FF12A132561F00070074B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		812FF12A132561F00070074B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				812FF129132561F00070074B /* ASTStore.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		812FF12C132561F00070074B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				81BD898113256C580041A29D /* ASTStoreControllerHeaders */,
+				81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */,
+				812FF12D132561F00070074B /* UIKit.framework */,
+				812FF12F132561F00070074B /* Foundation.framework */,
+				812FF131132561F00070074B /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		812FF133132561F00070074B /* ASTStore */ = {
+			isa = PBXGroup;
+			children = (
+				812FF13C132561F00070074B /* ASTStoreAppDelegate.h */,
+				812FF13D132561F00070074B /* ASTStoreAppDelegate.m */,
+				812FF13F132561F00070074B /* MainWindow.xib */,
+				812FF142132561F00070074B /* ASTStoreViewController.h */,
+				812FF143132561F00070074B /* ASTStoreViewController.m */,
+				812FF145132561F00070074B /* ASTStoreViewController.xib */,
+				812FF134132561F00070074B /* Supporting Files */,
+			);
+			path = ASTStore;
+			sourceTree = "<group>";
+		};
+		812FF134132561F00070074B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				812FF135132561F00070074B /* ASTStore-Info.plist */,
+				812FF136132561F00070074B /* InfoPlist.strings */,
+				812FF139132561F00070074B /* ASTStore-Prefix.pch */,
+				812FF13A132561F00070074B /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		81BD897313256AB60041A29D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				81BD897A13256AB60041A29D /* libASTStoreController.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		81BD898113256C580041A29D /* ASTStoreControllerHeaders */ = {
+			isa = PBXGroup;
+			children = (
+				81BD898013256C4E0041A29D /* ASTStoreController.h */,
+			);
+			name = ASTStoreControllerHeaders;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		812FF128132561F00070074B /* ASTStore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 812FF14A132561F00070074B /* Build configuration list for PBXNativeTarget "ASTStore" */;
+			buildPhases = (
+				812FF125132561F00070074B /* Sources */,
+				812FF126132561F00070074B /* Frameworks */,
+				812FF127132561F00070074B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				81BD897C13256AC20041A29D /* PBXTargetDependency */,
+			);
+			name = ASTStore;
+			productName = ASTStore;
+			productReference = 812FF129132561F00070074B /* ASTStore.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		812FF120132561F00070074B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = "Anystone Technologies, Inc.";
+			};
+			buildConfigurationList = 812FF123132561F00070074B /* Build configuration list for PBXProject "ASTStore" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 812FF11E132561F00070074B;
+			productRefGroup = 812FF12A132561F00070074B /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 81BD897313256AB60041A29D /* Products */;
+					ProjectRef = 81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				812FF128132561F00070074B /* ASTStore */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		81BD897A13256AB60041A29D /* libASTStoreController.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libASTStoreController.a;
+			remoteRef = 81BD897913256AB60041A29D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		812FF127132561F00070074B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				812FF138132561F00070074B /* InfoPlist.strings in Resources */,
+				812FF141132561F00070074B /* MainWindow.xib in Resources */,
+				812FF147132561F00070074B /* ASTStoreViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		812FF125132561F00070074B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				812FF13B132561F00070074B /* main.m in Sources */,
+				812FF13E132561F00070074B /* ASTStoreAppDelegate.m in Sources */,
+				812FF144132561F00070074B /* ASTStoreViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		81BD897C13256AC20041A29D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ASTStoreController;
+			targetProxy = 81BD897B13256AC20041A29D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		812FF136132561F00070074B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				812FF137132561F00070074B /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		812FF13F132561F00070074B /* MainWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				812FF140132561F00070074B /* en */,
+			);
+			name = MainWindow.xib;
+			sourceTree = "<group>";
+		};
+		812FF145132561F00070074B /* ASTStoreViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				812FF146132561F00070074B /* en */,
+			);
+			name = ASTStoreViewController.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		812FF148132561F00070074B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				SDKROOT = iphoneos;
+				USER_HEADER_SEARCH_PATHS = "";
+			};
+			name = Debug;
+		};
+		812FF149132561F00070074B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				SDKROOT = iphoneos;
+				USER_HEADER_SEARCH_PATHS = "";
+			};
+			name = Release;
+		};
+		812FF14B132561F00070074B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ASTStore/ASTStore-Prefix.pch";
+				INFOPLIST_FILE = "ASTStore/ASTStore-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../../../Library/Developer/Xcode/DerivedData/ASTStoreController-ekelukrnpdaouhgcjxxcqfhcqmcj/Build/Products/Debug-iphoneos\"",
+					"\"$(SRCROOT)\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		812FF14C132561F00070074B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ASTStore/ASTStore-Prefix.pch";
+				INFOPLIST_FILE = "ASTStore/ASTStore-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../../../Library/Developer/Xcode/DerivedData/ASTStoreController-ekelukrnpdaouhgcjxxcqfhcqmcj/Build/Products/Debug-iphoneos\"",
+					"\"$(SRCROOT)\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		812FF123132561F00070074B /* Build configuration list for PBXProject "ASTStore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				812FF148132561F00070074B /* Debug */,
+				812FF149132561F00070074B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		812FF14A132561F00070074B /* Build configuration list for PBXNativeTarget "ASTStore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				812FF14B132561F00070074B /* Debug */,
+				812FF14C132561F00070074B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 812FF120132561F00070074B /* Project object */;
+}
