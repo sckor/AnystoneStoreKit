@@ -34,4 +34,6 @@
     
 }
 
++ (id)sharedStoreController;
+
 @end

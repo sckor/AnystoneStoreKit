@@ -74,7 +74,6 @@
 		812FF11E132561F00070074B = {
 			isa = PBXGroup;
 			children = (
-				81E8F2D6132577AD004C0957 /* libASTStoreController.a */,
 				812FF133132561F00070074B /* ASTStore */,
 				812FF12C132561F00070074B /* Frameworks */,
 				812FF12A132561F00070074B /* Products */,
@@ -94,6 +93,7 @@
 			children = (
 				81BD898113256C580041A29D /* ASTStoreControllerHeaders */,
 				81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */,
+				81E8F2D6132577AD004C0957 /* libASTStoreController.a */,
 				812FF12D132561F00070074B /* UIKit.framework */,
 				812FF12F132561F00070074B /* Foundation.framework */,
 				812FF131132561F00070074B /* CoreGraphics.framework */,

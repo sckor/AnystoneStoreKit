@@ -28,7 +28,22 @@
 
 #import "ASTStoreController.h"
 
+@interface ASTStoreController()
+
+@end
+
 
 @implementation ASTStoreController
+
++ (id) sharedStoreController
+{
+    static dispatch_once_t pred;
+    static ASTStoreController *aSTStoreController = nil;
+    
+    dispatch_once(&pred, ^{ aSTStoreController = [[self alloc] init]; });
+    return aSTStoreController;
+}
+
+
 
 @end
