@@ -27,13 +27,178 @@
 
 
 #import "ASTStoreController.h"
+#import "ASTStoreProduct+Private.h"
+#import "ASTStoreProductPlistReader.h"
 
-@interface ASTStoreController()
+#define kASTStoreControllerDefaultNetworkTimeout 60
 
+@interface ASTStoreController() <SKProductsRequestDelegate>
+
+@property (readonly) NSMutableDictionary *storeProductDictionary;
+@property ASTStoreControllerProductDataState productDataState;
+@property (retain) SKProductsRequest *skProductsRequest;
 @end
 
 
 @implementation ASTStoreController
+
+#pragma mark Synthesis
+@synthesize storeProductDictionary = storeProductDictionary_;
+@synthesize productDataState = productDataState_;
+@synthesize delegate = delegate_;
+@synthesize networkTimeoutDuration = networkTimeoutDuration_;
+@synthesize skProductsRequest = skProductsRequest_;
+
+#pragma mark Accessors
+
+- (NSMutableDictionary*)storeProductDictionary
+{
+    if( nil != storeProductDictionary_ )
+    {
+        return ( storeProductDictionary_ );
+    }
+    
+    storeProductDictionary_ = [[NSMutableDictionary alloc] init];
+    
+    return ( storeProductDictionary_ );
+}
+
+#pragma mark Product Setup
+
+- (void)setProductIdentifierFromStoreProduct:(ASTStoreProduct*)storeProduct
+{
+    
+    ASTStoreProduct *existingProduct = [self.storeProductDictionary objectForKey:storeProduct.identifier];
+    
+    if( existingProduct )
+    {
+        [existingProduct updateProductFromProduct:storeProduct];
+    }
+    else
+    {
+        [self.storeProductDictionary setObject:storeProduct forKey:storeProduct.identifier];
+        self.productDataState = ASTStoreControllerProductDataStateStale;
+    }
+
+}
+
+- (BOOL)setProductIdentifiersFromPath:(NSString*)plistPath
+{
+    NSArray *productsArray = [ASTStoreProductPlistReader readStoreProductPlistFromFile:plistPath];
+    
+    if( nil == productsArray )
+    {
+        DLog(@"Failed to read product information from plist file: %@", plistPath);
+        return ( NO );
+    }
+    
+    for( ASTStoreProduct *aProduct in productsArray )
+    {
+        [self setProductIdentifierFromStoreProduct:aProduct];
+    }
+    
+    return( YES );
+}
+
+- (BOOL)setProductIdentifiersFromBundlePlist:(NSString*)plistName
+{
+    NSBundle *mainBundle = [NSBundle mainBundle];
+                        
+    NSString *plistPath = [mainBundle pathForResource:plistName ofType:@"plist"];
+    
+    if( nil == plistPath )
+    {
+        DLog(@"Failed to find resource:%@ ofType:plist", plistName);
+        return ( NO );
+    }
+    
+    BOOL result = [self setProductIdentifiersFromPath:plistPath];
+    
+    return( result );
+}
+
+
+- (void)setProductIdentifiersAsyncFromNetworkURL:(NSURL*)plistURL toPlistPath:(NSString*)path withCompletionHandler:(void (^)(NSError*))handler
+{
+    DLog(@"Not implemented yet");
+}
+
+
+- (void)setProductIdentifier:(NSString*)productIdentifier forType:(ASTStoreProductIdentifierType)type;
+{
+    ASTStoreProduct *aProduct = [ASTStoreProduct storeProductWithIdentifier:productIdentifier andType:type];
+    
+    if( nil == aProduct )
+    {
+        DLog(@"Failed to create product for id:%@ type:%d", productIdentifier, type);
+        return;
+    }
+
+    [self setProductIdentifierFromStoreProduct:aProduct];
+}
+
+
+#pragma mark Query lists of products being managed
+
+- (NSArray*)productIdentifiers
+{
+    return ( [self.storeProductDictionary allKeys] );
+}
+
+- (ASTStoreProduct*)storeProductForIdentifier:(NSString*)productIdentifier
+{
+    return ( [self.storeProductDictionary objectForKey:productIdentifier] );
+}
+
+#pragma mark Update Products from iTunes
+
+- (void)requestProductDataFromiTunes:(BOOL)force
+{
+    BOOL needsRefresh;
+    
+    switch (self.productDataState) 
+    {
+        case ASTStoreControllerProductDataStateStale:
+        case ASTStoreControllerProductDataStateStaleTimeout:
+            needsRefresh = YES;
+            break;
+            
+        case ASTStoreControllerProductDataStateUpToDate:
+            needsRefresh = force;
+            break;
+            
+        case ASTStoreControllerProductDataStateUpdating:
+        case ASTStoreControllerProductDataStateUnknown: 
+        default:
+            needsRefresh = NO;
+            break;
+    }
+    
+    if( NO == needsRefresh )
+    {
+        return;
+    }
+    
+    // Create an SKProductsRequest from the ASTStoreProducts
+    NSSet *productIdentifierSet = [NSSet setWithArray:[self productIdentifiers]];
+    self.skProductsRequest = [[[SKProductsRequest alloc] initWithProductIdentifiers:productIdentifierSet] autorelease];
+    self.skProductsRequest.delegate = self;
+    
+}
+
+#pragma mark Purchase
+- (void)purchase:(NSString*)productIdentifier
+{
+    
+}
+
+- (void)purchaseStoreProduct:(ASTStoreProduct*)storeProduct
+{
+    
+}
+
+
+#pragma mark Initialization and Cleanup
 
 + (id) sharedStoreController
 {
@@ -44,6 +209,27 @@
     return aSTStoreController;
 }
 
+- (id)init 
+{
+    self = [super init];
+    
+    if( nil == self) 
+    {
+        return( nil );
+    }
 
+    productDataState_ = ASTStoreControllerProductDataStateUnknown;
+    delegate_ = nil;
+    networkTimeoutDuration_ = kASTStoreControllerDefaultNetworkTimeout;
+    
+    return self;
+}
+
+- (void)dealloc
+{
+    // See opinions expressed here for why this asserts:
+    // http://www.mikeash.com/pyblog/friday-qa-2009-10-02-care-and-feeding-of-singletons.html
+    ALog(@"Should not be releasing a singleton!");
+}
 
 @end

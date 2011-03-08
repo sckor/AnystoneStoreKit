@@ -27,13 +27,93 @@
 
 
 #import <Foundation/Foundation.h>
+#import <StoreKit/StoreKit.h>
+#import "ASTStoreProduct.h"
 
+
+@protocol ASTStoreControllerDelegate;
+
+
+typedef enum
+{
+    ASTStoreControllerProductDataStateUnknown,
+    ASTStoreControllerProductDataStateStale,
+    ASTStoreControllerProductDataStateUpdating,
+    ASTStoreControllerProductDataStateStaleTimeout,
+    ASTStoreControllerProductDataStateUpToDate
+} ASTStoreControllerProductDataState;
 
 @interface ASTStoreController : NSObject 
 {
+    ASTStoreControllerProductDataState productDataState_;
+    NSTimeInterval networkTimeoutDuration_;
     
+    id <ASTStoreControllerDelegate> delegate_;
 }
 
 + (id)sharedStoreController;
 
+#pragma mark Set List of Products To Manage
+//
+// Methods to set the list of products to manage
+//
+// Plist format (see sampleProductIdentifiers.plist)
+// Key: StoreProducts NSArray
+//    NSDictionary
+//       Mandatory Key: identifier NSString
+//       Mandatory Key: type NSString (@"Consumable", @"Nonconsumable", @"AutoRenewable")
+//       Optional Key: shouldDisplay boolean
+//       Optional Key: minimumVersion NSString
+//       Optional Key: extraInformation NSString 
+
+// Read in products to manage from a plist included in the application bundle
+// The plist name should not include the .plist extension as it will be 
+// added automatically
+- (BOOL)setProductIdentifiersFromBundlePlist:(NSString*)plistName;
+
+// Provide the full path to the plist file on the local filesystem; should include the .plist extension
+- (BOOL)setProductIdentifiersFromPath:(NSString*)plistPath;
+
+// For quick setup if plist is overkill ie: just have simple identifier(s) to manage
+- (void)setProductIdentifier:(NSString*)productIdentifier forType:(ASTStoreProductIdentifierType)type;
+
+// Setup an ASTStoreProduct manually and add it to the list
+- (void)setProductIdentifierFromStoreProduct:(ASTStoreProduct*)storeProduct;
+
+#pragma mark Query lists of products being managed
+
+// Returns an array of the product identifiers which are being managed
+- (NSArray*)productIdentifiers;
+
+// Provides access to the ASTStoreProduct associated with a managed productIdentifier
+- (ASTStoreProduct*)storeProductForIdentifier:(NSString*)productIdentifier;
+
+#pragma mark Update Products from iTunes
+
+// Requests product data from iTunes (if needed, or if force=YES)
+- (void)requestProductDataFromiTunes:(BOOL)force;
+
+// Determine current state of the product data
+@property (readonly) ASTStoreControllerProductDataState productDataState;
+
+#pragma mark Purchase
+- (void)purchase:(NSString*)productIdentifier;
+- (void)purchaseStoreProduct:(ASTStoreProduct*)storeProduct;
+
+#pragma mark Delegate
+@property (assign) id <ASTStoreControllerDelegate> delegate;
+
+#pragma mark Timeout for network functions
+@property  NSTimeInterval networkTimeoutDuration;
+
 @end
+
+
+@protocol ASTStoreControllerDelegate <NSObject>
+@optional
+- (void)astStoreControllerProductDataStateChanged:(ASTStoreControllerProductDataState)state;
+- (void)astStoreControllerProductPurchased:(ASTStoreProduct*)storeProduct;
+@end
+
+
+

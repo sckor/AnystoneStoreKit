@@ -51,8 +51,10 @@
 		812FF142132561F00070074B /* ASTStoreViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTStoreViewController.h; sourceTree = "<group>"; };
 		812FF143132561F00070074B /* ASTStoreViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ASTStoreViewController.m; sourceTree = "<group>"; };
 		812FF146132561F00070074B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ASTStoreViewController.xib; sourceTree = "<group>"; };
+		8184214E1326866D001D5CDC /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		81842151132686BA001D5CDC /* ASTStoreController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASTStoreController.h; path = ASTStoreController/ASTStoreController.h; sourceTree = "<group>"; };
+		81842152132686BA001D5CDC /* ASTPrefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTPrefix.pch; sourceTree = "<group>"; };
 		81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ASTStoreController.xcodeproj; path = ../ASTStoreController/ASTStoreController.xcodeproj; sourceTree = "<group>"; };
-		81BD898013256C4E0041A29D /* ASTStoreController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASTStoreController.h; path = /Users/skormilo/Development/GIT/github/AnystoneStoreKit/ASTStoreController/ASTStoreController/ASTStoreController.h; sourceTree = "<absolute>"; };
 		81E8F2D6132577AD004C0957 /* libASTStoreController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libASTStoreController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -74,6 +76,7 @@
 		812FF11E132561F00070074B = {
 			isa = PBXGroup;
 			children = (
+				8184214E1326866D001D5CDC /* StoreKit.framework */,
 				812FF133132561F00070074B /* ASTStore */,
 				812FF12C132561F00070074B /* Frameworks */,
 				812FF12A132561F00070074B /* Products */,
@@ -91,7 +94,7 @@
 		812FF12C132561F00070074B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				81BD898113256C580041A29D /* ASTStoreControllerHeaders */,
+				81842150132686BA001D5CDC /* ASTStoreControllerHeaders */,
 				81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */,
 				81E8F2D6132577AD004C0957 /* libASTStoreController.a */,
 				812FF12D132561F00070074B /* UIKit.framework */,
@@ -126,20 +129,22 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		81842150132686BA001D5CDC /* ASTStoreControllerHeaders */ = {
+			isa = PBXGroup;
+			children = (
+				81842151132686BA001D5CDC /* ASTStoreController.h */,
+				81842152132686BA001D5CDC /* ASTPrefix.pch */,
+			);
+			name = ASTStoreControllerHeaders;
+			path = ../ASTStoreController;
+			sourceTree = "<group>";
+		};
 		81BD897313256AB60041A29D /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				81BD897A13256AB60041A29D /* libASTStoreController.a */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		81BD898113256C580041A29D /* ASTStoreControllerHeaders */ = {
-			isa = PBXGroup;
-			children = (
-				81BD898013256C4E0041A29D /* ASTStoreController.h */,
-			);
-			name = ASTStoreControllerHeaders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

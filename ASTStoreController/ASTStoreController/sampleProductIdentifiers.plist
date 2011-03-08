@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>StoreProducts</key>
+	<array>
+		<dict>
+			<key>identifier</key>
+			<string>com.anystonetech.storecontroller.basicsample</string>
+			<key>type</key>
+			<string>Nonconsumable</string>
+		</dict>
+		<dict>
+			<key>identifier</key>
+			<string>com.anystonetech.storecontroller.versionsample</string>
+			<key>type</key>
+			<string>Consumable</string>
+			<key>minimumVersion</key>
+			<string>1.2</string>
+		</dict>
+		<dict>
+			<key>identifier</key>
+			<string>com.anystonetech.storecontroller.hiddensample</string>
+			<key>type</key>
+			<string>AutoRenewable</string>
+			<key>shouldDisplay</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>identifier</key>
+			<string>com.anystonetech.storecontroller.fullsample</string>
+			<key>type</key>
+			<string>Consumable</string>
+			<key>shouldDisplay</key>
+			<true/>
+			<key>minimumVersion</key>
+			<string>1.0</string>
+			<key>extraInformation</key>
+			<string>Limited time sale : 50% off!</string>
+		</dict>
+	</array>
+</dict>
+</plist>
