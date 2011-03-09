@@ -42,6 +42,9 @@
 @synthesize tableContainerView = tableContainerView_;
 @synthesize tableView = tableView_;
 @synthesize storeCell = storeCell_;
+@synthesize restorePreviousPurchaseButton = restorePreviousPurchaseButton_;
+@synthesize connectingToStoreLabel = connectingToStoreLabel_;
+@synthesize connectingActivityIndicatorView = connectingActivityIndicatorView_;
 
 - (ASTStoreController*)storeController
 {
@@ -51,6 +54,39 @@
 - (NSArray*)productIdentifiers
 {
     return ( [self.storeController productIdentifiers] );
+}
+
+#pragma mark User Interface
+
+- (IBAction)restorePreviousPurchaseButtonPressed:(id)sender
+{
+    [self.storeController restorePreviousPurchases];
+}
+
+- (void)updateStoreStateDisplay
+{
+    switch (self.storeController.productDataState) 
+    {            
+        case ASTStoreControllerProductDataStateUpdating:
+            self.connectingToStoreLabel.text = @"Connecting to Store";
+            [self.connectingActivityIndicatorView startAnimating];
+            break;
+            
+        case ASTStoreControllerProductDataStateUpToDate:
+            self.connectingToStoreLabel.text = @"Connected to Store";
+            [self.connectingActivityIndicatorView stopAnimating];
+            break;
+            
+        case ASTStoreControllerProductDataStateUnknown:
+        case ASTStoreControllerProductDataStateStale:
+        case ASTStoreControllerProductDataStateStaleTimeout:
+        default:
+            self.connectingToStoreLabel.text = @"Store Not Available";
+            [self.connectingActivityIndicatorView stopAnimating];
+            
+
+            break;
+    }
 }
 
 #pragma mark - Table View Datasource
@@ -113,6 +149,7 @@
     
     // Update table now that the state of the data has changed
     [self.tableView reloadData];
+    [self updateStoreStateDisplay];
 }
 
 - (void)astStoreControllerProductPurchased:(ASTStoreProduct*)storeProduct
@@ -134,6 +171,7 @@
     // Set the store delegate to the table view
     self.storeController.delegate = self;
     [self.storeController requestProductDataFromiTunes:NO];
+    [self updateStoreStateDisplay];
 }
 
 - (void)viewDidUnload
@@ -144,6 +182,9 @@
     self.tableView = nil;
     self.storeController.delegate = nil;
     self.storeCell = nil;
+    self.restorePreviousPurchaseButton = nil;
+    self.connectingToStoreLabel = nil;
+    self.connectingActivityIndicatorView = nil;
 
 }
 
@@ -159,6 +200,15 @@
     
     [storeCell_ release];
     storeCell_ = nil;
+
+    [restorePreviousPurchaseButton_ release];
+    restorePreviousPurchaseButton_ = nil;
+    
+    [connectingToStoreLabel_ release];
+    connectingToStoreLabel_ = nil;
+    
+    [connectingActivityIndicatorView_ release];
+    connectingActivityIndicatorView_ = nil;
     
     self.storeController.delegate = nil;
     

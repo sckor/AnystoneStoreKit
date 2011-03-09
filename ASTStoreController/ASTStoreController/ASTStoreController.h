@@ -47,6 +47,7 @@ typedef enum
 {
     ASTStoreControllerProductDataState productDataState_;
     NSTimeInterval networkTimeoutDuration_;
+    NSTimeInterval retryStoreConnectionInterval_;
     
     id <ASTStoreControllerDelegate> delegate_;
 }
@@ -105,12 +106,14 @@ typedef enum
 #pragma mark Purchase
 - (void)purchase:(NSString*)productIdentifier;
 - (void)purchaseStoreProduct:(ASTStoreProduct*)storeProduct;
+- (void)restorePreviousPurchases;
 
 #pragma mark Delegate
 @property (assign) id <ASTStoreControllerDelegate> delegate;
 
 #pragma mark Timeout for network functions
 @property  NSTimeInterval networkTimeoutDuration;
+@property  NSTimeInterval retryStoreConnectionInterval;
 
 @end
 

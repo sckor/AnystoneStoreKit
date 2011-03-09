@@ -38,13 +38,22 @@
 {
     UIView *tableContainerView_;
     UITableView *tableView_;
-    
     UITableViewCell *storeCell_;
+  
+    UIButton *restorePreviousPurchaseButton_;
+    UILabel *connectingToStoreLabel_;
+    UIActivityIndicatorView *connectingActivityIndicatorView_;
+    
 }
+
+- (IBAction)restorePreviousPurchaseButtonPressed:(id)sender;
 
 @property (retain) IBOutlet UIView *tableContainerView;
 @property (retain) IBOutlet UITableView *tableView;
-
 @property (retain) IBOutlet UITableViewCell *storeCell;
+
+@property (retain) IBOutlet UIButton *restorePreviousPurchaseButton;
+@property (retain) IBOutlet UILabel *connectingToStoreLabel;
+@property (retain) IBOutlet UIActivityIndicatorView *connectingActivityIndicatorView;
 
 @end

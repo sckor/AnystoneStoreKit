@@ -88,5 +88,4 @@ typedef enum
 @property(nonatomic, readonly) NSLocale *priceLocale;
 
 
-
 @end

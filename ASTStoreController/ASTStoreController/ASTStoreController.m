@@ -31,6 +31,7 @@
 #import "ASTStoreProductPlistReader.h"
 
 #define kASTStoreControllerDefaultNetworkTimeout 60
+#define kASTStoreControllerDefaultretryStoreConnectionInterval 20
 
 @interface ASTStoreController() <SKProductsRequestDelegate>
 
@@ -48,6 +49,7 @@
 @synthesize delegate = delegate_;
 @synthesize networkTimeoutDuration = networkTimeoutDuration_;
 @synthesize skProductsRequest = skProductsRequest_;
+@synthesize retryStoreConnectionInterval = retryStoreConnectionInterval_;
 
 #pragma mark Delegate Selector Stubs
 
@@ -230,6 +232,17 @@
     {
         self.skProductsRequest = nil;
         self.productDataState = ASTStoreControllerProductDataStateStale;
+        
+        // Queue up a retry - if enabled
+        if( 0 != self.retryStoreConnectionInterval )
+        {
+            double delayInSeconds = self.retryStoreConnectionInterval;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void)
+            {
+                [self requestProductDataFromiTunes:NO];
+            });
+        }
     }
 }
 
@@ -288,6 +301,10 @@
     
 }
 
+- (void)restorePreviousPurchases
+{
+    
+}
 
 #pragma mark Initialization and Cleanup
 
@@ -312,6 +329,7 @@
     productDataState_ = ASTStoreControllerProductDataStateUnknown;
     delegate_ = nil;
     networkTimeoutDuration_ = kASTStoreControllerDefaultNetworkTimeout;
+    retryStoreConnectionInterval_ = kASTStoreControllerDefaultretryStoreConnectionInterval;
     
     return self;
 }
