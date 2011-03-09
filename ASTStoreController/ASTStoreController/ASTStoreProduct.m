@@ -26,18 +26,18 @@
 //  THE SOFTWARE.
 
 
-#import "ASTStoreProduct.h"
-
-
+#import "ASTStoreProduct+Private.h"
 
 @implementation ASTStoreProduct
 
-@synthesize identifier = identifier_;
+@synthesize productIdentifier = productIdentifier_;
 @synthesize minimumVersion = minimumVersion_;
 @synthesize type = type_;
 @synthesize shouldDisplay = shouldDisplay_;
 @synthesize extraInformation = extraInformation_;
 @synthesize skProduct = skProduct_;
+
+#pragma mark Class Methods
 
 + (id)storeProductWithIdentifier:(NSString*)anIdentifier andType:(ASTStoreProductIdentifierType)aType
 {
@@ -68,6 +68,8 @@
     return NO;
 }
 
+#pragma mark Private Methods
+
 - (void)updateProductFromProduct:(ASTStoreProduct*)aProduct
 {
     // Cannot update type, identifier or skProduct
@@ -88,6 +90,65 @@
     
 }
 
+#pragma mark SKProduct related properties
+
+- (NSString*)localizedPrice
+{
+    if( nil == self.skProduct )
+    {
+        return ( nil );
+    }
+    
+    NSNumberFormatter *numberFormatter = [[[NSNumberFormatter alloc] init] autorelease];
+    [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
+    [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+    [numberFormatter setLocale:self.skProduct.priceLocale];
+    NSString *formattedString = [numberFormatter stringFromNumber:self.skProduct.price];
+    
+    return ( formattedString );
+}
+
+- (NSString*)localizedDescription
+{
+    if( nil == self.skProduct )
+    {
+        return ( nil );
+    }
+    
+    return ( self.skProduct.localizedDescription );
+}
+
+- (NSString*)localizedTitle
+{
+    if( nil == self.skProduct )
+    {
+        return ( nil );
+    }
+    
+    return ( self.skProduct.localizedTitle );
+}
+
+- (NSDecimalNumber*)price
+{
+    if( nil == self.skProduct )
+    {
+        return ( nil );
+    }
+    
+    return ( self.skProduct.price );
+}
+
+- (NSLocale*)priceLocale
+{
+    if( nil == self.skProduct )
+    {
+        return ( nil );
+    }
+    
+    return ( self.skProduct.priceLocale );
+}
+
+#pragma mark Init and Dealloc
 - (id)initWithProductIdentifier:(NSString*)aProductIdentifier andType:(ASTStoreProductIdentifierType)aType
 {
     self = [super init];
@@ -105,8 +166,8 @@
     
     type_ = aType;
     
-    identifier_ = aProductIdentifier;
-    [identifier_ retain];
+    productIdentifier_ = aProductIdentifier;
+    [productIdentifier_ retain];
     
     
     
@@ -121,8 +182,8 @@
 - (void)dealloc 
 {
     
-    [identifier_ release];
-    identifier_ = nil;
+    [productIdentifier_ release];
+    productIdentifier_ = nil;
     
     [minimumVersion_ release];
     minimumVersion_ = nil;

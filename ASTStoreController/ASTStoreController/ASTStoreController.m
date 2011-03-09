@@ -104,7 +104,7 @@
 - (void)setProductIdentifierFromStoreProduct:(ASTStoreProduct*)storeProduct
 {
     
-    ASTStoreProduct *existingProduct = [self.storeProductDictionary objectForKey:storeProduct.identifier];
+    ASTStoreProduct *existingProduct = [self.storeProductDictionary objectForKey:storeProduct.productIdentifier];
     
     if( existingProduct )
     {
@@ -112,7 +112,7 @@
     }
     else
     {
-        [self.storeProductDictionary setObject:storeProduct forKey:storeProduct.identifier];
+        [self.storeProductDictionary setObject:storeProduct forKey:storeProduct.productIdentifier];
         self.productDataState = ASTStoreControllerProductDataStateStale;
     }
 
@@ -180,7 +180,7 @@
 
 - (void)removeStoreProduct:(ASTStoreProduct*)storeProduct
 {
-    [self.storeProductDictionary removeObjectForKey:storeProduct.identifier];
+    [self.storeProductDictionary removeObjectForKey:storeProduct.productIdentifier];
 }
 
 #pragma mark Query lists of products being managed

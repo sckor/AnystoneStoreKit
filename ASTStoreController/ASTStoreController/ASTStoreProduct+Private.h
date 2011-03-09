@@ -28,8 +28,11 @@
 
 #import "ASTStoreProduct.h"
 
-@interface ASTStoreProduct (Private)
+@interface ASTStoreProduct ()
 
 @property (retain) SKProduct *skProduct;
+
+- (void)updateProductFromProduct:(ASTStoreProduct*)aProduct;
++ (BOOL)isStoreProductIdentifierTypeValid:(ASTStoreProductIdentifierType)aType;
 
 @end

@@ -39,28 +39,34 @@ typedef enum
 
 @interface ASTStoreProduct : NSObject 
 {
-    NSString *identifier_;
+    NSString *productIdentifier_;
     ASTStoreProductIdentifierType type_;
 
     NSString *minimumVersion_;
+    NSString *extraInformation_;    
     BOOL shouldDisplay_;
-    NSString *extraInformation_;
-    SKProduct *skProduct_;
 }
 
-@property (readonly) NSString *identifier;
++ (id)storeProductWithIdentifier:(NSString*)anIdentifier andType:(ASTStoreProductIdentifierType)aType;
+- (id)initWithProductIdentifier:(NSString*)anIdentifier andType:(ASTStoreProductIdentifierType)aType;
+
+@property (readonly) NSString *productIdentifier;
 @property (readonly) ASTStoreProductIdentifierType type;
 
 @property (retain) NSString *minimumVersion;
-@property BOOL shouldDisplay;
 @property (retain) NSString *extraInformation;
-@property (readonly) SKProduct *skProduct;
 
-+ (id)storeProductWithIdentifier:(NSString*)anIdentifier andType:(ASTStoreProductIdentifierType)aType;
-+ (BOOL)isStoreProductIdentifierTypeValid:(ASTStoreProductIdentifierType)aType;
+@property BOOL shouldDisplay;
 
-- (id)initWithProductIdentifier:(NSString*)anIdentifier andType:(ASTStoreProductIdentifierType)aType;
+// The following properties are valid when the data has been retrieved from
+// iTunes by the ASTStoreController; If there is not data, the methods
+// will return nil.
+@property(nonatomic, readonly) NSString *localizedPrice;
+@property(nonatomic, readonly) NSString *localizedDescription;
+@property(nonatomic, readonly) NSString *localizedTitle;
+@property(nonatomic, readonly) NSDecimalNumber *price;
+@property(nonatomic, readonly) NSLocale *priceLocale;
 
-- (void)updateProductFromProduct:(ASTStoreProduct*)aProduct;
+
 
 @end
