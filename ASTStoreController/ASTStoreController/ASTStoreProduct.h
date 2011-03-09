@@ -42,6 +42,9 @@ typedef enum
     NSString *productIdentifier_;
     ASTStoreProductIdentifierType type_;
 
+    NSString *title_;
+    NSString *description_;
+    
     NSString *minimumVersion_;
     NSString *extraInformation_;    
     BOOL shouldDisplay_;
@@ -53,6 +56,13 @@ typedef enum
 
 @property (readonly) NSString *productIdentifier;
 @property (readonly) ASTStoreProductIdentifierType type;
+
+// Title to send back from localizedTitle if title has not been obtained from app store
+@property (retain) NSString *title;
+
+// Description to return from localizedDescription if the description has not been obtained from
+// the app store
+@property (retain) NSString *description;
 
 // Can be used to prevent displaying of in app purchases in older versions of the app
 // which do not support it yet

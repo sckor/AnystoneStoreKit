@@ -1,43 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>StoreProducts</key>
-	<array>
-		<dict>
-			<key>identifier</key>
-			<string>com.anystonetech.storecontroller.basicsample</string>
-			<key>type</key>
-			<string>Nonconsumable</string>
-		</dict>
-		<dict>
-			<key>identifier</key>
-			<string>com.anystonetech.storecontroller.versionsample</string>
-			<key>type</key>
-			<string>Consumable</string>
-			<key>minimumVersion</key>
-			<string>1.2</string>
-		</dict>
-		<dict>
-			<key>identifier</key>
-			<string>com.anystonetech.storecontroller.hiddensample</string>
-			<key>type</key>
-			<string>AutoRenewable</string>
-			<key>shouldDisplay</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>identifier</key>
-			<string>com.anystonetech.storecontroller.fullsample</string>
-			<key>type</key>
-			<string>Consumable</string>
-			<key>shouldDisplay</key>
-			<true/>
-			<key>minimumVersion</key>
-			<string>1.0</string>
-			<key>extraInformation</key>
-			<string>Limited time sale : 50% off!</string>
-		</dict>
-	</array>
-</dict>
+<array>
+	<dict>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.storecontroller.basicsample</string>
+		<key>title</key>
+		<string>Basic</string>
+		<key>description</key>
+		<string>Basic Nonconsumable Purchase</string>
+		<key>type</key>
+		<string>Nonconsumable</string>
+	</dict>
+	<dict>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.storecontroller.versionsample</string>
+		<key>minimumVersion</key>
+		<string>1.2</string>
+		<key>description</key>
+		<string>Consumable with a minimum version</string>
+		<key>title</key>
+		<string>Version Sample</string>
+		<key>type</key>
+		<string>Consumable</string>
+	</dict>
+	<dict>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.storecontroller.hiddensample</string>
+		<key>shouldDisplay</key>
+		<false/>
+		<key>title</key>
+		<string>Hidden</string>
+		<key>description</key>
+		<string>Hidden Autorenewable</string>
+		<key>type</key>
+		<string>AutoRenewable</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Full</string>
+		<key>description</key>
+		<string>Sample consumable with everything populated</string>
+		<key>extraInformation</key>
+		<string>Limited time sale : 50% off!</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.storecontroller.fullsample</string>
+		<key>minimumVersion</key>
+		<string>1.0</string>
+		<key>shouldDisplay</key>
+		<true/>
+		<key>type</key>
+		<string>Consumable</string>
+	</dict>
+</array>
 </plist>

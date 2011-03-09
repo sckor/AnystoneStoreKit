@@ -28,42 +28,147 @@
 
 #import "ASTStoreViewController.h"
 
+@interface ASTStoreViewController()
+
+@property (readonly) ASTStoreController *storeController;
+@property (readonly) NSArray *productIdentifiers;
+@end
+
+
 @implementation ASTStoreViewController
+
+#pragma mark Synthesis
+
+@synthesize tableContainerView = tableContainerView_;
+@synthesize tableView = tableView_;
+@synthesize storeCell = storeCell_;
+
+- (ASTStoreController*)storeController
+{
+    return ( [ASTStoreController sharedStoreController] );
+}
+
+- (NSArray*)productIdentifiers
+{
+    return ( [self.storeController productIdentifiers] );
+}
+
+#pragma mark - Table View Datasource
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return ( [self.productIdentifiers count] );
+}
+
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath 
+{    
+    NSString *identifier = [self.productIdentifiers objectAtIndex:indexPath.row];
+    ASTStoreProduct *product = [self.storeController storeProductForIdentifier:identifier];
+    
+    //UIImageView *imageView = (UIImageView*) [cell viewWithTag:1];
+    UILabel *title = (UILabel*) [cell viewWithTag:2];
+    UILabel *description = (UILabel*) [cell viewWithTag:3];
+    UILabel *extraInfo = (UILabel*) [cell viewWithTag:4];
+    UILabel *price = (UILabel*) [cell viewWithTag:5];
+    
+    title.text = product.localizedTitle;
+    description.text = product.localizedDescription;
+    extraInfo.text = product.extraInformation;
+    price.text = product.localizedPrice;
+    
+    //imageView.image = nil;
+    
+    cell.backgroundColor = [UIColor lightGrayColor];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifier = @"ASTStoreTableViewCell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) 
+    {
+        [[NSBundle mainBundle] loadNibNamed:@"ASTStoreTableViewCell" owner:self options:nil];
+        cell = storeCell_;
+        self.storeCell = nil;
+    }
+    
+    [self configureCell:cell atIndexPath:indexPath];
+    
+    return cell;
+}
+
+#pragma mark - Table View Delegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return ( 67.0 );
+}
+            
+#pragma mark ASTStoreControllerDelegate Methods
+
+- (void)astStoreControllerProductDataStateChanged:(ASTStoreControllerProductDataState)state
+{
+    DLog(@"stateChanged:%d", state);
+    
+    // Update table now that the state of the data has changed
+    [self.tableView reloadData];
+}
+
+- (void)astStoreControllerProductPurchased:(ASTStoreProduct*)storeProduct
+{
+    DLog(@"purchased:%@", storeProduct.productIdentifier);    
+}
+
+#pragma mark - View lifecycle
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    // Set the store delegate to the table view
+    self.storeController.delegate = self;
+    [self.storeController requestProductDataFromiTunes:NO];
+}
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    
+    self.tableContainerView = nil;
+    self.tableView = nil;
+    self.storeController.delegate = nil;
+    self.storeCell = nil;
+
+}
+
+#pragma  mark - Memory Management
 
 - (void)dealloc
 {
+    [tableContainerView_ release];
+    tableContainerView_ = nil;
+    
+    [tableView_ release];
+    tableView_ = nil;
+    
+    [storeCell_ release];
+    storeCell_ = nil;
+    
+    self.storeController.delegate = nil;
+    
     [super dealloc];
 }
 
 - (void)didReceiveMemoryWarning
 {
-    // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
 }
 
-#pragma mark - View lifecycle
-
-/*
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-}
-*/
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
 
 @end

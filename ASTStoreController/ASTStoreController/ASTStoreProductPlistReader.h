@@ -28,8 +28,10 @@
 
 #import <Foundation/Foundation.h>
 
-#define kASTStoreProductPlistIdentifierKey @"identifier"
+#define kASTStoreProductPlistIdentifierKey @"productIdentifier"
 #define kASTStoreProductPlistTypeKey @"type"
+#define kASTStoreProductPlistTitleKey @"title"
+#define kASTStoreProductPlistDescriptionKey @"description"
 #define kASTStoreProductPlistMinimumVersionKey @"minimumVersion"
 #define kASTStoreProductPlistShouldDisplayKey @"shouldDisplay"
 #define kASTStoreProductPlistExtraInformation @"extraInformation"

@@ -27,8 +27,8 @@
 
 
 #import "ASTStoreAppDelegate.h"
-
 #import "ASTStoreViewController.h"
+#import "ASTStoreController.h"
 
 @implementation ASTStoreAppDelegate
 
@@ -39,8 +39,18 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
-     
+    // Initialize the store controller right away so that it can get any outstanding transactions
+    ASTStoreController *sc = [ASTStoreController sharedStoreController];
+    
+    // Setup the list of products to manage (in this case using a local plist file)
+    // Do not request the product information here though - want to wait until the customer
+    // Goes into the store, since there may not be any need contact iTunes
+    BOOL result = [sc setProductIdentifiersFromBundlePlist:@"sampleProductIdentifiers"];
+    if( NO == result )
+    {
+        DLog(@"Could not read from sampleProductIdentifiers - oh no!");
+    }
+    
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     return YES;

@@ -30,8 +30,21 @@
 #import "ASTStoreController.h"
 
 @interface ASTStoreViewController : UIViewController 
+    <
+    UITableViewDataSource, 
+    UITableViewDelegate,
+    ASTStoreControllerDelegate
+    >
 {
+    UIView *tableContainerView_;
+    UITableView *tableView_;
     
+    UITableViewCell *storeCell_;
 }
+
+@property (retain) IBOutlet UIView *tableContainerView;
+@property (retain) IBOutlet UITableView *tableView;
+
+@property (retain) IBOutlet UITableViewCell *storeCell;
 
 @end

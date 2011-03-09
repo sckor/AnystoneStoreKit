@@ -16,7 +16,6 @@
 		8184216B1326AB78001D5CDC /* ASTStoreProduct+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8184216A1326AB78001D5CDC /* ASTStoreProduct+Private.h */; };
 		8184216E1326B56F001D5CDC /* ASTStoreProductPlistReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 8184216C1326B56F001D5CDC /* ASTStoreProductPlistReader.h */; };
 		8184216F1326B56F001D5CDC /* ASTStoreProductPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 8184216D1326B56F001D5CDC /* ASTStoreProductPlistReader.m */; };
-		81BD898413256EAC0041A29D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81BD898313256EAC0041A29D /* StoreKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,7 +31,6 @@
 		8184216A1326AB78001D5CDC /* ASTStoreProduct+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ASTStoreProduct+Private.h"; sourceTree = "<group>"; };
 		8184216C1326B56F001D5CDC /* ASTStoreProductPlistReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreProductPlistReader.h; sourceTree = "<group>"; };
 		8184216D1326B56F001D5CDC /* ASTStoreProductPlistReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreProductPlistReader.m; sourceTree = "<group>"; };
-		81BD898313256EAC0041A29D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,7 +38,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81BD898413256EAC0041A29D /* StoreKit.framework in Frameworks */,
 				812FF1151325607F0070074B /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -69,7 +66,6 @@
 		812FF1131325607F0070074B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				81BD898313256EAC0041A29D /* StoreKit.framework */,
 				812FF1141325607F0070074B /* Foundation.framework */,
 			);
 			name = Frameworks;

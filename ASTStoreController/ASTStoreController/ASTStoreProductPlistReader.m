@@ -86,12 +86,24 @@
             continue;
         }
         
+        NSString *title = [dict objectForKey:kASTStoreProductPlistTitleKey];
+        NSString *description = [dict objectForKey:kASTStoreProductPlistDescriptionKey];
         
         NSString *extraInformation = [dict objectForKey:kASTStoreProductPlistExtraInformation];
         NSString *minimumVersion = [dict objectForKey:kASTStoreProductPlistMinimumVersionKey];
         NSNumber *boolAsNumber = [dict objectForKey:kASTStoreProductPlistShouldDisplayKey];
         
         ASTStoreProduct *aProduct = [ASTStoreProduct storeProductWithIdentifier:identifier andType:type];
+        
+        if( title )
+        {
+            aProduct.title = title;
+        }
+        
+        if( description )
+        {
+            aProduct.description = description;
+        }
         
         if( extraInformation )
         {

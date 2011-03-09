@@ -60,8 +60,10 @@ typedef enum
 // Plist format (see sampleProductIdentifiers.plist)
 // Key: StoreProducts NSArray
 //    NSDictionary
-//       Mandatory Key: identifier NSString
+//       Mandatory Key: productIdentifier NSString
 //       Mandatory Key: type NSString (@"Consumable", @"Nonconsumable", @"AutoRenewable")
+//       Optional Key: title NSString - title to use until app store title can be retrieved
+//       Optional Key: description NSString - description to use until store description can be retrieved
 //       Optional Key: shouldDisplay boolean
 //       Optional Key: minimumVersion NSString
 //       Optional Key: extraInformation NSString 

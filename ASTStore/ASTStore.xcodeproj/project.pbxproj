@@ -16,6 +16,11 @@
 		812FF141132561F00070074B /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 812FF13F132561F00070074B /* MainWindow.xib */; };
 		812FF144132561F00070074B /* ASTStoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 812FF143132561F00070074B /* ASTStoreViewController.m */; };
 		812FF147132561F00070074B /* ASTStoreViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 812FF145132561F00070074B /* ASTStoreViewController.xib */; };
+		81671CDA1327D28000B12E3D /* sampleProductIdentifiers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 81671CD91327D28000B12E3D /* sampleProductIdentifiers.plist */; };
+		81671CF11328068B00B12E3D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81671CF01328068A00B12E3D /* StoreKit.framework */; };
+		81671D0713280BF900B12E3D /* ASTStoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 81671D0613280BF900B12E3D /* ASTStoreTableViewCell.xib */; };
+		81671D0A1328186C00B12E3D /* default-purchase-image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 81671D081328186C00B12E3D /* default-purchase-image@2x.png */; };
+		81671D0B1328186C00B12E3D /* default-purchase-image.png in Resources */ = {isa = PBXBuildFile; fileRef = 81671D091328186C00B12E3D /* default-purchase-image.png */; };
 		81E8F2D7132577AD004C0957 /* libASTStoreController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 81E8F2D6132577AD004C0957 /* libASTStoreController.a */; };
 /* End PBXBuildFile section */
 
@@ -51,7 +56,11 @@
 		812FF142132561F00070074B /* ASTStoreViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTStoreViewController.h; sourceTree = "<group>"; };
 		812FF143132561F00070074B /* ASTStoreViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ASTStoreViewController.m; sourceTree = "<group>"; };
 		812FF146132561F00070074B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ASTStoreViewController.xib; sourceTree = "<group>"; };
-		8184214E1326866D001D5CDC /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		81671CD91327D28000B12E3D /* sampleProductIdentifiers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = sampleProductIdentifiers.plist; path = ../../ASTStoreController/ASTStoreController/sampleProductIdentifiers.plist; sourceTree = "<group>"; };
+		81671CF01328068A00B12E3D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		81671D0613280BF900B12E3D /* ASTStoreTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreTableViewCell.xib; sourceTree = "<group>"; };
+		81671D081328186C00B12E3D /* default-purchase-image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default-purchase-image@2x.png"; sourceTree = "<group>"; };
+		81671D091328186C00B12E3D /* default-purchase-image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default-purchase-image.png"; sourceTree = "<group>"; };
 		81842151132686BA001D5CDC /* ASTStoreController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASTStoreController.h; path = ASTStoreController/ASTStoreController.h; sourceTree = "<group>"; };
 		81842152132686BA001D5CDC /* ASTPrefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTPrefix.pch; sourceTree = "<group>"; };
 		81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ASTStoreController.xcodeproj; path = ../ASTStoreController/ASTStoreController.xcodeproj; sourceTree = "<group>"; };
@@ -63,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81671CF11328068B00B12E3D /* StoreKit.framework in Frameworks */,
 				81E8F2D7132577AD004C0957 /* libASTStoreController.a in Frameworks */,
 				812FF12E132561F00070074B /* UIKit.framework in Frameworks */,
 				812FF130132561F00070074B /* Foundation.framework in Frameworks */,
@@ -76,7 +86,6 @@
 		812FF11E132561F00070074B = {
 			isa = PBXGroup;
 			children = (
-				8184214E1326866D001D5CDC /* StoreKit.framework */,
 				812FF133132561F00070074B /* ASTStore */,
 				812FF12C132561F00070074B /* Frameworks */,
 				812FF12A132561F00070074B /* Products */,
@@ -94,12 +103,13 @@
 		812FF12C132561F00070074B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				81671CF01328068A00B12E3D /* StoreKit.framework */,
 				81842150132686BA001D5CDC /* ASTStoreControllerHeaders */,
 				81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */,
-				81E8F2D6132577AD004C0957 /* libASTStoreController.a */,
 				812FF12D132561F00070074B /* UIKit.framework */,
 				812FF12F132561F00070074B /* Foundation.framework */,
 				812FF131132561F00070074B /* CoreGraphics.framework */,
+				81E8F2D6132577AD004C0957 /* libASTStoreController.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -107,12 +117,8 @@
 		812FF133132561F00070074B /* ASTStore */ = {
 			isa = PBXGroup;
 			children = (
-				812FF13C132561F00070074B /* ASTStoreAppDelegate.h */,
-				812FF13D132561F00070074B /* ASTStoreAppDelegate.m */,
-				812FF13F132561F00070074B /* MainWindow.xib */,
-				812FF142132561F00070074B /* ASTStoreViewController.h */,
-				812FF143132561F00070074B /* ASTStoreViewController.m */,
-				812FF145132561F00070074B /* ASTStoreViewController.xib */,
+				81671D0513280BB800B12E3D /* Resources */,
+				81671D0413280B9F00B12E3D /* Classes */,
 				812FF134132561F00070074B /* Supporting Files */,
 			);
 			path = ASTStore;
@@ -127,6 +133,30 @@
 				812FF13A132561F00070074B /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		81671D0413280B9F00B12E3D /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				812FF13C132561F00070074B /* ASTStoreAppDelegate.h */,
+				812FF13D132561F00070074B /* ASTStoreAppDelegate.m */,
+				812FF142132561F00070074B /* ASTStoreViewController.h */,
+				812FF143132561F00070074B /* ASTStoreViewController.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		81671D0513280BB800B12E3D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				81671D081328186C00B12E3D /* default-purchase-image@2x.png */,
+				81671D091328186C00B12E3D /* default-purchase-image.png */,
+				812FF13F132561F00070074B /* MainWindow.xib */,
+				812FF145132561F00070074B /* ASTStoreViewController.xib */,
+				81671CD91327D28000B12E3D /* sampleProductIdentifiers.plist */,
+				81671D0613280BF900B12E3D /* ASTStoreTableViewCell.xib */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		81842150132686BA001D5CDC /* ASTStoreControllerHeaders */ = {
@@ -217,6 +247,10 @@
 				812FF138132561F00070074B /* InfoPlist.strings in Resources */,
 				812FF141132561F00070074B /* MainWindow.xib in Resources */,
 				812FF147132561F00070074B /* ASTStoreViewController.xib in Resources */,
+				81671CDA1327D28000B12E3D /* sampleProductIdentifiers.plist in Resources */,
+				81671D0713280BF900B12E3D /* ASTStoreTableViewCell.xib in Resources */,
+				81671D0A1328186C00B12E3D /* default-purchase-image@2x.png in Resources */,
+				81671D0B1328186C00B12E3D /* default-purchase-image.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

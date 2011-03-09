@@ -37,6 +37,8 @@
 @synthesize extraInformation = extraInformation_;
 @synthesize skProduct = skProduct_;
 @synthesize isValid = isValid_;
+@synthesize title = title_;
+@synthesize description = description_;
 
 #pragma mark Class Methods
 
@@ -113,7 +115,7 @@
 {
     if( nil == self.skProduct )
     {
-        return ( nil );
+        return ( self.description );
     }
     
     return ( self.skProduct.localizedDescription );
@@ -123,7 +125,7 @@
 {
     if( nil == self.skProduct )
     {
-        return ( nil );
+        return ( self.title );
     }
     
     return ( self.skProduct.localizedTitle );
@@ -171,8 +173,9 @@
     [productIdentifier_ retain];
     
     
-    
     minimumVersion_ = nil;
+    title_ = nil;
+    description_ = nil;
     shouldDisplay_ = YES;
     extraInformation_ = nil;
     skProduct_ = nil;
@@ -195,6 +198,12 @@
     
     [skProduct_ release];
     skProduct_ = nil;
+    
+    [title_ release];
+    title_ = nil;
+    
+    [description_ release];
+    description_ = nil;
     
     [super dealloc];
 }
