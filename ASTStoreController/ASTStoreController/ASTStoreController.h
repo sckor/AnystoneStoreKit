@@ -80,6 +80,10 @@ typedef enum
 // Setup an ASTStoreProduct manually and add it to the list
 - (void)setProductIdentifierFromStoreProduct:(ASTStoreProduct*)storeProduct;
 
+// Remove an existing product from the list
+- (void)removeProductIdentifier:(NSString*)productIdentifier;
+- (void)removeStoreProduct:(ASTStoreProduct*)storeProduct;
+
 #pragma mark Query lists of products being managed
 
 // Returns an array of the product identifiers which are being managed
@@ -94,7 +98,7 @@ typedef enum
 - (void)requestProductDataFromiTunes:(BOOL)force;
 
 // Determine current state of the product data
-@property (readonly) ASTStoreControllerProductDataState productDataState;
+@property (nonatomic,readonly) ASTStoreControllerProductDataState productDataState;
 
 #pragma mark Purchase
 - (void)purchase:(NSString*)productIdentifier;
@@ -113,6 +117,7 @@ typedef enum
 @optional
 - (void)astStoreControllerProductDataStateChanged:(ASTStoreControllerProductDataState)state;
 - (void)astStoreControllerProductPurchased:(ASTStoreProduct*)storeProduct;
+- (void)astStoreControllerProductIdentifierPurchased:(NSString*)productIdentifier;
 @end
 
 

@@ -130,6 +130,9 @@
     [extraInformation_ release];
     extraInformation_ = nil;
     
+    [skProduct_ release];
+    skProduct_ = nil;
+    
     [super dealloc];
 }
 

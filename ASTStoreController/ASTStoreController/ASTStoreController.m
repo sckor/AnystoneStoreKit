@@ -35,7 +35,7 @@
 @interface ASTStoreController() <SKProductsRequestDelegate>
 
 @property (readonly) NSMutableDictionary *storeProductDictionary;
-@property ASTStoreControllerProductDataState productDataState;
+@property (nonatomic) ASTStoreControllerProductDataState productDataState;
 @property (retain) SKProductsRequest *skProductsRequest;
 @end
 
@@ -49,6 +49,33 @@
 @synthesize networkTimeoutDuration = networkTimeoutDuration_;
 @synthesize skProductsRequest = skProductsRequest_;
 
+#pragma mark Delegate Selector Stubs
+
+- (void)invokeDelegateStoreControllerProductDataStateChanged:(ASTStoreControllerProductDataState)newState
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(astStoreControllerProductDataStateChanged:)])
+    {
+        [self.delegate astStoreControllerProductDataStateChanged:newState];
+    }
+}
+
+- (void)invokeDelegateStoreControllerProductPurchased:(ASTStoreProduct*)storeProduct
+{
+    if (self.delegate && [self.delegate respondsToSelector: @selector(astStoreControllerProductPurchased:)])
+    {
+        [self.delegate astStoreControllerProductPurchased:storeProduct];
+    }
+}
+
+- (void)invokeDelegateStoreControllerProductIdentifierPurchased:(NSString*)productIdentifier
+{
+    if (self.delegate && [self.delegate respondsToSelector: @selector(astStoreControllerProductIdentifierPurchased:)])
+    {
+        [self.delegate astStoreControllerProductIdentifierPurchased:productIdentifier];
+    }
+}
+
+
 #pragma mark Accessors
 
 - (NSMutableDictionary*)storeProductDictionary
@@ -61,6 +88,15 @@
     storeProductDictionary_ = [[NSMutableDictionary alloc] init];
     
     return ( storeProductDictionary_ );
+}
+
+- (void)setProductDataState:(ASTStoreControllerProductDataState)aProductDataState
+{
+    if( aProductDataState != productDataState_ )
+    {
+        productDataState_ = aProductDataState;
+        [self invokeDelegateStoreControllerProductDataStateChanged:aProductDataState];
+    }
 }
 
 #pragma mark Product Setup
@@ -137,6 +173,15 @@
     [self setProductIdentifierFromStoreProduct:aProduct];
 }
 
+- (void)removeProductIdentifier:(NSString*)productIdentifier
+{
+    [self.storeProductDictionary removeObjectForKey:productIdentifier];
+}
+
+- (void)removeStoreProduct:(ASTStoreProduct*)storeProduct
+{
+    [self.storeProductDictionary removeObjectForKey:storeProduct.identifier];
+}
 
 #pragma mark Query lists of products being managed
 
@@ -148,6 +193,47 @@
 - (ASTStoreProduct*)storeProductForIdentifier:(NSString*)productIdentifier
 {
     return ( [self.storeProductDictionary objectForKey:productIdentifier] );
+}
+
+#pragma mark SKProductRequest and SKRequest Delegate Methods
+
+- (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
+{
+    DLog(@"request:%@ response:%@", request, response);
+    
+    for( SKProduct *aProduct in response.products )
+    {
+        // Associate the SKProduct with the appropriate ASTStoreProduct
+        DLog(@"Associating data for %@", aProduct.productIdentifier);
+        ASTStoreProduct *storeProduct = [self.storeProductDictionary objectForKey:aProduct.productIdentifier];
+        storeProduct.skProduct = aProduct;
+    }
+    
+    // Remove any that did not come back as valid
+    for( NSString *productIdentifier in response.invalidProductIdentifiers )
+    {
+        DLog(@"Removing invalid productIdentifier: %@", productIdentifier);
+        [self removeProductIdentifier:productIdentifier];
+    }
+    
+    self.skProductsRequest = nil;
+    self.productDataState = ASTStoreControllerProductDataStateUpToDate;
+}
+
+- (void)request:(SKRequest *)request didFailWithError:(NSError *)error
+{
+    DLog(@"request:%@ error:%@", request, error);
+    
+    if( [request isKindOfClass:[SKProductsRequest class]] )
+    {
+        self.skProductsRequest = nil;
+        self.productDataState = ASTStoreControllerProductDataStateStale;
+    }
+}
+
+- (void)requestDidFinish:(SKRequest *)request
+{
+    DLog(@"%@", request);
 }
 
 #pragma mark Update Products from iTunes
@@ -184,6 +270,9 @@
     self.skProductsRequest = [[[SKProductsRequest alloc] initWithProductIdentifiers:productIdentifierSet] autorelease];
     self.skProductsRequest.delegate = self;
     
+    self.productDataState = ASTStoreControllerProductDataStateUpdating;
+    
+    [self.skProductsRequest start];
 }
 
 #pragma mark Purchase
