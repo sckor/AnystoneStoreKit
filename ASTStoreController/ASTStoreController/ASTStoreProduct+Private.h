@@ -31,6 +31,7 @@
 @interface ASTStoreProduct ()
 
 @property (retain) SKProduct *skProduct;
+@property  BOOL isValid;
 
 - (void)updateProductFromProduct:(ASTStoreProduct*)aProduct;
 + (BOOL)isStoreProductIdentifierTypeValid:(ASTStoreProductIdentifierType)aType;

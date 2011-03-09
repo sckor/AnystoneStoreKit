@@ -204,16 +204,18 @@
     for( SKProduct *aProduct in response.products )
     {
         // Associate the SKProduct with the appropriate ASTStoreProduct
-        DLog(@"Associating data for %@", aProduct.productIdentifier);
+        DLog(@"Associating valid data for %@", aProduct.productIdentifier);
         ASTStoreProduct *storeProduct = [self.storeProductDictionary objectForKey:aProduct.productIdentifier];
         storeProduct.skProduct = aProduct;
+        storeProduct.isValid = YES;
     }
     
-    // Remove any that did not come back as valid
     for( NSString *productIdentifier in response.invalidProductIdentifiers )
     {
-        DLog(@"Removing invalid productIdentifier: %@", productIdentifier);
-        [self removeProductIdentifier:productIdentifier];
+        DLog(@"Setting invalid productIdentifier: %@", productIdentifier);
+        ASTStoreProduct *storeProduct = [self.storeProductDictionary objectForKey:productIdentifier];
+        storeProduct.skProduct = nil;
+        storeProduct.isValid = NO;
     }
     
     self.skProductsRequest = nil;

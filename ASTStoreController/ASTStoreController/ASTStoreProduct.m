@@ -36,6 +36,7 @@
 @synthesize shouldDisplay = shouldDisplay_;
 @synthesize extraInformation = extraInformation_;
 @synthesize skProduct = skProduct_;
+@synthesize isValid = isValid_;
 
 #pragma mark Class Methods
 
@@ -175,6 +176,7 @@
     shouldDisplay_ = YES;
     extraInformation_ = nil;
     skProduct_ = nil;
+    isValid_ = YES;
     
     return self;
 }
