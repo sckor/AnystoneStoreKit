@@ -1,8 +1,8 @@
 //
-//  ASTStoreProduct+Private.h
+//  ASTStoreKit.h
 //  ASTStoreController
 //
-//  Created by Sean Kormilo on 11-03-08.
+//  Created by Sean Kormilo on 11-03-10.
 //  http://www.anystonetech.com
 
 //  Copyright (c) 2011 Anystone Technologies, Inc.
@@ -26,15 +26,18 @@
 //  THE SOFTWARE.
 
 
-#import "ASTStoreProduct.h"
-#import "ASTStoreKit.h"
+#if TARGET_IPHONE_SIMULATOR
 
-@interface ASTStoreProduct ()
+// To be 100% sure this code is not built into release builds...
+#ifdef DEBUG
+// The ILSimStoreKit header is smart enough to only enable SimStoreKit 
+// if running on the simulator - it will not enable on the real devices
+#define ILSimReplaceRealStoreKit 1
+#include "ILSimStoreKit.h"
+#endif
 
-@property (retain) SKProduct *skProduct;
-@property  BOOL isValid;
+#else
 
-- (void)updateProductFromProduct:(ASTStoreProduct*)aProduct;
-+ (BOOL)isStoreProductIdentifierTypeValid:(ASTStoreProductIdentifierType)aType;
+#include <StoreKit/StoreKit.h>
 
-@end
+#endif

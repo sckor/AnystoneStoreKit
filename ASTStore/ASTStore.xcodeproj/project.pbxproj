@@ -22,24 +22,8 @@
 		81671D0A1328186C00B12E3D /* default-purchase-image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 81671D081328186C00B12E3D /* default-purchase-image@2x.png */; };
 		81671D0B1328186C00B12E3D /* default-purchase-image.png in Resources */ = {isa = PBXBuildFile; fileRef = 81671D091328186C00B12E3D /* default-purchase-image.png */; };
 		81E8F2D7132577AD004C0957 /* libASTStoreController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 81E8F2D6132577AD004C0957 /* libASTStoreController.a */; };
+		81EE59F7132A61C800C722E4 /* ilSimKitProducts.plist in Resources */ = {isa = PBXBuildFile; fileRef = 81EE59F6132A61C800C722E4 /* ilSimKitProducts.plist */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		81BD897913256AB60041A29D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 812FF1111325607F0070074B;
-			remoteInfo = ASTStoreController;
-		};
-		81BD897B13256AC20041A29D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 812FF1101325607F0070074B;
-			remoteInfo = ASTStoreController;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		812FF129132561F00070074B /* ASTStore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ASTStore.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,10 +45,12 @@
 		81671D0613280BF900B12E3D /* ASTStoreTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreTableViewCell.xib; sourceTree = "<group>"; };
 		81671D081328186C00B12E3D /* default-purchase-image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default-purchase-image@2x.png"; sourceTree = "<group>"; };
 		81671D091328186C00B12E3D /* default-purchase-image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default-purchase-image.png"; sourceTree = "<group>"; };
-		81842151132686BA001D5CDC /* ASTStoreController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASTStoreController.h; path = ASTStoreController/ASTStoreController.h; sourceTree = "<group>"; };
-		81842152132686BA001D5CDC /* ASTPrefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTPrefix.pch; sourceTree = "<group>"; };
-		81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ASTStoreController.xcodeproj; path = ../ASTStoreController/ASTStoreController.xcodeproj; sourceTree = "<group>"; };
+		81671D2E1329464F00B12E3D /* ASTStoreController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASTStoreController.h; path = ASTStoreController/ASTStoreController.h; sourceTree = "<group>"; };
+		81671D2F1329464F00B12E3D /* ASTStoreProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASTStoreProduct.h; path = ASTStoreController/ASTStoreProduct.h; sourceTree = "<group>"; };
+		81671D301329464F00B12E3D /* ASTPrefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTPrefix.pch; sourceTree = "<group>"; };
+		81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ASTStoreController.xcodeproj; path = ../../ASTStoreController/ASTStoreController.xcodeproj; sourceTree = "<group>"; };
 		81E8F2D6132577AD004C0957 /* libASTStoreController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libASTStoreController.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		81EE59F6132A61C800C722E4 /* ilSimKitProducts.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = ilSimKitProducts.plist; path = ../../ASTStoreController/ASTStoreController/ilSimKitProducts.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,8 +90,6 @@
 			isa = PBXGroup;
 			children = (
 				81671CF01328068A00B12E3D /* StoreKit.framework */,
-				81842150132686BA001D5CDC /* ASTStoreControllerHeaders */,
-				81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */,
 				812FF12D132561F00070074B /* UIKit.framework */,
 				812FF12F132561F00070074B /* Foundation.framework */,
 				812FF131132561F00070074B /* CoreGraphics.framework */,
@@ -117,6 +101,7 @@
 		812FF133132561F00070074B /* ASTStore */ = {
 			isa = PBXGroup;
 			children = (
+				81671D2C1329462E00B12E3D /* Libraries */,
 				81671D0513280BB800B12E3D /* Resources */,
 				81671D0413280B9F00B12E3D /* Classes */,
 				812FF134132561F00070074B /* Supporting Files */,
@@ -154,27 +139,30 @@
 				812FF13F132561F00070074B /* MainWindow.xib */,
 				812FF145132561F00070074B /* ASTStoreViewController.xib */,
 				81671CD91327D28000B12E3D /* sampleProductIdentifiers.plist */,
+				81EE59F6132A61C800C722E4 /* ilSimKitProducts.plist */,
 				81671D0613280BF900B12E3D /* ASTStoreTableViewCell.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		81842150132686BA001D5CDC /* ASTStoreControllerHeaders */ = {
+		81671D2C1329462E00B12E3D /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				81842151132686BA001D5CDC /* ASTStoreController.h */,
-				81842152132686BA001D5CDC /* ASTPrefix.pch */,
+				81671D2D1329464F00B12E3D /* ASTStoreControllerHeaders */,
+				81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */,
 			);
-			name = ASTStoreControllerHeaders;
-			path = ../ASTStoreController;
+			name = Libraries;
 			sourceTree = "<group>";
 		};
-		81BD897313256AB60041A29D /* Products */ = {
+		81671D2D1329464F00B12E3D /* ASTStoreControllerHeaders */ = {
 			isa = PBXGroup;
 			children = (
-				81BD897A13256AB60041A29D /* libASTStoreController.a */,
+				81671D2E1329464F00B12E3D /* ASTStoreController.h */,
+				81671D2F1329464F00B12E3D /* ASTStoreProduct.h */,
+				81671D301329464F00B12E3D /* ASTPrefix.pch */,
 			);
-			name = Products;
+			name = ASTStoreControllerHeaders;
+			path = ../../ASTStoreController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -191,7 +179,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				81BD897C13256AC20041A29D /* PBXTargetDependency */,
 			);
 			name = ASTStore;
 			productName = ASTStore;
@@ -216,28 +203,12 @@
 			mainGroup = 812FF11E132561F00070074B;
 			productRefGroup = 812FF12A132561F00070074B /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 81BD897313256AB60041A29D /* Products */;
-					ProjectRef = 81BD897213256AB60041A29D /* ASTStoreController.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				812FF128132561F00070074B /* ASTStore */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		81BD897A13256AB60041A29D /* libASTStoreController.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libASTStoreController.a;
-			remoteRef = 81BD897913256AB60041A29D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		812FF127132561F00070074B /* Resources */ = {
@@ -251,6 +222,7 @@
 				81671D0713280BF900B12E3D /* ASTStoreTableViewCell.xib in Resources */,
 				81671D0A1328186C00B12E3D /* default-purchase-image@2x.png in Resources */,
 				81671D0B1328186C00B12E3D /* default-purchase-image.png in Resources */,
+				81EE59F7132A61C800C722E4 /* ilSimKitProducts.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,14 +240,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		81BD897C13256AC20041A29D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ASTStoreController;
-			targetProxy = 81BD897B13256AC20041A29D /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		812FF136132561F00070074B /* InfoPlist.strings */ = {

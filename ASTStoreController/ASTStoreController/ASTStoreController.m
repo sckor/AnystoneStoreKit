@@ -339,6 +339,7 @@
     // See opinions expressed here for why this asserts:
     // http://www.mikeash.com/pyblog/friday-qa-2009-10-02-care-and-feeding-of-singletons.html
     ALog(@"Should not be releasing a singleton!");
+    [super dealloc];
 }
 
 @end
