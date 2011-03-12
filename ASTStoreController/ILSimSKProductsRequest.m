@@ -78,9 +78,7 @@
 	NSString* productsFile = [[[NSProcessInfo processInfo] environment] objectForKey:kILSimSKProductsPlistEnvironmentVariable];
     NSString* productFileInBundle = [[NSBundle mainBundle] pathForResource:productsFile ofType:@""];
     
-    DLog(@"productsFile:%@ productFileInBundle:%@", productsFile, productFileInBundle);
 	NSDictionary* d = productFileInBundle ? [NSDictionary dictionaryWithContentsOfFile:productFileInBundle] : nil;
-	DLog(@"nsdictionary:%@", d);
     
 	NSDictionary* productData = [d objectForKey:ident];
 	if (!productData)

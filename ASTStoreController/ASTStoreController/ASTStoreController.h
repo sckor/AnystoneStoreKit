@@ -25,7 +25,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-
+#import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import "ASTStoreProduct.h"
 
@@ -62,6 +62,11 @@ typedef enum
 //    NSDictionary
 //       Mandatory Key: productIdentifier NSString
 //       Mandatory Key: type NSString (@"Consumable", @"Nonconsumable", @"AutoRenewable")
+//       Optional Key: familyIdentifier NSString: used to track consumables/AutoRenewables *Mandatory for Consumable and AutoRenewable types
+//       Optional Key: familyQuantity NSString:
+//                     Mandatory For consumable - should be an NSUInteger formatted as a string
+//                     Mandatory For AutoRenewable - should be one of: ... offered sub lengths as string...
+//
 //       Optional Key: title NSString - title to use until app store title can be retrieved
 //       Optional Key: description NSString - description to use until store description can be retrieved
 //       Optional Key: shouldDisplay boolean
@@ -77,14 +82,19 @@ typedef enum
 - (BOOL)setProductIdentifiersFromPath:(NSString*)plistPath;
 
 // For quick setup if plist is overkill ie: just have simple identifier(s) to manage
-- (void)setProductIdentifier:(NSString*)productIdentifier forType:(ASTStoreProductIdentifierType)type;
+- (void)setNonConsumableProductIdentifier:(NSString*)productIdentifier;
 
-// Setup an ASTStoreProduct manually and add it to the list
-- (void)setProductIdentifierFromStoreProduct:(ASTStoreProduct*)storeProduct;
+- (void)setConsumableProductIdentifier:(NSString*)productIdentifier 
+                  familyIdentifier:(NSString*)familyIdentifier 
+                    familyQuantity:(NSUInteger)familyQuantity;
+
+- (void)setAutoRenewableProductIdentifier:(NSString*)productIdentifier 
+                  familyIdentifier:(NSString*)familyIdentifier 
+                    familyQuantity:(NSString*)familyQuantity;
+
 
 // Remove an existing product from the list
 - (void)removeProductIdentifier:(NSString*)productIdentifier;
-- (void)removeStoreProduct:(ASTStoreProduct*)storeProduct;
 
 #pragma mark Query lists of products being managed
 
@@ -104,7 +114,6 @@ typedef enum
 
 #pragma mark Purchase
 - (void)purchase:(NSString*)productIdentifier;
-- (void)purchaseStoreProduct:(ASTStoreProduct*)storeProduct;
 - (void)restorePreviousPurchases;
 
 #pragma mark Delegate
@@ -120,8 +129,16 @@ typedef enum
 @protocol ASTStoreControllerDelegate <NSObject>
 @optional
 - (void)astStoreControllerProductDataStateChanged:(ASTStoreControllerProductDataState)state;
-- (void)astStoreControllerProductPurchased:(ASTStoreProduct*)storeProduct;
+
+// Should implement this, otherwise no purchase notifications for you
 - (void)astStoreControllerProductIdentifierPurchased:(NSString*)productIdentifier;
+
+// Invoked for actual purchase failures - may want to display message
+- (void)astStoreControllerProductIdentifierFailedPurchase:(NSString*)productIdentifier withError:(NSError*)error;
+
+// Invoked for cancellations - no message should be shown to user per programming guide
+- (void)astStoreControllerProductIdentifierCancelledPurchase:(NSString*)productIdentifier;
+
 @end
 
 

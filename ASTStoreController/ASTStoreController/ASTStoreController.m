@@ -33,11 +33,13 @@
 #define kASTStoreControllerDefaultNetworkTimeout 60
 #define kASTStoreControllerDefaultretryStoreConnectionInterval 20
 
-@interface ASTStoreController() <SKProductsRequestDelegate>
+@interface ASTStoreController() <SKProductsRequestDelegate, SKPaymentTransactionObserver>
 
 @property (readonly) NSMutableDictionary *storeProductDictionary;
 @property (nonatomic) ASTStoreControllerProductDataState productDataState;
 @property (retain) SKProductsRequest *skProductsRequest;
+@property (readonly) SKPaymentQueue *skPaymentQueue;
+
 @end
 
 
@@ -50,6 +52,7 @@
 @synthesize networkTimeoutDuration = networkTimeoutDuration_;
 @synthesize skProductsRequest = skProductsRequest_;
 @synthesize retryStoreConnectionInterval = retryStoreConnectionInterval_;
+@synthesize skPaymentQueue;
 
 #pragma mark Delegate Selector Stubs
 
@@ -61,24 +64,36 @@
     }
 }
 
-- (void)invokeDelegateStoreControllerProductPurchased:(ASTStoreProduct*)storeProduct
-{
-    if (self.delegate && [self.delegate respondsToSelector: @selector(astStoreControllerProductPurchased:)])
-    {
-        [self.delegate astStoreControllerProductPurchased:storeProduct];
-    }
-}
-
 - (void)invokeDelegateStoreControllerProductIdentifierPurchased:(NSString*)productIdentifier
 {
-    if (self.delegate && [self.delegate respondsToSelector: @selector(astStoreControllerProductIdentifierPurchased:)])
+    if (self.delegate && [self.delegate respondsToSelector:@selector(astStoreControllerProductIdentifierPurchased:)])
     {
         [self.delegate astStoreControllerProductIdentifierPurchased:productIdentifier];
     }
 }
 
+- (void)invokeDelegateStoreControllerProductIdentifierCancelledPurchase:(NSString*)productIdentifier
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(astStoreControllerProductIdentifierCancelledPurchase:)])
+    {
+        [self.delegate astStoreControllerProductIdentifierCancelledPurchase:productIdentifier];
+    }
+}
+
+
+- (void)invokeDelegateStoreControllerProductIdentifierFailedPurchase:(NSString*)productIdentifier withError:(NSError*)error
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(astStoreControllerProductIdentifierFailedPurchase:withError:)])
+    {
+        [self.delegate astStoreControllerProductIdentifierFailedPurchase:productIdentifier withError:error];
+    }
+}
 
 #pragma mark Accessors
+- (SKPaymentQueue*)skPaymentQueue
+{
+    return( [SKPaymentQueue defaultQueue] );
+}
 
 - (NSMutableDictionary*)storeProductDictionary
 {
@@ -155,13 +170,6 @@
     return( result );
 }
 
-
-- (void)setProductIdentifiersAsyncFromNetworkURL:(NSURL*)plistURL toPlistPath:(NSString*)path withCompletionHandler:(void (^)(NSError*))handler
-{
-    DLog(@"Not implemented yet");
-}
-
-
 - (void)setProductIdentifier:(NSString*)productIdentifier forType:(ASTStoreProductIdentifierType)type;
 {
     ASTStoreProduct *aProduct = [ASTStoreProduct storeProductWithIdentifier:productIdentifier andType:type];
@@ -171,19 +179,35 @@
         DLog(@"Failed to create product for id:%@ type:%d", productIdentifier, type);
         return;
     }
-
+    
     [self setProductIdentifierFromStoreProduct:aProduct];
 }
+
+- (void)setNonConsumableProductIdentifier:(NSString*)productIdentifier
+{
+    
+}
+
+- (void)setConsumableProductIdentifier:(NSString*)productIdentifier 
+                      familyIdentifier:(NSString*)familyIdentifier 
+                        familyQuantity:(NSUInteger)familyQuantity
+{
+    
+}
+
+- (void)setAutoRenewableProductIdentifier:(NSString*)productIdentifier 
+                         familyIdentifier:(NSString*)familyIdentifier 
+                           familyQuantity:(NSString*)familyQuantity
+{
+    
+}
+
 
 - (void)removeProductIdentifier:(NSString*)productIdentifier
 {
     [self.storeProductDictionary removeObjectForKey:productIdentifier];
 }
 
-- (void)removeStoreProduct:(ASTStoreProduct*)storeProduct
-{
-    [self.storeProductDictionary removeObjectForKey:storeProduct.productIdentifier];
-}
 
 #pragma mark Query lists of products being managed
 
@@ -290,14 +314,99 @@
     [self.skProductsRequest start];
 }
 
+#pragma mark Transaction Handling
+- (void)completeTransaction:(SKPaymentTransaction *)transaction 
+{ 
+    DLog(@"Complete: %@", transaction.payment.productIdentifier);
+    
+    // TODO : set product as purchased, quantities etc, allow for querying...
+    // [self recordTransaction: transaction];
+    
+    [self invokeDelegateStoreControllerProductIdentifierPurchased:transaction.payment.productIdentifier];
+        
+    // Remove the transaction from the payment queue: what if things need to be downloaded etc... would 
+    // like that to be async relative to this...
+    [self.skPaymentQueue finishTransaction:transaction];
+}
+
+- (void)failedTransaction:(SKPaymentTransaction *)transaction
+{
+    if (transaction.error.code != SKErrorPaymentCancelled) 
+    {
+        [self invokeDelegateStoreControllerProductIdentifierFailedPurchase:transaction.payment.productIdentifier
+                                                                 withError:transaction.error];
+    }
+    else
+    {
+        [self invokeDelegateStoreControllerProductIdentifierCancelledPurchase:transaction.payment.productIdentifier];
+    }
+    
+    [self.skPaymentQueue finishTransaction:transaction];
+}
+
+- (void)restoreTransaction:(SKPaymentTransaction *)transaction 
+{
+    DLog(@"restoring: %@", transaction.payment.productIdentifier);
+    
+    [self completeTransaction:transaction];
+}
+
+#pragma mark SKPaymentTransactionObserver Methods
+
+- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions
+{
+    for (SKPaymentTransaction *transaction in transactions) 
+    {
+        switch (transaction.transactionState) 
+        {
+            case SKPaymentTransactionStatePurchased: 
+                [self completeTransaction:transaction]; 
+                break;
+                
+            case SKPaymentTransactionStateFailed: 
+                [self failedTransaction:transaction]; 
+                break;
+                
+            case SKPaymentTransactionStateRestored: 
+                [self restoreTransaction:transaction];
+                break;
+                
+            default:
+                break;
+        }
+    }
+}
+
+- (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue
+{
+    DLog(@"restore complete");
+}
+
+- (void)paymentQueue:(SKPaymentQueue *)queue removedTransactions:(NSArray *)transactions
+{
+    DLog(@"removed:%@", transactions);
+}
+
+- (void)paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error
+{
+    DLog(@"failed:%@", error);
+}
+
 #pragma mark Purchase
 - (void)purchase:(NSString*)productIdentifier
 {
-    
-}
+    if( ! [SKPaymentQueue canMakePayments] )
+    {
+        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Purchases Disabled" 
+                                                         message:@"In App Purchase is Disabled. Please check Settings -> General -> Restrictions." 
+                                                        delegate:self 
+                                               cancelButtonTitle:@"Understood." 
+                                               otherButtonTitles:nil] autorelease];
+        [alert show];
 
-- (void)purchaseStoreProduct:(ASTStoreProduct*)storeProduct
-{
+        return;
+    }
+        
     
 }
 
@@ -330,6 +439,9 @@
     delegate_ = nil;
     networkTimeoutDuration_ = kASTStoreControllerDefaultNetworkTimeout;
     retryStoreConnectionInterval_ = kASTStoreControllerDefaultretryStoreConnectionInterval;
+    
+    // Register as an observer right away
+    [self.skPaymentQueue addTransactionObserver:self];
     
     return self;
 }
