@@ -36,11 +36,25 @@ typedef enum
     ASTStoreProductIdentifierTypeAutoRenewable
 } ASTStoreProductIdentifierType;
 
+typedef enum
+{
+    ASTStoreProductAutoRenewableTypeInvalid,
+    ASTStoreProductAutoRenewableType7Days,
+    ASTStoreProductAutoRenewableType1Month,
+    ASTStoreProductAutoRenewableType2Months,
+    ASTStoreProductAutoRenewableType3Months,
+    ASTStoreProductAutoRenewableType6Months,
+    ASTStoreProductAutoRenewableType1Year,
+    ASTStoreProductAutoRenewableTypeMaximum
+} ASTStoreProductAutoRenewableType;
+
 @interface ASTStoreProduct : NSObject 
 {
     NSString *productIdentifier_;
     ASTStoreProductIdentifierType type_;
-
+    NSString *familyIdentifier_;
+    NSUInteger familyQuanity_;
+    
     NSString *title_;
     NSString *description_;
     
@@ -50,11 +64,41 @@ typedef enum
     BOOL isValid_;
 }
 
-+ (id)storeProductWithIdentifier:(NSString*)anIdentifier andType:(ASTStoreProductIdentifierType)aType;
-- (id)initWithProductIdentifier:(NSString*)anIdentifier andType:(ASTStoreProductIdentifierType)aType;
+
++ (id)nonConsumableStoreProductWithIdentifier:(NSString*)aProductIdentifier;
+
++ (id)consumableStoreProductWithIdentifier:(NSString*)aProductIdentifier 
+                          familyIdentifier:(NSString*)aFamilyIdentifier 
+                            familyQuantity:(NSUInteger)aFamilyQuantity;
+
++ (id)autoRenewableStoreProductWithIdentifier:(NSString*)aProductIdentifier 
+                             familyIdentifier:(NSString*)aFamilyIdentifier 
+                               familyQuantity:(ASTStoreProductAutoRenewableType)aFamilyQuantity;
+
++ (id)storeProductWithProductIdentifier:(NSString*)aProductIdentifier 
+                                   type:(ASTStoreProductIdentifierType)aType
+                       familyIdentifier:(NSString*)aFamilyIdentifier
+                         familyQuantity:(NSUInteger)aFamilyQuantity;
+
+- (id)initNonConsumableStoreProductWithIdentifier:(NSString*)aProductIdentifier;
+
+- (id)initConsumableStoreProductWithIdentifier:(NSString*)aProductIdentifier 
+                          familyIdentifier:(NSString*)aFamilyIdentifier 
+                            familyQuantity:(NSUInteger)aFamilyQuantity;
+
+- (id)initAutoRenewableStoreProductWithIdentifier:(NSString*)aProductIdentifier 
+                             familyIdentifier:(NSString*)aFamilyIdentifier 
+                               familyQuantity:(ASTStoreProductAutoRenewableType)aFamilyQuantity;
+
 
 @property (readonly) NSString *productIdentifier;
 @property (readonly) ASTStoreProductIdentifierType type;
+
+// Used to track consumables/AutoRenewables; Required for Consumable and AutoRenewable types
+@property (retain) NSString *familyIdentifier;
+
+// Used to manage increments and decrements of item quantities for consumables and autorenewables
+@property  NSUInteger familyQuanity;
 
 // Title to send back from localizedTitle if title has not been obtained from app store
 @property (retain) NSString *title;

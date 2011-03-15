@@ -3,54 +3,66 @@
 <plist version="1.0">
 <array>
 	<dict>
+		<key>description</key>
+		<string>Basic Nonconsumable Purchase</string>
 		<key>productIdentifier</key>
 		<string>com.anystonetech.storecontroller.basicsample</string>
 		<key>title</key>
 		<string>Basic</string>
-		<key>description</key>
-		<string>Basic Nonconsumable Purchase</string>
 		<key>type</key>
 		<string>Nonconsumable</string>
 	</dict>
 	<dict>
-		<key>productIdentifier</key>
-		<string>com.anystonetech.storecontroller.versionsample</string>
+		<key>description</key>
+		<string>Consumable with a minimum version 1 smurfberry</string>
 		<key>minimumVersion</key>
 		<string>1.2</string>
-		<key>description</key>
-		<string>Consumable with a minimum version</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.storecontroller.versionsample</string>
 		<key>title</key>
 		<string>Version Sample</string>
 		<key>type</key>
 		<string>Consumable</string>
+		<key>familyIdentifier</key>
+		<string>smurfberry</string>
+		<key>familyQuantity</key>
+		<string>1</string>
 	</dict>
 	<dict>
+		<key>description</key>
+		<string>Hidden Autorenewable</string>
 		<key>productIdentifier</key>
 		<string>com.anystonetech.storecontroller.hiddensample</string>
 		<key>shouldDisplay</key>
 		<false/>
 		<key>title</key>
 		<string>Hidden</string>
-		<key>description</key>
-		<string>Hidden Autorenewable</string>
 		<key>type</key>
 		<string>AutoRenewable</string>
+		<key>familyIdentifier</key>
+		<string>renewTime</string>
+		<key>familyQuantity</key>
+		<string>7Days</string>
 	</dict>
 	<dict>
-		<key>title</key>
-		<string>Full</string>
 		<key>description</key>
-		<string>Sample consumable with everything populated</string>
+		<string>Sample consumable with everything populated 10 smurfberries</string>
 		<key>extraInformation</key>
 		<string>Limited time sale : 50% off!</string>
-		<key>productIdentifier</key>
-		<string>com.anystonetech.storecontroller.fullsample</string>
 		<key>minimumVersion</key>
 		<string>1.0</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.storecontroller.fullsample</string>
 		<key>shouldDisplay</key>
 		<true/>
+		<key>title</key>
+		<string>Full</string>
 		<key>type</key>
 		<string>Consumable</string>
+		<key>familyIdentifier</key>
+		<string>smurfberry</string>
+		<key>familyQuantity</key>
+		<string>10</string>
 	</dict>
 </array>
 </plist>

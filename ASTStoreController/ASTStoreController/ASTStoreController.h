@@ -45,7 +45,6 @@ typedef enum
 @interface ASTStoreController : NSObject 
 {
     ASTStoreControllerProductDataState productDataState_;
-    NSTimeInterval networkTimeoutDuration_;
     NSTimeInterval retryStoreConnectionInterval_;
     
     id <ASTStoreControllerDelegate> delegate_;
@@ -58,14 +57,22 @@ typedef enum
 // Methods to set the list of products to manage
 //
 // Plist format (see sampleProductIdentifiers.plist)
-// Key: StoreProducts NSArray
+// NSArray of
 //    NSDictionary
 //       Mandatory Key: productIdentifier NSString
 //       Mandatory Key: type NSString (@"Consumable", @"Nonconsumable", @"AutoRenewable")
-//       Optional Key: familyIdentifier NSString: used to track consumables/AutoRenewables *Mandatory for Consumable and AutoRenewable types
-//       Optional Key: familyQuantity NSString:
-//                     Mandatory For consumable - should be an NSUInteger formatted as a string
-//                     Mandatory For AutoRenewable - should be one of: ... offered sub lengths as string...
+//       Mandatory Key for Consumable and AutoRenewable: 
+//          familyIdentifier NSString: used to track consumables/AutoRenewables
+//       Mandatory Key for Consumable and AutoRenewable: 
+//          familyQuantity NSString:
+//                     Mandatory For Consumable - should be an NSUInteger formatted as a string; must be > 0
+//                     Mandatory For AutoRenewable - should be one of:
+//                          @"7Days",
+//                          @"1Month",
+//                          @"2Months",
+//                          @"3Months",
+//                          @"6Months",
+//                          @"1Year"
 //
 //       Optional Key: title NSString - title to use until app store title can be retrieved
 //       Optional Key: description NSString - description to use until store description can be retrieved
@@ -82,15 +89,15 @@ typedef enum
 - (BOOL)setProductIdentifiersFromPath:(NSString*)plistPath;
 
 // For quick setup if plist is overkill ie: just have simple identifier(s) to manage
-- (void)setNonConsumableProductIdentifier:(NSString*)productIdentifier;
+- (BOOL)setNonConsumableProductIdentifier:(NSString*)productIdentifier;
 
-- (void)setConsumableProductIdentifier:(NSString*)productIdentifier 
+- (BOOL)setConsumableProductIdentifier:(NSString*)productIdentifier 
                   familyIdentifier:(NSString*)familyIdentifier 
                     familyQuantity:(NSUInteger)familyQuantity;
 
-- (void)setAutoRenewableProductIdentifier:(NSString*)productIdentifier 
+- (BOOL)setAutoRenewableProductIdentifier:(NSString*)productIdentifier 
                   familyIdentifier:(NSString*)familyIdentifier 
-                    familyQuantity:(NSString*)familyQuantity;
+                    familyQuantity:(ASTStoreProductAutoRenewableType)familyQuantity;
 
 
 // Remove an existing product from the list
@@ -116,11 +123,12 @@ typedef enum
 - (void)purchase:(NSString*)productIdentifier;
 - (void)restorePreviousPurchases;
 
+
+
 #pragma mark Delegate
 @property (assign) id <ASTStoreControllerDelegate> delegate;
 
-#pragma mark Timeout for network functions
-@property  NSTimeInterval networkTimeoutDuration;
+#pragma mark Retry timeouts
 @property  NSTimeInterval retryStoreConnectionInterval;
 
 @end
@@ -128,16 +136,28 @@ typedef enum
 
 @protocol ASTStoreControllerDelegate <NSObject>
 @optional
+
+#pragma mark Store State Delegate Methods
 - (void)astStoreControllerProductDataStateChanged:(ASTStoreControllerProductDataState)state;
 
+#pragma mark Purchase Related Delegate Methods
 // Should implement this, otherwise no purchase notifications for you
 - (void)astStoreControllerProductIdentifierPurchased:(NSString*)productIdentifier;
 
-// Invoked for actual purchase failures - may want to display message
+// Invoked for actual purchase failures - may want to display a message to the user
 - (void)astStoreControllerProductIdentifierFailedPurchase:(NSString*)productIdentifier withError:(NSError*)error;
 
 // Invoked for cancellations - no message should be shown to user per programming guide
 - (void)astStoreControllerProductIdentifierCancelledPurchase:(NSString*)productIdentifier;
+
+#pragma mark Restore Transaction Delegate Methods
+// Restore will invoke astStoreControllerProductIdentifierPurchased: for any restored purchases
+
+// Additionally will invoke this once the restore queue has been processed
+- (void)astStoreControllerRestoreComplete;
+
+// Failures during the restore
+- (void)astStoreControllerRestoreFailedWithError:(NSError*)error;
 
 @end
 

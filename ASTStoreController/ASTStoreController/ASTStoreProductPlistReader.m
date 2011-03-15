@@ -54,6 +54,53 @@
     return ( ASTStoreProductIdentifierTypeInvalid );
 }
 
++ (NSUInteger)stringToQuantity:(NSString*)quantityAsString fromType:(ASTStoreProductIdentifierType)aType
+{
+    DLog(@"string:%@ type:%d", quantityAsString, aType);
+    
+    if( aType == ASTStoreProductIdentifierTypeConsumable )
+    {
+        return ( [quantityAsString integerValue] );
+    }
+    
+    if( aType == ASTStoreProductIdentifierTypeAutoRenewable )
+    {
+        NSString *lowerAutoRenewable = [quantityAsString lowercaseString];
+        
+        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductPlistAutoRenewQuantity7Days lowercaseString]] )
+        {
+            return ( ASTStoreProductAutoRenewableType7Days );
+        }
+        
+        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductPlistAutoRenewQuantity1Month lowercaseString]] )
+        {
+            return ( ASTStoreProductAutoRenewableType1Month );
+        }
+
+        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductPlistAutoRenewQuantity2Months lowercaseString]] )
+        {
+            return ( ASTStoreProductAutoRenewableType2Months );
+        }
+
+        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductPlistAutoRenewQuantity3Months lowercaseString]] )
+        {
+            return ( ASTStoreProductAutoRenewableType2Months );
+        }
+        
+        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductPlistAutoRenewQuantity6Months lowercaseString]] )
+        {
+            return ( ASTStoreProductAutoRenewableType2Months );
+        }
+
+        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductPlistAutoRenewQuantity1Year lowercaseString]] )
+        {
+            return ( ASTStoreProductAutoRenewableType1Year );
+        }
+    }
+    
+    return ( 0 );
+}
+
 + (NSArray*)readStoreProductPlistFromFile:(NSString*)file
 {
     NSArray *plistArray = [NSArray arrayWithContentsOfFile:file];
@@ -70,6 +117,8 @@
     {
         NSString *identifier = [dict objectForKey:kASTStoreProductPlistIdentifierKey];
         NSString *typeAsString = [dict objectForKey:kASTStoreProductPlistTypeKey];
+        NSString *familyIdentifier = nil;
+        NSUInteger familyQuantity = 0;
         
         if(( nil == identifier ) || ( nil == typeAsString ))
         {
@@ -85,6 +134,27 @@
             DLog(@"Failed to read a valid type from plist file for identifier: %@", identifier);
             continue;
         }
+
+        if(( ASTStoreProductIdentifierTypeConsumable == type ) || 
+           ( ASTStoreProductIdentifierTypeAutoRenewable == type ))
+        {
+            familyIdentifier = [dict objectForKey:kASTStoreProductPlistTypeFamilyIdentifier];
+            NSString *familyQuantityAsString = [dict objectForKey:kASTStoreProductPlistTypeFamilyQuantity];
+            
+            familyQuantity = [ASTStoreProductPlistReader stringToQuantity:familyQuantityAsString fromType:type];
+        }
+
+        
+        ASTStoreProduct *aProduct = [ASTStoreProduct storeProductWithProductIdentifier:identifier 
+                                                                                  type:type
+                                                                      familyIdentifier:familyIdentifier 
+                                                                        familyQuantity:familyQuantity];
+        
+        if( nil == aProduct )
+        {
+            DLog(@"Failed to instantiate ASTStoreProduct from plist file for identifier:%@", identifier);
+            continue;
+        }
         
         NSString *title = [dict objectForKey:kASTStoreProductPlistTitleKey];
         NSString *description = [dict objectForKey:kASTStoreProductPlistDescriptionKey];
@@ -92,8 +162,7 @@
         NSString *extraInformation = [dict objectForKey:kASTStoreProductPlistExtraInformation];
         NSString *minimumVersion = [dict objectForKey:kASTStoreProductPlistMinimumVersionKey];
         NSNumber *boolAsNumber = [dict objectForKey:kASTStoreProductPlistShouldDisplayKey];
-        
-        ASTStoreProduct *aProduct = [ASTStoreProduct storeProductWithIdentifier:identifier andType:type];
+
         
         if( title )
         {

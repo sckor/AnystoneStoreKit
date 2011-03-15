@@ -49,7 +49,6 @@
 @synthesize storeProductDictionary = storeProductDictionary_;
 @synthesize productDataState = productDataState_;
 @synthesize delegate = delegate_;
-@synthesize networkTimeoutDuration = networkTimeoutDuration_;
 @synthesize skProductsRequest = skProductsRequest_;
 @synthesize retryStoreConnectionInterval = retryStoreConnectionInterval_;
 @synthesize skPaymentQueue;
@@ -89,10 +88,26 @@
     }
 }
 
+- (void)invokeDelegateStoreControllerRestoreComplete
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(astStoreControllerRestoreComplete)])
+    {
+        [self.delegate astStoreControllerRestoreComplete];
+    }
+}
+
+- (void)invokeDelegateStoreControllerRestoreFailedWithError:(NSError*)error
+{
+    if (self.delegate && [self.delegate respondsToSelector: @selector(astStoreControllerRestoreFailedWithError:)])
+    {
+        [self.delegate astStoreControllerRestoreFailedWithError:error];
+    }
+}
+
 #pragma mark Accessors
 - (SKPaymentQueue*)skPaymentQueue
 {
-    return( [SKPaymentQueue defaultQueue] );
+    return ( [SKPaymentQueue defaultQueue] );
 }
 
 - (NSMutableDictionary*)storeProductDictionary
@@ -150,7 +165,7 @@
         [self setProductIdentifierFromStoreProduct:aProduct];
     }
     
-    return( YES );
+    return ( YES );
 }
 
 - (BOOL)setProductIdentifiersFromBundlePlist:(NSString*)plistName
@@ -167,39 +182,61 @@
     
     BOOL result = [self setProductIdentifiersFromPath:plistPath];
     
-    return( result );
+    return ( result );
 }
 
-- (void)setProductIdentifier:(NSString*)productIdentifier forType:(ASTStoreProductIdentifierType)type;
+
+- (BOOL)setNonConsumableProductIdentifier:(NSString*)productIdentifier
 {
-    ASTStoreProduct *aProduct = [ASTStoreProduct storeProductWithIdentifier:productIdentifier andType:type];
+    ASTStoreProduct *aProduct = [ASTStoreProduct nonConsumableStoreProductWithIdentifier:productIdentifier];
     
     if( nil == aProduct )
     {
-        DLog(@"Failed to create product for id:%@ type:%d", productIdentifier, type);
-        return;
+        DLog(@"Failed to create product for id:%@", productIdentifier);
+        return ( NO );
     }
     
     [self setProductIdentifierFromStoreProduct:aProduct];
-}
-
-- (void)setNonConsumableProductIdentifier:(NSString*)productIdentifier
-{
     
+    return ( YES );
 }
 
-- (void)setConsumableProductIdentifier:(NSString*)productIdentifier 
+- (BOOL)setConsumableProductIdentifier:(NSString*)productIdentifier 
                       familyIdentifier:(NSString*)familyIdentifier 
                         familyQuantity:(NSUInteger)familyQuantity
 {
+    ASTStoreProduct *aProduct = [ASTStoreProduct consumableStoreProductWithIdentifier:productIdentifier 
+                                                                     familyIdentifier:familyIdentifier 
+                                                                       familyQuantity:familyQuantity];
+    if( nil == aProduct )
+    {
+        DLog(@"Failed to create product for id:%@", productIdentifier);
+        return ( NO );
+    }
     
+    [self setProductIdentifierFromStoreProduct:aProduct];
+    
+    return ( YES );
+
 }
 
-- (void)setAutoRenewableProductIdentifier:(NSString*)productIdentifier 
+- (BOOL)setAutoRenewableProductIdentifier:(NSString*)productIdentifier 
                          familyIdentifier:(NSString*)familyIdentifier 
-                           familyQuantity:(NSString*)familyQuantity
+                           familyQuantity:(ASTStoreProductAutoRenewableType)familyQuantity
 {
+    ASTStoreProduct *aProduct = [ASTStoreProduct autoRenewableStoreProductWithIdentifier:productIdentifier 
+                                                                        familyIdentifier:familyIdentifier 
+                                                                          familyQuantity:familyQuantity];
     
+    if( nil == aProduct )
+    {
+        DLog(@"Failed to create product for id:%@", productIdentifier);
+        return ( NO );
+    }
+    
+    [self setProductIdentifierFromStoreProduct:aProduct];
+    
+    return ( YES );
 }
 
 
@@ -380,6 +417,7 @@
 - (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue
 {
     DLog(@"restore complete");
+    [self invokeDelegateStoreControllerRestoreComplete];
 }
 
 - (void)paymentQueue:(SKPaymentQueue *)queue removedTransactions:(NSArray *)transactions
@@ -390,6 +428,7 @@
 - (void)paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error
 {
     DLog(@"failed:%@", error);
+    [self invokeDelegateStoreControllerRestoreFailedWithError:error];
 }
 
 #pragma mark Purchase
@@ -400,7 +439,7 @@
         UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Purchases Disabled" 
                                                          message:@"In App Purchase is Disabled. Please check Settings -> General -> Restrictions." 
                                                         delegate:self 
-                                               cancelButtonTitle:@"Understood." 
+                                               cancelButtonTitle:@"OK" 
                                                otherButtonTitles:nil] autorelease];
         [alert show];
 
@@ -432,12 +471,11 @@
     
     if( nil == self) 
     {
-        return( nil );
+        return ( nil );
     }
 
     productDataState_ = ASTStoreControllerProductDataStateUnknown;
     delegate_ = nil;
-    networkTimeoutDuration_ = kASTStoreControllerDefaultNetworkTimeout;
     retryStoreConnectionInterval_ = kASTStoreControllerDefaultretryStoreConnectionInterval;
     
     // Register as an observer right away

@@ -40,6 +40,17 @@
 #define kASTStoreProductPlistTypeNonconsumableKey @"Nonconsumable"
 #define kASTStoreProductPlistTypeAutoRenewable @"AutoRenewable"
 
+#define kASTStoreProductPlistTypeFamilyIdentifier @"familyIdentifier"
+#define kASTStoreProductPlistTypeFamilyQuantity @"familyQuantity"
+
+#define kASTStoreProductPlistAutoRenewQuantity7Days @"7Days"
+#define kASTStoreProductPlistAutoRenewQuantity1Month @"1Month"
+#define kASTStoreProductPlistAutoRenewQuantity2Months @"2Months"
+#define kASTStoreProductPlistAutoRenewQuantity3Months @"3Months"
+#define kASTStoreProductPlistAutoRenewQuantity6Months @"7Months"
+#define kASTStoreProductPlistAutoRenewQuantity1Year @"1Year"
+
+
 @interface ASTStoreProductPlistReader : NSObject
 
 + (NSArray*)readStoreProductPlistFromFile:(NSString*)file;
