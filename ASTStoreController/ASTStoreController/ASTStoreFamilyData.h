@@ -1,8 +1,8 @@
 //
-//  ASTStoreProduct+Private.h
+//  ASTStoreFamilyData.h
 //  ASTStoreController
 //
-//  Created by Sean Kormilo on 11-03-08.
+//  Created by Sean Kormilo on 11-03-15.
 //  http://www.anystonetech.com
 
 //  Copyright (c) 2011 Anystone Technologies, Inc.
@@ -25,17 +25,19 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
+#import <Foundation/Foundation.h>
 
-#import "ASTStoreProduct.h"
-#import "ASTStoreKit.h"
-#import "ASTStoreProductData.h"
 
-@interface ASTStoreProduct ()
+@interface ASTStoreFamilyData : NSObject <NSCoding, NSCopying>
+{
+    NSString *familyIdentifier_;
+    NSUInteger availableQuantity_;
+}
 
-@property (retain) SKProduct *skProduct;
-@property  BOOL isValid;
-@property (retain) ASTStoreProductData *productData;
++ (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier;
+- (id)initWithFamilyIdentifier:(NSString*)aFamilyIdentifier;
 
-- (void)updateProductFromProduct:(ASTStoreProduct*)aProduct;
+@property (nonatomic) NSUInteger availableQuantity;
+@property (readonly,retain) NSString *familyIdentifier;
 
 @end

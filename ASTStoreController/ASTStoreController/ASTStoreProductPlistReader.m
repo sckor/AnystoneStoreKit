@@ -143,7 +143,13 @@
             
             familyQuantity = [ASTStoreProductPlistReader stringToQuantity:familyQuantityAsString fromType:type];
         }
-
+        else
+        {
+            // For Nonconsumable, set the familyIdentifier to the productId
+            // and set the quantity to 1
+            familyIdentifier = identifier;
+            familyQuantity = 1;
+        }
         
         ASTStoreProduct *aProduct = [ASTStoreProduct storeProductWithProductIdentifier:identifier 
                                                                                   type:type

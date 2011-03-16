@@ -1,8 +1,8 @@
 //
-//  ASTStoreProduct+Private.h
+//  ASTStoreProductTypes.h
 //  ASTStoreController
 //
-//  Created by Sean Kormilo on 11-03-08.
+//  Created by Sean Kormilo on 11-03-15.
 //  http://www.anystonetech.com
 
 //  Copyright (c) 2011 Anystone Technologies, Inc.
@@ -25,17 +25,23 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
+typedef enum
+{
+    ASTStoreProductIdentifierTypeInvalid,
+    ASTStoreProductIdentifierTypeConsumable,
+    ASTStoreProductIdentifierTypeNonconsumable,
+    ASTStoreProductIdentifierTypeAutoRenewable
+} ASTStoreProductIdentifierType;
 
-#import "ASTStoreProduct.h"
-#import "ASTStoreKit.h"
-#import "ASTStoreProductData.h"
+typedef enum
+{
+    ASTStoreProductAutoRenewableTypeInvalid,
+    ASTStoreProductAutoRenewableType7Days,
+    ASTStoreProductAutoRenewableType1Month,
+    ASTStoreProductAutoRenewableType2Months,
+    ASTStoreProductAutoRenewableType3Months,
+    ASTStoreProductAutoRenewableType6Months,
+    ASTStoreProductAutoRenewableType1Year,
+    ASTStoreProductAutoRenewableTypeMaximum
+} ASTStoreProductAutoRenewableType;
 
-@interface ASTStoreProduct ()
-
-@property (retain) SKProduct *skProduct;
-@property  BOOL isValid;
-@property (retain) ASTStoreProductData *productData;
-
-- (void)updateProductFromProduct:(ASTStoreProduct*)aProduct;
-
-@end

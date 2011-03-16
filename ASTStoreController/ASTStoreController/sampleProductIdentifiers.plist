@@ -24,7 +24,7 @@
 		<key>type</key>
 		<string>Consumable</string>
 		<key>familyIdentifier</key>
-		<string>smurfberry</string>
+		<string>com.anystonetech.storecontroller.smurfberry</string>
 		<key>familyQuantity</key>
 		<string>1</string>
 	</dict>
@@ -60,7 +60,7 @@
 		<key>type</key>
 		<string>Consumable</string>
 		<key>familyIdentifier</key>
-		<string>smurfberry</string>
+		<string>com.anystonetech.storecontroller.smurfberry</string>
 		<key>familyQuantity</key>
 		<string>10</string>
 	</dict>

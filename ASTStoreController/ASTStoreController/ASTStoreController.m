@@ -29,6 +29,7 @@
 #import "ASTStoreController.h"
 #import "ASTStoreProduct+Private.h"
 #import "ASTStoreProductPlistReader.h"
+#import "ASTStoreFamilyData.h"
 
 #define kASTStoreControllerDefaultNetworkTimeout 60
 #define kASTStoreControllerDefaultretryStoreConnectionInterval 20
@@ -39,6 +40,7 @@
 @property (nonatomic) ASTStoreControllerProductDataState productDataState;
 @property (retain) SKProductsRequest *skProductsRequest;
 @property (readonly) SKPaymentQueue *skPaymentQueue;
+@property (nonatomic) ASTStoreControllerPurchaseState purchaseState;
 
 @end
 
@@ -52,6 +54,7 @@
 @synthesize skProductsRequest = skProductsRequest_;
 @synthesize retryStoreConnectionInterval = retryStoreConnectionInterval_;
 @synthesize skPaymentQueue;
+@synthesize purchaseState = purchaseState_;
 
 #pragma mark Delegate Selector Stubs
 
@@ -62,6 +65,15 @@
         [self.delegate astStoreControllerProductDataStateChanged:newState];
     }
 }
+
+- (void)invokeDelegateStoreControllerPurchaseStateChanged:(ASTStoreControllerPurchaseState)newState
+{
+    if (self.delegate && [self.delegate respondsToSelector: @selector(astStoreControllerPurchaseStateChanged:)])
+    {
+        [self.delegate astStoreControllerPurchaseStateChanged:newState];
+    }
+}
+
 
 - (void)invokeDelegateStoreControllerProductIdentifierPurchased:(NSString*)productIdentifier
 {
@@ -126,9 +138,68 @@
 {
     if( aProductDataState != productDataState_ )
     {
-        productDataState_ = aProductDataState;
+        @synchronized(self)
+        {
+            productDataState_ = aProductDataState;
+        }
+
         [self invokeDelegateStoreControllerProductDataStateChanged:aProductDataState];
     }
+}
+
+- (ASTStoreControllerProductDataState)productDataState
+{
+    ASTStoreControllerProductDataState state;
+    
+    @synchronized(self)
+    {
+        state = productDataState_;
+    }
+    
+    return state;
+    
+}
+- (void)setPurchaseState:(ASTStoreControllerPurchaseState)aPurchaseState
+{
+    if( aPurchaseState != purchaseState_ )
+    {
+        @synchronized(self) 
+        {   
+            purchaseState_ = aPurchaseState;
+        }
+        
+        [self invokeDelegateStoreControllerPurchaseStateChanged:aPurchaseState];
+    }
+}
+
+- (ASTStoreControllerPurchaseState)purchaseState
+{
+    ASTStoreControllerPurchaseState state;
+    
+    @synchronized(self)
+    {
+        state = purchaseState_;
+    }
+    
+    return state;
+}
+
+- (BOOL)isPurchaseStateTerminal
+{
+    switch (self.purchaseState) 
+    {
+        case ASTStoreControllerPurchaseStateNone:
+        case ASTStoreControllerPurchaseStateFailed:
+        case ASTStoreControllerPurchaseStateCancelled:
+        case ASTStoreControllerPurchaseStatePurchased:
+            return ( YES );
+            break;
+            
+        default:
+            break;
+    }
+    
+    return ( NO );
 }
 
 #pragma mark Product Setup
@@ -245,6 +316,10 @@
     [self.storeProductDictionary removeObjectForKey:productIdentifier];
 }
 
+- (void)resetProductIdentifier:(NSString*)productIdentifier
+{
+    DLog(@"TODO");
+}
 
 #pragma mark Query lists of products being managed
 
@@ -354,15 +429,70 @@
 #pragma mark Transaction Handling
 - (void)completeTransaction:(SKPaymentTransaction *)transaction 
 { 
-    DLog(@"Complete: %@", transaction.payment.productIdentifier);
+    NSString *productIdentifier = nil;
     
-    // TODO : set product as purchased, quantities etc, allow for querying...
-    // [self recordTransaction: transaction];
+
+    if( transaction.transactionState == SKPaymentTransactionStateRestored )
+    {
+        productIdentifier = transaction.originalTransaction.payment.productIdentifier;
+    }
+    else
+    {
+        productIdentifier = transaction.payment.productIdentifier;
+    }
     
-    [self invokeDelegateStoreControllerProductIdentifierPurchased:transaction.payment.productIdentifier];
+    DLog(@"Complete: %@ receipt:%@", productIdentifier, transaction.transactionReceipt);
+    
+    // Attempt to get the product object for this - if that fails
+    // Then attempt to the product data object for transaction - 
+    ASTStoreProductData *productData = nil;    
+    ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
+
+    if( nil != theProduct )
+    {
+        productData = theProduct.productData;
+    }
+    else
+    {
+        productData = [ASTStoreProductData storeProductDataFromProductIdentifier:productIdentifier];
+    }
+    
+    if( nil == productData )
+    {
+        // then leave in the queue and service later? What triggers this? Addition 
+        // of new products could check the queue? Hmm.
+        DLog(@"Failed to obtain product data for:%@", productIdentifier);
+        self.purchaseState = ASTStoreControllerPurchaseStateFailed;
+        [self.skPaymentQueue finishTransaction:transaction];
+        return;
+    }
+    
+    // TODO: Should check with server somewhere in here for receipt verification if configured
+    self.purchaseState = ASTStoreControllerPurchaseStateVerifyingReceipt;
+
+    if( productData.type == ASTStoreProductIdentifierTypeConsumable )
+    {
+        // Increment the available quantity for the family
+        NSUInteger quantity = productData.availableQuantity;
+        quantity += productData.familyQuanity;
         
+        productData.availableQuantity = quantity;
+    }
+    else if ( productData.type == ASTStoreProductIdentifierTypeNonconsumable )
+    {
+        productData.availableQuantity = 1;
+    }
+    else
+    {
+        DLog(@"Unsupported product type: %d", productData.type);
+    }
+        
+    [self invokeDelegateStoreControllerProductIdentifierPurchased:productIdentifier];
+    self.purchaseState = ASTStoreControllerPurchaseStatePurchased;
+
     // Remove the transaction from the payment queue: what if things need to be downloaded etc... would 
-    // like that to be async relative to this...
+    // like that to be async relative to this... though restoring could always run that behaviour again
+    
     [self.skPaymentQueue finishTransaction:transaction];
 }
 
@@ -372,10 +502,12 @@
     {
         [self invokeDelegateStoreControllerProductIdentifierFailedPurchase:transaction.payment.productIdentifier
                                                                  withError:transaction.error];
+        self.purchaseState = ASTStoreControllerPurchaseStateFailed;
     }
     else
     {
         [self invokeDelegateStoreControllerProductIdentifierCancelledPurchase:transaction.payment.productIdentifier];
+        self.purchaseState = ASTStoreControllerPurchaseStateCancelled;
     }
     
     [self.skPaymentQueue finishTransaction:transaction];
@@ -417,7 +549,9 @@
 - (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue
 {
     DLog(@"restore complete");
+
     [self invokeDelegateStoreControllerRestoreComplete];
+    self.purchaseState = ASTStoreControllerPurchaseStateNone;
 }
 
 - (void)paymentQueue:(SKPaymentQueue *)queue removedTransactions:(NSArray *)transactions
@@ -429,10 +563,11 @@
 {
     DLog(@"failed:%@", error);
     [self invokeDelegateStoreControllerRestoreFailedWithError:error];
+    self.purchaseState = ASTStoreControllerPurchaseStateFailed;
 }
 
 #pragma mark Purchase
-- (void)purchase:(NSString*)productIdentifier
+- (void)purchaseProduct:(NSString*)productIdentifier
 {
     if( ! [SKPaymentQueue canMakePayments] )
     {
@@ -445,13 +580,122 @@
 
         return;
     }
-        
     
+    if( NO == [self isPurchaseStateTerminal] )
+    {
+        // Not in a terminal purchase state - reject request
+        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Purchase In Progress" 
+                                                         message:@"Another purchase is in progress. Please wait for it to complete and try again." 
+                                                        delegate:self 
+                                               cancelButtonTitle:@"OK" 
+                                               otherButtonTitles:nil] autorelease];
+        [alert show];
+        
+        return;
+    }
+    
+    self.purchaseState = ASTStoreControllerPurchaseStateProcessingPayment;
+    
+    // TODO : Set Purchase States.... and check to make sure purchase is allowed
+    SKPayment *payment = [SKPayment paymentWithProductIdentifier:productIdentifier]; 
+    [self.skPaymentQueue addPayment:payment];
 }
 
 - (void)restorePreviousPurchases
 {
+    if( NO == [self isPurchaseStateTerminal] )
+    {
+        // Not in a terminal purchase state - reject request
+        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Purchase In Progress" 
+                                                         message:@"Another purchase is in progress. Please wait for it to complete and try again." 
+                                                        delegate:self 
+                                               cancelButtonTitle:@"OK" 
+                                               otherButtonTitles:nil] autorelease];
+        [alert show];
+        
+        return;
+    }
     
+    self.purchaseState = ASTStoreControllerPurchaseStateProcessingPayment;
+
+    [self.skPaymentQueue restoreCompletedTransactions];
+}
+
+#pragma mark Querying Purchases
+
+- (BOOL)isProductPurchased:(NSString*)productIdentifier
+{
+    NSUInteger quantity = [self availableQuantityForProduct:productIdentifier];
+    
+    if( quantity > 0 )
+    {
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (NSUInteger)availableQuantityForProduct:(NSString*)productIdentifier
+{
+    ASTStoreProduct *aProduct = [self storeProductForIdentifier:productIdentifier];
+    
+    if( nil == aProduct )
+    {
+        DLog(@"Failed to get product data for:%@", productIdentifier);
+        return 0;
+    }
+    
+    return ( aProduct.productData.availableQuantity );
+}
+
+- (NSUInteger)availableQuantityForFamily:(NSString*)familyIdentifier
+{
+    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:familyIdentifier];
+    
+    if( nil == familyData )
+    {
+        DLog(@"Failed to get familyData for:%@", familyIdentifier);
+        return 0;
+    }
+    
+    return ( familyData.availableQuantity );
+}
+
+- (NSUInteger)consumeProduct:(NSString*)productIdentifier quantity:(NSUInteger)amountToConsume
+{
+    ASTStoreProduct *aProduct = [self storeProductForIdentifier:productIdentifier];
+
+    if( aProduct.productData.type != ASTStoreProductIdentifierTypeConsumable )
+    {
+        return 0;
+    }
+    
+    return ( [self consumeFamily:aProduct.productData.familyIdentifier quantity:amountToConsume] );
+}
+
+- (NSUInteger)consumeFamily:(NSString*)familyIdentifier quantity:(NSUInteger)amountToConsume
+{
+    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:familyIdentifier];
+    
+    if( nil == familyData )
+    {
+        DLog(@"Failed to get familyData for:%@", familyIdentifier);
+        return 0;
+    }
+
+    NSUInteger currentQuantity = familyData.availableQuantity;
+    NSUInteger consumeQuantity = amountToConsume;
+    
+    if( currentQuantity < consumeQuantity )
+    {
+        consumeQuantity = currentQuantity;
+    }
+    
+    // Update the amount of consumables in the family
+    currentQuantity -= consumeQuantity;
+    familyData.availableQuantity = currentQuantity;
+    
+    return consumeQuantity;    
 }
 
 #pragma mark Initialization and Cleanup
@@ -477,6 +721,7 @@
     productDataState_ = ASTStoreControllerProductDataStateUnknown;
     delegate_ = nil;
     retryStoreConnectionInterval_ = kASTStoreControllerDefaultretryStoreConnectionInterval;
+    purchaseState_ = ASTStoreControllerPurchaseStateNone;
     
     // Register as an observer right away
     [self.skPaymentQueue addTransactionObserver:self];

@@ -30,17 +30,14 @@
 
 @implementation ASTStoreProduct
 
-@synthesize productIdentifier = productIdentifier_;
 @synthesize minimumVersion = minimumVersion_;
-@synthesize type = type_;
 @synthesize shouldDisplay = shouldDisplay_;
 @synthesize extraInformation = extraInformation_;
 @synthesize skProduct = skProduct_;
 @synthesize isValid = isValid_;
 @synthesize title = title_;
 @synthesize description = description_;
-@synthesize familyIdentifier = familyIdentifier_;
-@synthesize familyQuanity = familyQuanity_;
+@synthesize productData = productData_;
 
 #pragma mark Class Methods
 
@@ -91,9 +88,13 @@
             break;
             
         case ASTStoreProductIdentifierTypeAutoRenewable:
+#ifdef AUTORENEW_SUPPORTED
             return ( [ASTStoreProduct autoRenewableStoreProductWithIdentifier:aProductIdentifier
                                                              familyIdentifier:aFamilyIdentifier
                                                                familyQuantity:aFamilyQuantity] );
+#else
+            DLog(@"Auto Renewable Not Supported Yet");
+#endif
         default:
             break;
     }
@@ -101,25 +102,6 @@
     return ( nil );
 }
 
-+ (BOOL)isStoreProductIdentifierTypeValid:(ASTStoreProductIdentifierType)aType
-{
-    if( aType == ASTStoreProductIdentifierTypeConsumable )
-    {
-        return YES;
-    }
-    
-    if( aType == ASTStoreProductIdentifierTypeNonconsumable )
-    {
-        return YES;
-    }
-    
-    if( aType == ASTStoreProductIdentifierTypeAutoRenewable )
-    {
-        return YES;
-    }
-    
-    return NO;
-}
 
 #pragma mark Private Methods
 
@@ -155,6 +137,32 @@
     {
         self.shouldDisplay = aProduct.shouldDisplay;
     }
+}
+
+#pragma mark ASTStoreProductData related methods
+- (NSString*)productIdentifier
+{
+    return ( self.productData.productIdentifier );
+}
+
+- (ASTStoreProductIdentifierType)type
+{
+    return ( self.productData.type );
+}
+
+- (NSString*)familyIdentifier
+{
+    return ( self.productData.familyIdentifier );
+}
+
+- (NSUInteger)familyQuanity
+{
+    return ( self.productData.familyQuanity );
+}
+
+- (void)setFamilyQuanity:(NSUInteger)familyQuanity
+{
+    self.productData.familyQuanity = familyQuanity;
 }
 
 #pragma mark SKProduct related properties
@@ -230,21 +238,24 @@
         return ( nil );
     }
     
-    if( ! [ASTStoreProduct isStoreProductIdentifierTypeValid:aType] )
+    if( ! [ASTStoreProductData isStoreProductIdentifierTypeValid:aType] )
     {
         [self release];
         return nil;
     }
     
-    type_ = aType;
+    productData_ = [ASTStoreProductData storeProductWithProductIdentifier:aProductIdentifier 
+                                                                     type:aType 
+                                                         familyIdentifier:aFamilyIdentifier 
+                                                           familyQuantity:aFamilyQuantity];
     
-    productIdentifier_ = aProductIdentifier;
-    [productIdentifier_ retain];
+    if( nil == productData_ )
+    {
+        [self release];
+        return nil;
+    }
     
-    familyIdentifier_ = aFamilyIdentifier;
-    [familyIdentifier_ retain];
-    
-    familyQuanity_= aFamilyQuantity;
+    [productData_ retain];
     
     minimumVersion_ = nil;
     title_ = nil;
@@ -261,27 +272,14 @@
 {
     return ( [self initWithProductIdentifier:aProductIdentifier 
                                        type:ASTStoreProductIdentifierTypeNonconsumable 
-                           familyIdentifier:nil 
-                             familyQuantity:0] );
+                           familyIdentifier:aProductIdentifier 
+                             familyQuantity:1] );
 }
 
 - (id)initConsumableStoreProductWithIdentifier:(NSString*)aProductIdentifier 
                               familyIdentifier:(NSString*)aFamilyIdentifier 
                                 familyQuantity:(NSUInteger)aFamilyQuantity
 {
-    if(( nil == aFamilyIdentifier ) || ( [aFamilyIdentifier isEqualToString:@""] ))
-    {
-        DLog(@"Family Identifier must be set for a Consumable product");
-        [self release];
-        return ( nil );
-    }
-    
-    if( 0 == aFamilyQuantity )
-    {
-        DLog(@"Family quantity must be > 0 for a Consumable product");
-        [self release];
-        return ( nil );
-    }
     
     return ( [self initWithProductIdentifier:aProductIdentifier 
                                        type:ASTStoreProductIdentifierTypeConsumable 
@@ -294,23 +292,6 @@
                                  familyIdentifier:(NSString*)aFamilyIdentifier 
                                    familyQuantity:(ASTStoreProductAutoRenewableType)aFamilyQuantity
 {
-    if(( nil == aFamilyIdentifier ) || ( [aFamilyIdentifier isEqualToString:@""] ))
-    {
-        DLog(@"Family Identifier must be set for an AutoRenewable product");
-
-        [self release];
-        return ( nil );
-    }
-    
-    if(( ASTStoreProductAutoRenewableTypeInvalid == aFamilyQuantity ) ||
-       ( aFamilyQuantity >= ASTStoreProductAutoRenewableTypeMaximum ))
-    {
-        DLog(@"Family quantity must be > 0 for an AutoRenewable product");
-
-        [self release];
-        return ( nil );
-    }
-    
     return ( [self initWithProductIdentifier:aProductIdentifier 
                                        type:ASTStoreProductIdentifierTypeConsumable 
                            familyIdentifier:aFamilyIdentifier
@@ -320,10 +301,7 @@
 
 
 - (void)dealloc 
-{
-    [productIdentifier_ release];
-    productIdentifier_ = nil;
-    
+{    
     [minimumVersion_ release];
     minimumVersion_ = nil;
     
@@ -339,8 +317,8 @@
     [description_ release];
     description_ = nil;
     
-    [familyIdentifier_ release];
-    familyIdentifier_ = nil;
+    [productData_ release];
+    productData_ = nil;
     
     [super dealloc];
 }

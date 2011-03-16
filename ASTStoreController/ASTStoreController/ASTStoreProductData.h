@@ -1,8 +1,8 @@
 //
-//  ASTStoreProduct.h
+//  ASTStoreProductData.h
 //  ASTStoreController
 //
-//  Created by Sean Kormilo on 11-03-08.
+//  Created by Sean Kormilo on 11-03-15.
 //  http://www.anystonetech.com
 
 //  Copyright (c) 2011 Anystone Technologies, Inc.
@@ -25,21 +25,29 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-
 #import <Foundation/Foundation.h>
 #import "ASTStoreProductTypes.h"
 
-@interface ASTStoreProduct : NSObject 
+@interface ASTStoreProductData : NSObject <NSCoding, NSCopying>
 {
-    NSString *title_;
-    NSString *description_;
-    
-    NSString *minimumVersion_;
-    NSString *extraInformation_;
-    BOOL shouldDisplay_;
-    BOOL isValid_;
+    // Values needed to handle transactions if they occur on startup prior
+    // to the StoreController being initialized with the products
+    NSString *productIdentifier_;
+    ASTStoreProductIdentifierType type_;
+    NSString *familyIdentifier_;
+    NSUInteger familyQuanity_;
 }
 
+// Used to get access to the store product data from the filesystem
+// if the infrastructure not yet initialized. ie: on startup if there
+// are outstanding transactions that need to be handled but the plist
+// file hasn't been read, or the StoreController class has not been initialized
+// with all of the product data yet, then it will still correctly be able to
+// manage the purchase
++ (ASTStoreProductData*)storeProductDataFromProductIdentifier:(NSString*)aProductIdentifier;
+
+
++ (BOOL)isStoreProductIdentifierTypeValid:(ASTStoreProductIdentifierType)aType;
 
 + (id)nonConsumableStoreProductWithIdentifier:(NSString*)aProductIdentifier;
 
@@ -59,57 +67,25 @@
 - (id)initNonConsumableStoreProductWithIdentifier:(NSString*)aProductIdentifier;
 
 - (id)initConsumableStoreProductWithIdentifier:(NSString*)aProductIdentifier 
-                          familyIdentifier:(NSString*)aFamilyIdentifier 
-                            familyQuantity:(NSUInteger)aFamilyQuantity;
+                              familyIdentifier:(NSString*)aFamilyIdentifier 
+                                familyQuantity:(NSUInteger)aFamilyQuantity;
 
 - (id)initAutoRenewableStoreProductWithIdentifier:(NSString*)aProductIdentifier 
-                             familyIdentifier:(NSString*)aFamilyIdentifier 
-                               familyQuantity:(ASTStoreProductAutoRenewableType)aFamilyQuantity;
+                                 familyIdentifier:(NSString*)aFamilyIdentifier 
+                                   familyQuantity:(ASTStoreProductAutoRenewableType)aFamilyQuantity;
 
-// Product identifier as specified in iTunes connect
-@property (readonly) NSString *productIdentifier;
 
-// The type of products, consumable, nonconsumable, autorenew
+@property (readonly,retain) NSString *productIdentifier;
 @property (readonly) ASTStoreProductIdentifierType type;
 
 // Used to track consumables/AutoRenewables; Required for Consumable and AutoRenewable types
-// Should match family type in iTunes connect for autorenewables
-// Otherwise used to ensure that the same consumables are pegged against the right value
-// assuming multiple product identifiers have differing quantities
-@property (readonly) NSString *familyIdentifier;
+@property (retain) NSString *familyIdentifier;
 
 // Used to manage increments and decrements of item quantities for consumables and autorenewables
-@property  NSUInteger familyQuanity;
+@property  (nonatomic) NSUInteger familyQuanity;
 
-// Title to send back from localizedTitle if title has not been obtained from app store
-@property (retain) NSString *title;
-
-// Description to return from localizedDescription if the description has not been obtained from
-// the app store
-@property (retain) NSString *description;
-
-// Can be used to prevent displaying of in app purchases in older versions of the app
-// which do not support it yet
-@property (retain) NSString *minimumVersion;
-
-// An extra string to display in the store, such as "On sale 50% off for a limited time!"
-@property (retain) NSString *extraInformation;
-
-// Hint to the store view controller whether this item should show up in the list
-@property BOOL shouldDisplay;
-
-// Defaults to YES; Will be set to NO if iTunes returns that the product
-// is invalid upon querying for it
-@property  (readonly) BOOL isValid;
-
-// The following properties are valid when the data has been retrieved from
-// iTunes by the ASTStoreController; If there is not data, the methods
-// will return nil. See SKProduct for more information
-@property(nonatomic, readonly) NSString *localizedPrice;
-@property(nonatomic, readonly) NSString *localizedDescription;
-@property(nonatomic, readonly) NSString *localizedTitle;
-@property(nonatomic, readonly) NSDecimalNumber *price;
-@property(nonatomic, readonly) NSLocale *priceLocale;
+// Use to set and get the number of units available in the family
+@property  (nonatomic) NSUInteger availableQuantity;
 
 
 @end
