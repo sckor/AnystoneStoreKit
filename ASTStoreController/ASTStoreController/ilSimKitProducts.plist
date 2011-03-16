@@ -2,28 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>TestItem</key>
+	<key>com.anystonetech.storecontroller.nonconsumable</key>
 	<dict>
 		<key>COMMENT: ProductType meanings</key>
 		<array>
-			<string>Non-Consumable</string>
-			<string>Consumable</string>
-			<string>Subscription</string>
-		</array>
-		<key>Description</key>
-		<string>A small test item used to test the simulated StoreKit.</string>
-		<key>ProductType</key>
-		<integer>0</integer>
-		<key>Tier</key>
-		<integer>2</integer>
-		<key>Title</key>
-		<string>Test Item</string>
-	</dict>
-	<key>com.anystonetech.storecontroller.basicsample</key>
-	<dict>
-		<key>COMMENT: ProductType meanings</key>
-		<array>
-			<string>Non-Consumable</string>
+			<string>Nonconsumable</string>
 			<string>Consumable</string>
 			<string>Subscription</string>
 		</array>
@@ -34,7 +17,41 @@
 		<key>Tier</key>
 		<integer>2</integer>
 		<key>Title</key>
-		<string>Basic - SK</string>
+		<string>Nonconsumable - SK</string>
+	</dict>
+	<key>com.anystonetech.storecontroller.versionsample</key>
+	<dict>
+		<key>COMMENT: ProductType meanings</key>
+		<array>
+			<string>Nonconsumable</string>
+			<string>Consumable</string>
+			<string>Subscription</string>
+		</array>
+		<key>Description</key>
+		<string>Consumable with a minimum version and 1 berry - SK</string>
+		<key>ProductType</key>
+		<integer>1</integer>
+		<key>Tier</key>
+		<integer>1</integer>
+		<key>Title</key>
+		<string>Consumable - 1 berry - SK</string>
+	</dict>
+	<key>com.anystonetech.storecontroller.fullsample</key>
+	<dict>
+		<key>COMMENT: ProductType meanings</key>
+		<array>
+			<string>Nonconsumable</string>
+			<string>Consumable</string>
+			<string>Subscription</string>
+		</array>
+		<key>Description</key>
+		<string>Consumable with 10 berries - SK</string>
+		<key>ProductType</key>
+		<integer>1</integer>
+		<key>Tier</key>
+		<integer>4</integer>
+		<key>Title</key>
+		<string>Consumable - 10 berry - SK</string>
 	</dict>
 </dict>
 </plist>

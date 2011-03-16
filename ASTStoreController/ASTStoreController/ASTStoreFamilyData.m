@@ -30,6 +30,7 @@
 #define k_FAMILY_IDENTIFIER 						@"familyIdentifier"
 #define k_PURCHASED_QUANTITY 						@"purchasedQuantity"
 
+
 @interface ASTStoreFamilyData()
 
 - (void)save;
@@ -46,6 +47,17 @@
 @synthesize familyDataPath = familyDataPath_;
 
 #pragma mark private class methods
++ (NSMutableDictionary*)familyDataDictionary
+{
+    static dispatch_once_t pred;
+    static NSMutableDictionary *familyDataDictionary_ = nil;
+    
+    dispatch_once(&pred, ^{ familyDataDictionary_ = [[NSMutableDictionary alloc] init]; });
+    
+    return ( familyDataDictionary_ );
+}
+
+
 + (NSString*)pathForFamilyDataWithIdentifier:(NSString*)aFamilyIdentifier
 {
     // Want to keep the family data in the following directory
@@ -81,7 +93,14 @@
 #pragma mark public class methods
 + (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier
 {
-    ASTStoreFamilyData *familyData = nil;
+    // Only want 1 instance of the family data across the process, so cache them in a dictionary
+    ASTStoreFamilyData *familyData = [[ASTStoreFamilyData familyDataDictionary] objectForKey:aFamilyIdentifier];
+    
+    if( nil != familyData )
+    {
+        return familyData;
+    }
+    
     
     NSString *fileName = [ASTStoreFamilyData pathForFamilyDataWithIdentifier:aFamilyIdentifier];
     
@@ -98,12 +117,17 @@
         // File does not exist - create a new instance
         familyData = [[[ASTStoreFamilyData alloc] initWithFamilyIdentifier:aFamilyIdentifier] autorelease];
         [familyData save];
+        
+        [[ASTStoreFamilyData familyDataDictionary] setObject:familyData forKey:aFamilyIdentifier];
+        
         return ( familyData );
     }
     
     familyData = [NSKeyedUnarchiver unarchiveObjectWithFile:fileName];    
     familyData.familyDataPath = fileName;
 
+    [[ASTStoreFamilyData familyDataDictionary] setObject:familyData forKey:aFamilyIdentifier];
+    
     return( familyData );
 }
 
@@ -122,11 +146,17 @@
     return ( familyDataPath_ );
 }
 
+
 - (void)setAvailableQuantity:(NSUInteger)newQuantity
 {
     availableQuantity_ = newQuantity;
     
     [self save];
+}
+
+- (NSMutableDictionary*)familyDataDictionary
+{
+    return [ASTStoreFamilyData familyDataDictionary];
 }
 
 #pragma mark Private Methods
@@ -185,6 +215,8 @@
     {
         return( nil );
     }
+    
+    
     
     familyIdentifier_ = aFamilyIdentifier;
     [familyIdentifier_ retain];

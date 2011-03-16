@@ -27,6 +27,7 @@
 
 
 #import "ASTStoreViewController.h"
+#import "ASTStoreDetailViewController.h"
 
 @interface ASTStoreViewController()
 
@@ -100,6 +101,8 @@
 {    
     NSString *identifier = [self.productIdentifiers objectAtIndex:indexPath.row];
     ASTStoreProduct *product = [self.storeController storeProductForIdentifier:identifier];
+    BOOL isPurchased = [self.storeController isProductPurchased:identifier];
+    
     
     //UIImageView *imageView = (UIImageView*) [cell viewWithTag:1];
     UILabel *title = (UILabel*) [cell viewWithTag:2];
@@ -108,9 +111,29 @@
     UILabel *price = (UILabel*) [cell viewWithTag:5];
     
     title.text = product.localizedTitle;
-    description.text = product.localizedDescription;
     extraInfo.text = product.extraInformation;
-    price.text = product.localizedPrice;
+    
+    if( product.type == ASTStoreProductIdentifierTypeConsumable )
+    {
+        NSUInteger onHand = [self.storeController availableQuantityForProduct:identifier];
+        
+        NSString *availableQuantityString = [NSString stringWithFormat:@"On Hand: %u",  onHand];
+        description.text = availableQuantityString;
+        price.text = product.localizedPrice;
+    }
+    else
+    {
+        if( isPurchased )
+        {
+            price.text = nil;
+            description.text = @"Purchased - Thank you!";
+        }
+        else
+        {
+            price.text = product.localizedPrice;
+            description.text = nil;
+        }
+    }
     
     //imageView.image = nil;
     
@@ -140,7 +163,16 @@
 {
     return ( 67.0 );
 }
-            
+       
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    ASTStoreDetailViewController *vc = [[[ASTStoreDetailViewController alloc] init] autorelease];
+    NSString *identifier = [self.productIdentifiers objectAtIndex:indexPath.row];
+
+    vc.productIdentifier = identifier;
+    [self.navigationController pushViewController:vc animated:YES];
+    
+}
 #pragma mark ASTStoreControllerDelegate Methods
 
 - (void)astStoreControllerProductDataStateChanged:(ASTStoreControllerProductDataState)state
@@ -157,6 +189,24 @@
     DLog(@"purchased:%@", storeProduct.productIdentifier);    
 }
 
+- (void)astStoreControllerPurchaseStateChanged:(ASTStoreControllerPurchaseState)state
+{
+    DLog(@"purchaseStateChanged:%d", state);
+}
+
+// Additionally will invoke this once the restore queue has been processed
+- (void)astStoreControllerRestoreComplete
+{
+    DLog(@"restore Complete");
+}
+
+// Failures during the restore
+- (void)astStoreControllerRestoreFailedWithError:(NSError*)error
+{
+    DLog(@"restore failed with error:%@", error);    
+}
+
+
 #pragma mark - View lifecycle
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -167,11 +217,24 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     
-    // Set the store delegate to the table view
     self.storeController.delegate = self;
     [self.storeController requestProductDataFromiTunes:NO];
     [self updateStoreStateDisplay];
+    [self.tableView reloadData];
+
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    self.storeController.delegate = nil;    
 }
 
 - (void)viewDidUnload
@@ -180,7 +243,6 @@
     
     self.tableContainerView = nil;
     self.tableView = nil;
-    self.storeController.delegate = nil;
     self.storeCell = nil;
     self.restorePreviousPurchaseButton = nil;
     self.connectingToStoreLabel = nil;

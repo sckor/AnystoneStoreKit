@@ -152,8 +152,7 @@ typedef enum
 #pragma mark Querying Purchases
 
 // Nonconsumable - YES means purchased, NO means not
-// Consumable - YES means that there is at least 1 quanity of the
-//              item available in the family associated with the product id
+// Consumable - Always returns NO, since it can be purchased again; check quantity
 // AutoRenewable - YES means subscription is valid for the family 
 //                 associated with the product id and NO means not.
 - (BOOL)isProductPurchased:(NSString*)productIdentifier;

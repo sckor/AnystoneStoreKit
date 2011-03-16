@@ -33,9 +33,9 @@
 @implementation ASTStoreAppDelegate
 
 
-@synthesize window=_window;
-
-@synthesize viewController=_viewController;
+@synthesize window=window_;
+@synthesize viewController=viewController_;
+@synthesize navigationController = navigationController_;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -51,7 +51,7 @@
         DLog(@"Could not read from sampleProductIdentifiers - oh no!");
     }
     
-    self.window.rootViewController = self.viewController;
+    self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -97,8 +97,9 @@
 
 - (void)dealloc
 {
-    [_window release];
-    [_viewController release];
+    [window_ release];
+    [navigationController_ release];
+    [viewController_ release];
     [super dealloc];
 }
 

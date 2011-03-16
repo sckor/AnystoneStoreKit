@@ -625,9 +625,10 @@
 
 - (BOOL)isProductPurchased:(NSString*)productIdentifier
 {
-    NSUInteger quantity = [self availableQuantityForProduct:productIdentifier];
-    
-    if( quantity > 0 )
+    NSUInteger quantity = [self availableQuantityForProduct:productIdentifier]; 
+    ASTStoreProduct *aProduct = [self storeProductForIdentifier:productIdentifier];
+
+    if(( quantity > 0 ) && ( aProduct.type != ASTStoreProductIdentifierTypeConsumable ))
     {
         return YES;
     }
