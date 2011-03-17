@@ -66,10 +66,24 @@
         purchaseTitle = @"Purchased - Thank You!";
                 self.purchaseButton.enabled = NO;
     }
+    else if( self.storeController.productDataState == ASTStoreControllerProductDataStateUpToDate )
+    {
+        // Check to see if item is valid...
+        if( self.storeProduct.isValid )
+        {
+            purchaseTitle = [NSString stringWithFormat:@"Only %@", [self.storeProduct localizedPrice]];
+            self.purchaseButton.enabled = YES;
+        }
+        else
+        {
+            purchaseTitle = @"Store Error";
+            self.purchaseButton.enabled = NO;
+        }
+    }
     else
     {
-        purchaseTitle = [NSString stringWithFormat:@"Only %@", [self.storeProduct localizedPrice]];
-        self.purchaseButton.enabled = YES;
+        purchaseTitle = @"Connecting to Store";
+        self.purchaseButton.enabled = NO;
     }
  
         

@@ -64,6 +64,11 @@
     [self.storeController restorePreviousPurchases];
 }
 
+- (IBAction)removeAllPurchaseDataButtonPressed:(id)sender 
+{
+    [self.storeController resetAllProducts];
+}
+
 - (void)updateStoreStateDisplay
 {
     switch ( self.storeController.productDataState ) 
@@ -227,6 +232,7 @@
 - (void)astStoreControllerRestoreFailedWithError:(NSError*)error
 {
     DLog(@"restore failed with error:%@", error);
+    self.connectingToStoreLabel.text = @"Restore Failed";
     
 }
 

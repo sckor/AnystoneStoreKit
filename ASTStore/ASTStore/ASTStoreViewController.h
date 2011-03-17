@@ -47,6 +47,7 @@
 }
 
 - (IBAction)restorePreviousPurchaseButtonPressed:(id)sender;
+- (IBAction)removeAllPurchaseDataButtonPressed:(id)sender;
 
 @property (retain) IBOutlet UIView *tableContainerView;
 @property (retain) IBOutlet UITableView *tableView;

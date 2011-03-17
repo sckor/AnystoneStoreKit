@@ -301,8 +301,20 @@
 }
 
 - (void)resetProductIdentifier:(NSString*)productIdentifier
+{    
+    ASTStoreProduct *aProduct = [self storeProductForIdentifier:productIdentifier];
+    [aProduct.productData removeData];
+    
+    // Invoke a noop state change to kick any view controllers to refresh data
+    [self invokeDelegateStoreControllerProductDataStateChanged:self.productDataState];
+}
+
+- (void)resetAllProducts
 {
-    DLog(@"TODO");
+    for( NSString *productIdentifier in [self productIdentifiers] )
+    {
+        [self resetProductIdentifier:productIdentifier];
+    }
 }
 
 #pragma mark Query lists of products being managed

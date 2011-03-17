@@ -59,14 +59,24 @@
 @synthesize familyData = familyData_;
 
 #pragma mark Private Class Methods
-+ (NSString*)pathForProductDataWithIdentifier:(NSString*)aProductIdentifier
++ (NSString*)directoryForProductDataWithIdentifier:(NSString*)aProductIdentifier
 {
-    // Want to keep the family data in the following directory
-    // <app>/Library/ASTStoreController/productData/aProductIdentifier.archive
+    // Want to keep the product data in the following directory
+    // <app>/Library/ASTStoreController/productData/aProductIdentifier
     NSString *libraryPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES)
                              objectAtIndex:0];
     
     NSString *directoryPath = [libraryPath stringByAppendingPathComponent:@"ASTStoreController/productData"];
+    
+    
+    return ([directoryPath stringByAppendingPathComponent:aProductIdentifier]);
+}
+
++ (NSString*)pathForProductDataWithIdentifier:(NSString*)aProductIdentifier
+{
+    // Want to keep the product data archive in the following file
+    // <app>/Library/ASTStoreController/productData/aProductIdentifier/ASTStoreProductData.archive
+    NSString *directoryPath = [ASTStoreProductData directoryForProductDataWithIdentifier:aProductIdentifier];
     
     NSFileManager *fm = [NSFileManager defaultManager];
     
@@ -85,7 +95,7 @@
         }
     }
     
-    NSString *pathForProductData = [directoryPath stringByAppendingPathComponent:aProductIdentifier];
+    NSString *pathForProductData = [directoryPath stringByAppendingPathComponent:@"ASTStoreProductData"];
     
     return ( [pathForProductData stringByAppendingPathExtension:@"archive"] );
 }
@@ -398,8 +408,45 @@
                               familyQuantity:aFamilyQuantity] );
 }
 
+- (void)removeData
+{
+    // Remove the family data
+    [familyData_ release];
+    familyData_ = nil;
+    
+    [ASTStoreFamilyData removeFamilyDataForIdentifier:self.familyIdentifier];
+    
+    NSString *dirName = [ASTStoreProductData directoryForProductDataWithIdentifier:self.productIdentifier];
+    
+    if( nil == dirName )
+    {
+        DLog(@"Failed to get dirName for product id:%@", self.productIdentifier);
+        return;
+    }
+    
+    NSFileManager *fm = [NSFileManager defaultManager];
+    
+    if( YES == [fm fileExistsAtPath:dirName isDirectory:nil] )
+    {
+        NSError *error;
+        BOOL result = [fm removeItemAtPath:dirName error:&error];
+        
+        if( result )
+        {
+            DLog(@"Removed family data from disk for id:%@", dirName);
+        }
+        else
+        {
+            DLog(@"Remove family data failed for id:%@ error:%@", dirName, error);
+        }
+    }
 
+    // Release and set to nil - if accessed again will force recreation of directory
+    // and file on save
+    [productDataPath_ release];
+    productDataPath_ = nil;
 
+}
 
 - (void)dealloc 
 {

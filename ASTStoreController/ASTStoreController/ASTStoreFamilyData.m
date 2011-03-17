@@ -131,6 +131,34 @@
     return( familyData );
 }
 
++ (void)removeFamilyDataForIdentifier:(NSString*)aFamilyIdentifier
+{
+    ASTStoreFamilyData *familyData = [[ASTStoreFamilyData familyDataDictionary] objectForKey:aFamilyIdentifier];
+    
+    if( nil != familyData )
+    {
+        [[ASTStoreFamilyData familyDataDictionary] removeObjectForKey:aFamilyIdentifier];
+        DLog(@"Removed family data from memory for id:%@", aFamilyIdentifier);
+    }
+    
+    NSString *fileName = [ASTStoreFamilyData pathForFamilyDataWithIdentifier:aFamilyIdentifier];
+    
+    NSFileManager *fm = [NSFileManager defaultManager];
+    
+    if( YES == [fm fileExistsAtPath:fileName isDirectory:nil] )
+    {
+        NSError *error;
+        BOOL result = [fm removeItemAtPath:fileName error:&error];
+        if( result )
+        {
+            DLog(@"Removed family data from disk for id:%@", aFamilyIdentifier);
+        }
+        else
+        {
+            DLog(@"Remove family data failed for id:%@ error:%@", aFamilyIdentifier, error);
+        }
+    }
+}
 
 #pragma mark Synthesizer Override
 - (NSString*)familyDataPath

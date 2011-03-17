@@ -122,6 +122,7 @@ typedef enum
 // including any data related to the family (ie: all berries associated
 // with the family associated with the product will be removed too).
 - (void)resetProductIdentifier:(NSString*)productIdentifier;
+- (void)resetAllProducts;
 
 #pragma mark Query lists of products being managed
 

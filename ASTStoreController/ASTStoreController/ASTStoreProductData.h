@@ -74,6 +74,7 @@
                                  familyIdentifier:(NSString*)aFamilyIdentifier 
                                    familyQuantity:(ASTStoreProductAutoRenewableType)aFamilyQuantity;
 
+- (void)removeData;
 
 @property (readonly,retain) NSString *productIdentifier;
 @property (readonly) ASTStoreProductIdentifierType type;

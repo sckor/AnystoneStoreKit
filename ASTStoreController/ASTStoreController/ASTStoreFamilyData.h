@@ -35,6 +35,7 @@
 }
 
 + (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier;
++ (void)removeFamilyDataForIdentifier:(NSString*)aFamilyIdentifier;
 - (id)initWithFamilyIdentifier:(NSString*)aFamilyIdentifier;
 
 @property (nonatomic) NSUInteger availableQuantity;
