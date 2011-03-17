@@ -19,6 +19,8 @@
     
     NSString *productIdentifier_;
     UILabel *onHand_;
+    UIActivityIndicatorView *connectingActivityIndicatorView_;
+    UILabel *statusLabel_;
 }
 
 - (IBAction)purchaseButtonPressed:(id)sender;
@@ -31,5 +33,7 @@
 @property (retain) IBOutlet UILabel *onHand;
 
 @property (retain) NSString *productIdentifier;
+@property (retain) IBOutlet UIActivityIndicatorView *connectingActivityIndicatorView;
+@property (retain) IBOutlet UILabel *statusLabel;
 
 @end

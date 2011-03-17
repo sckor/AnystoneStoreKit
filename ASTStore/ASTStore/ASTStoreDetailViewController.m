@@ -26,6 +26,8 @@
 @synthesize storeProduct = storeProduct_;
 @synthesize productIdentifier = productIdentifier_;
 @synthesize onHand = onHand_;
+@synthesize connectingActivityIndicatorView = connectingActivityIndicatorView_;
+@synthesize statusLabel = statusLabel_;
 
 - (ASTStoreController*)storeController
 {
@@ -57,6 +59,7 @@
     self.extraInfo.text = self.storeProduct.extraInformation;
     
     NSString *purchaseTitle = nil;
+    NSString *statusText = nil;
     
     if( [self.storeController isProductPurchased:self.productIdentifier] )
     {
@@ -69,9 +72,7 @@
         self.purchaseButton.enabled = YES;
     }
  
-    [self.purchaseButton setTitle:purchaseTitle forState:UIControlStateNormal];
-    [self.purchaseButton setTitle:purchaseTitle forState:UIControlStateHighlighted];
-    
+        
     if( self.storeProduct.type == ASTStoreProductIdentifierTypeConsumable )
     {
         self.onHand.text = [NSString stringWithFormat:@"On Hand: %d", 
@@ -81,6 +82,42 @@
     {
         self.onHand.text = nil;
     }
+    
+    if( self.storeController.purchaseState != ASTStoreControllerPurchaseStateNone )
+    {
+        [self.connectingActivityIndicatorView startAnimating];
+        purchaseTitle = @"Please Wait";
+    }
+    else
+    {
+        [self.connectingActivityIndicatorView stopAnimating];
+    }
+    
+    switch ( self.storeController.purchaseState ) 
+    {
+        case ASTStoreControllerPurchaseStateProcessingPayment:
+            statusText = @"Processing";
+            
+            break;
+            
+        case ASTStoreControllerPurchaseStateVerifyingReceipt:
+            statusText = @"Verifying";
+            break;
+            
+        case ASTStoreControllerPurchaseStateDownloadingContent:
+            statusText = @"Downloading";
+            break;
+
+        default:
+            break;
+    }
+    
+
+    self.statusLabel.text = statusText;
+    
+    [self.purchaseButton setTitle:purchaseTitle forState:UIControlStateNormal];
+    [self.purchaseButton setTitle:purchaseTitle forState:UIControlStateHighlighted];
+
 }
 
 
@@ -104,6 +141,20 @@
 - (void)astStoreControllerPurchaseStateChanged:(ASTStoreControllerPurchaseState)state
 {
     DLog(@"purchaseStateChanged:%d", state);
+    
+    if( ASTStoreControllerPurchaseStateNone == state )
+    {
+        DLog(@"enable buttons");
+        self.purchaseButton.enabled = YES;
+        self.purchaseButton.userInteractionEnabled = YES;
+    }
+    else
+    {
+        DLog(@"disable buttons");
+        self.purchaseButton.enabled = NO;
+        self.purchaseButton.userInteractionEnabled = NO;
+    }
+    
     [self updateViewData];
 }
 
@@ -113,19 +164,22 @@
 {
     DLog(@"purchased: %@", productIdentifier);
     [self updateViewData];
+    self.statusLabel.text = @"Purchase Successful";
 }
 
 #pragma mark Purchase Related Delegate Methods
 // Invoked for actual purchase failures - may want to display a message to the user
 - (void)astStoreControllerProductIdentifierFailedPurchase:(NSString*)productIdentifier withError:(NSError*)error
 {
-    DLog(@"failed purchase: %@ error:%@", productIdentifier, error);    
+    DLog(@"failed purchase: %@ error:%@", productIdentifier, error);
+    self.statusLabel.text = @"Purchase Failed";
 }
 
 // Invoked for cancellations - no message should be shown to user per programming guide
 - (void)astStoreControllerProductIdentifierCancelledPurchase:(NSString*)productIdentifier
 {
     DLog(@"cancelled purchase: %@", productIdentifier);
+    self.statusLabel.text = @"Purchase Cancelled";
 }
 
 #pragma mark - View lifecycle
@@ -173,6 +227,13 @@
     
     [onHand_ release];
     onHand_ = nil;
+    
+    [connectingActivityIndicatorView_ release];
+    connectingActivityIndicatorView_ = nil;
+    
+    [statusLabel_ release];
+    statusLabel_ = nil;
+    
     [super viewDidUnload];
 }
 
@@ -183,11 +244,11 @@
     [description_ release];
     [extraInfo_ release];
     [purchaseButton_ release];
-    
-    [productIdentifier_ release];
-    productIdentifier_ = nil;
-    
+    [productIdentifier_ release];    
     [onHand_ release];
+    [connectingActivityIndicatorView_ release];
+    [statusLabel_ release];
+    
     [super dealloc];
 }
 

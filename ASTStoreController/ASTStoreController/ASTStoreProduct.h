@@ -66,6 +66,11 @@
                              familyIdentifier:(NSString*)aFamilyIdentifier 
                                familyQuantity:(ASTStoreProductAutoRenewableType)aFamilyQuantity;
 
+@property (readonly) BOOL isPurchased;
+@property (readonly) NSUInteger availableQuantity;
+- (NSUInteger)consumeQuantity:(NSUInteger)amountToConsume;
+
+
 // Product identifier as specified in iTunes connect
 @property (readonly) NSString *productIdentifier;
 

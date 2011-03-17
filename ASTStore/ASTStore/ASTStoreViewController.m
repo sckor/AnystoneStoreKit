@@ -66,7 +66,7 @@
 
 - (void)updateStoreStateDisplay
 {
-    switch (self.storeController.productDataState) 
+    switch ( self.storeController.productDataState ) 
     {            
         case ASTStoreControllerProductDataStateUpdating:
             self.connectingToStoreLabel.text = @"Connecting to Store";
@@ -74,7 +74,7 @@
             break;
             
         case ASTStoreControllerProductDataStateUpToDate:
-            self.connectingToStoreLabel.text = @"Connected to Store";
+            self.connectingToStoreLabel.text = nil;
             [self.connectingActivityIndicatorView stopAnimating];
             break;
             
@@ -84,8 +84,27 @@
         default:
             self.connectingToStoreLabel.text = @"Store Not Available";
             [self.connectingActivityIndicatorView stopAnimating];
-            
+            break;
+    }
+    
+    switch ( self.storeController.purchaseState ) 
+    {
+        case ASTStoreControllerPurchaseStateProcessingPayment:
+            self.connectingToStoreLabel.text = @"Processing";
+            [self.connectingActivityIndicatorView startAnimating];
+            break;
 
+        case ASTStoreControllerPurchaseStateVerifyingReceipt:
+            self.connectingToStoreLabel.text = @"Verifying";
+            [self.connectingActivityIndicatorView startAnimating];
+            break;
+            
+        case ASTStoreControllerPurchaseStateDownloadingContent:
+            self.connectingToStoreLabel.text = @"Downloading";
+            [self.connectingActivityIndicatorView startAnimating];
+            break;
+
+        default:
             break;
     }
 }
@@ -184,26 +203,31 @@
     [self updateStoreStateDisplay];
 }
 
-- (void)astStoreControllerProductPurchased:(ASTStoreProduct*)storeProduct
+- (void)astStoreControllerProductIdentifierPurchased:(NSString*)productIdentifier
 {
-    DLog(@"purchased:%@", storeProduct.productIdentifier);    
+    DLog(@"purchased:%@", productIdentifier);
+    [self.tableView reloadData];
+    [self updateStoreStateDisplay];
 }
 
 - (void)astStoreControllerPurchaseStateChanged:(ASTStoreControllerPurchaseState)state
 {
     DLog(@"purchaseStateChanged:%d", state);
+    [self updateStoreStateDisplay];
 }
 
 // Additionally will invoke this once the restore queue has been processed
 - (void)astStoreControllerRestoreComplete
 {
     DLog(@"restore Complete");
+    [self updateStoreStateDisplay];
 }
 
 // Failures during the restore
 - (void)astStoreControllerRestoreFailedWithError:(NSError*)error
 {
-    DLog(@"restore failed with error:%@", error);    
+    DLog(@"restore failed with error:%@", error);
+    
 }
 
 

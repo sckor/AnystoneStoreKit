@@ -56,6 +56,7 @@
 @synthesize skPaymentQueue;
 @synthesize purchaseState = purchaseState_;
 
+
 #pragma mark Delegate Selector Stubs
 
 - (void)invokeDelegateStoreControllerProductDataStateChanged:(ASTStoreControllerProductDataState)newState
@@ -184,23 +185,6 @@
     return state;
 }
 
-- (BOOL)isPurchaseStateTerminal
-{
-    switch (self.purchaseState) 
-    {
-        case ASTStoreControllerPurchaseStateNone:
-        case ASTStoreControllerPurchaseStateFailed:
-        case ASTStoreControllerPurchaseStateCancelled:
-        case ASTStoreControllerPurchaseStatePurchased:
-            return ( YES );
-            break;
-            
-        default:
-            break;
-    }
-    
-    return ( NO );
-}
 
 #pragma mark Product Setup
 
@@ -459,11 +443,8 @@
     
     if( nil == productData )
     {
-        // then leave in the queue and service later? What triggers this? Addition 
-        // of new products could check the queue? Hmm.
-        DLog(@"Failed to obtain product data for:%@", productIdentifier);
-        self.purchaseState = ASTStoreControllerPurchaseStateFailed;
-        [self.skPaymentQueue finishTransaction:transaction];
+        // Have no information how to process this payment - abort
+        ALog(@"Failed to obtain product data for:%@", productIdentifier);
         return;
     }
     
@@ -487,9 +468,9 @@
         DLog(@"Unsupported product type: %d", productData.type);
     }
         
+    self.purchaseState = ASTStoreControllerPurchaseStateNone;
     [self invokeDelegateStoreControllerProductIdentifierPurchased:productIdentifier];
-    self.purchaseState = ASTStoreControllerPurchaseStatePurchased;
-
+    
     // Remove the transaction from the payment queue: what if things need to be downloaded etc... would 
     // like that to be async relative to this... though restoring could always run that behaviour again
     
@@ -498,16 +479,16 @@
 
 - (void)failedTransaction:(SKPaymentTransaction *)transaction
 {
+    self.purchaseState = ASTStoreControllerPurchaseStateNone;
+
     if (transaction.error.code != SKErrorPaymentCancelled) 
     {
         [self invokeDelegateStoreControllerProductIdentifierFailedPurchase:transaction.payment.productIdentifier
                                                                  withError:transaction.error];
-        self.purchaseState = ASTStoreControllerPurchaseStateFailed;
     }
     else
     {
         [self invokeDelegateStoreControllerProductIdentifierCancelledPurchase:transaction.payment.productIdentifier];
-        self.purchaseState = ASTStoreControllerPurchaseStateCancelled;
     }
     
     [self.skPaymentQueue finishTransaction:transaction];
@@ -549,21 +530,14 @@
 - (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue
 {
     DLog(@"restore complete");
-
     [self invokeDelegateStoreControllerRestoreComplete];
-    self.purchaseState = ASTStoreControllerPurchaseStateNone;
-}
-
-- (void)paymentQueue:(SKPaymentQueue *)queue removedTransactions:(NSArray *)transactions
-{
-    DLog(@"removed:%@", transactions);
 }
 
 - (void)paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error
 {
     DLog(@"failed:%@", error);
+    self.purchaseState = ASTStoreControllerPurchaseStateNone;
     [self invokeDelegateStoreControllerRestoreFailedWithError:error];
-    self.purchaseState = ASTStoreControllerPurchaseStateFailed;
 }
 
 #pragma mark Purchase
@@ -581,7 +555,7 @@
         return;
     }
     
-    if( NO == [self isPurchaseStateTerminal] )
+    if( self.purchaseState != ASTStoreControllerPurchaseStateNone )
     {
         // Not in a terminal purchase state - reject request
         UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Purchase In Progress" 
@@ -603,7 +577,7 @@
 
 - (void)restorePreviousPurchases
 {
-    if( NO == [self isPurchaseStateTerminal] )
+    if( self.purchaseState != ASTStoreControllerPurchaseStateNone )
     {
         // Not in a terminal purchase state - reject request
         UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Purchase In Progress" 
@@ -625,15 +599,9 @@
 
 - (BOOL)isProductPurchased:(NSString*)productIdentifier
 {
-    NSUInteger quantity = [self availableQuantityForProduct:productIdentifier]; 
     ASTStoreProduct *aProduct = [self storeProductForIdentifier:productIdentifier];
 
-    if(( quantity > 0 ) && ( aProduct.type != ASTStoreProductIdentifierTypeConsumable ))
-    {
-        return YES;
-    }
-    
-    return NO;
+    return ( aProduct.isPurchased );
 }
 
 - (NSUInteger)availableQuantityForProduct:(NSString*)productIdentifier
@@ -646,57 +614,14 @@
         return 0;
     }
     
-    return ( aProduct.productData.availableQuantity );
-}
-
-- (NSUInteger)availableQuantityForFamily:(NSString*)familyIdentifier
-{
-    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:familyIdentifier];
-    
-    if( nil == familyData )
-    {
-        DLog(@"Failed to get familyData for:%@", familyIdentifier);
-        return 0;
-    }
-    
-    return ( familyData.availableQuantity );
+    return ( aProduct.availableQuantity );
 }
 
 - (NSUInteger)consumeProduct:(NSString*)productIdentifier quantity:(NSUInteger)amountToConsume
 {
     ASTStoreProduct *aProduct = [self storeProductForIdentifier:productIdentifier];
 
-    if( aProduct.productData.type != ASTStoreProductIdentifierTypeConsumable )
-    {
-        return 0;
-    }
-    
-    return ( [self consumeFamily:aProduct.productData.familyIdentifier quantity:amountToConsume] );
-}
-
-- (NSUInteger)consumeFamily:(NSString*)familyIdentifier quantity:(NSUInteger)amountToConsume
-{
-    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:familyIdentifier];
-    
-    if( nil == familyData )
-    {
-        DLog(@"Failed to get familyData for:%@", familyIdentifier);
-        return 0;
-    }
-
-    NSUInteger currentQuantity = familyData.availableQuantity;
-    NSUInteger consumeQuantity = amountToConsume;
-    
-    if( currentQuantity < consumeQuantity )
-    {
-        consumeQuantity = currentQuantity;
-    }
-    
-    // Update the amount of consumables in the family
-    currentQuantity -= consumeQuantity;
-    familyData.availableQuantity = currentQuantity;
-    
-    return consumeQuantity;    
+    return ( [aProduct consumeQuantity:amountToConsume] );
 }
 
 #pragma mark Initialization and Cleanup

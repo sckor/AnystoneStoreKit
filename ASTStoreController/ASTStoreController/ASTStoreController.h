@@ -47,10 +47,7 @@ typedef enum
     ASTStoreControllerPurchaseStateNone,
     ASTStoreControllerPurchaseStateProcessingPayment,
     ASTStoreControllerPurchaseStateVerifyingReceipt,
-    ASTStoreControllerPurchaseStateDownloadingContent,
-    ASTStoreControllerPurchaseStateFailed,
-    ASTStoreControllerPurchaseStateCancelled,
-    ASTStoreControllerPurchaseStatePurchased
+    ASTStoreControllerPurchaseStateDownloadingContent
 } ASTStoreControllerPurchaseState;
 
 @interface ASTStoreController : NSObject 
@@ -153,31 +150,17 @@ typedef enum
 
 // Nonconsumable - YES means purchased, NO means not
 // Consumable - Always returns NO, since it can be purchased again; check quantity
-// AutoRenewable - YES means subscription is valid for the family 
-//                 associated with the product id and NO means not.
 - (BOOL)isProductPurchased:(NSString*)productIdentifier;
 
-// Nonconsumable - Should always report 1
+// Nonconsumable - Should always report 1 if purchased, 0 if not
 // Consumable - Number of items available in the family associated with the product id
-// AutoRenewable - n/a
 - (NSUInteger)availableQuantityForProduct:(NSString*)productIdentifier;
 
-// Nonconsumable - Should always report 1 (family == productIdentifier)
-// Consumable - Number of items available in the family
-// AutoRenewable - n/a
-- (NSUInteger)availableQuantityForFamily:(NSString*)familyIdentifier;
-
 // Consumable - returns number of items consumed; if amountToConsume is > available then
-//              it will consume up to the amount available and return the amount consumed
+//              it will consume up to the amount available and return the amount actually consumed
 // Nonconsumable - does nothing, returns 0
-// AutoRenewable - does nothing, returns 0
 - (NSUInteger)consumeProduct:(NSString*)productIdentifier quantity:(NSUInteger)amountToConsume;
 
-// Consumable - returns number of items consumed; if amountToConsume is > available then
-//              it will consume up to the amount available and return the amount consumed
-// Nonconsumable - will attempt to consume - do not use on Nonconsumables
-// AutoRenewable - will attempt to consume - do not use on AutoRenewables
-- (NSUInteger)consumeFamily:(NSString*)familyIdentifier quantity:(NSUInteger)amountToConsume;
 
 #pragma mark Delegate
 @property (assign) id <ASTStoreControllerDelegate> delegate;
