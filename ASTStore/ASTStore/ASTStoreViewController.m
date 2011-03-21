@@ -297,7 +297,8 @@
     [super viewWillAppear:animated];
     
     self.storeController.delegate = self;
-    self.urlTextField.text = [[self serverURL] absoluteString];
+    self.storeController.serverUrl = [self serverURL];
+    self.urlTextField.text = [self.storeController.serverUrl absoluteString];
         
     [self.storeController requestProductDataFromiTunes:NO];
     [self updateStoreStateDisplay];

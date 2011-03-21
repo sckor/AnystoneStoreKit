@@ -250,7 +250,7 @@
 			name = Classes;
 			sourceTree = "<group>";
 		};
-		8196CB791333ADEC000C5286 /* ASTHttpRequest */ = {
+		8196CB791333ADEC000C5286 /* ASIHttpRequest */ = {
 			isa = PBXGroup;
 			children = (
 				8196CBA41333BE69000C5286 /* ASIHTTPRequestConfig.h */,
@@ -272,7 +272,7 @@
 				8196CB971333BE33000C5286 /* ASINetworkQueue.h */,
 				8196CB981333BE33000C5286 /* ASINetworkQueue.m */,
 			);
-			name = ASTHttpRequest;
+			name = ASIHttpRequest;
 			sourceTree = "<group>";
 		};
 		8196CB7A1333AE68000C5286 /* Third Party */ = {
@@ -280,7 +280,7 @@
 			children = (
 				8196CBBA1333D2CF000C5286 /* JSONKit */,
 				8196CB9F1333BE52000C5286 /* Reachability */,
-				8196CB791333ADEC000C5286 /* ASTHttpRequest */,
+				8196CB791333ADEC000C5286 /* ASIHttpRequest */,
 				81671D311329472300B12E3D /* SimStoreKit */,
 			);
 			name = "Third Party";
