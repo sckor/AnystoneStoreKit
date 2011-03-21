@@ -697,6 +697,13 @@
     [self.skPaymentQueue restoreCompletedTransactions];
 }
 
+- (void)setProductPurchased:(NSString*)productIdentifier withQuantity:(NSUInteger)totalQuantityAvailable
+{
+    ASTStoreProduct *aProduct = [self storeProductForIdentifier:productIdentifier];
+
+    [aProduct setPurchasedQuantity:totalQuantityAvailable];
+}
+
 #pragma mark Querying Purchases
 
 - (BOOL)isProductPurchased:(NSString*)productIdentifier

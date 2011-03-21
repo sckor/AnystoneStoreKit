@@ -148,6 +148,11 @@ typedef enum
 - (void)purchaseProduct:(NSString*)productIdentifier;
 - (void)restorePreviousPurchases;
 
+// If you need to force the local purchase state (perhaps migrating from another in-app purchase state)
+// This function will allow for setting the purchase quanity without going through the app store
+// directly; quantity is only used if type is consumable
+- (void)setProductPurchased:(NSString*)productIdentifier withQuantity:(NSUInteger)totalQuantityAvailable;
+
 #pragma mark Querying Purchases
 
 // Nonconsumable - YES means purchased, NO means not

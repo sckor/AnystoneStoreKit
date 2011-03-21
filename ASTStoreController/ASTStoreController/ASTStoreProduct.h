@@ -70,6 +70,8 @@
 @property (readonly) NSUInteger availableQuantity;
 - (NSUInteger)consumeQuantity:(NSUInteger)amountToConsume;
 
+- (void)setPurchasedQuantity:(NSUInteger)totalQuantityAvailable;
+
 
 // Product identifier as specified in iTunes connect
 @property (readonly) NSString *productIdentifier;

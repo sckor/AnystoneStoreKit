@@ -206,6 +206,17 @@
     return consumeQuantity;
 }
 
+- (void)setPurchasedQuantity:(NSUInteger)totalQuantityAvailable
+{
+    NSUInteger quantity = totalQuantityAvailable;
+    
+    if( self.type != ASTStoreProductIdentifierTypeConsumable )
+    {
+        quantity = 1;
+    }
+    
+    self.productData.availableQuantity = quantity;
+}
 
 #pragma mark SKProduct related properties
 
