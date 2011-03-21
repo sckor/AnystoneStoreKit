@@ -1,8 +1,8 @@
 //
-//  ASTStoreViewController.h
-//  ASTStore
+//  ASTStoreServer.h
+//  ASTStoreController
 //
-//  Created by Sean Kormilo on 11-03-07.
+//  Created by Sean Kormilo on 11-03-18.
 //  http://www.anystonetech.com
 
 //  Copyright (c) 2011 Anystone Technologies, Inc.
@@ -25,39 +25,26 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
+#import <Foundation/Foundation.h>
 
-#import <UIKit/UIKit.h>
-#import "ASTStoreController.h"
-
-@interface ASTStoreViewController : UIViewController
-    <
-    UITableViewDataSource, 
-    UITableViewDelegate,
-    UITextFieldDelegate,
-    ASTStoreControllerDelegate
-    >
+typedef enum
 {
-    UIView *tableContainerView_;
-    UITableView *tableView_;
-    UITableViewCell *storeCell_;
-  
-    UIButton *restorePreviousPurchaseButton_;
-    UILabel *connectingToStoreLabel_;
-    UIActivityIndicatorView *connectingActivityIndicatorView_;
-    
-    UITextField *urlTextField_;
+    kASTStoreServerReceiptVerificationResultPass,
+    kASTStoreServerReceiptVerificationResultFail,
+    kASTStoreServerReceiptVerificationResultInconclusive
+} kASTStoreServerReceiptVerificationResult;
+
+#define kASTStoreServerDefaultNetworkTimeout 15.0
+
+@interface ASTStoreServer : NSObject 
+{
+    NSURL *serverUrl_;
+    NSTimeInterval serverConnectionTimeout_;
 }
 
-- (IBAction)restorePreviousPurchaseButtonPressed:(id)sender;
-- (IBAction)removeAllPurchaseDataButtonPressed:(id)sender;
+- (kASTStoreServerReceiptVerificationResult)verifyReceipt:(NSData*)receiptData forProductId:(NSString*)productId;
 
-@property (retain) IBOutlet UIView *tableContainerView;
-@property (retain) IBOutlet UITableView *tableView;
-@property (retain) IBOutlet UITableViewCell *storeCell;
-
-@property (retain) IBOutlet UIButton *restorePreviousPurchaseButton;
-@property (retain) IBOutlet UILabel *connectingToStoreLabel;
-@property (retain) IBOutlet UIActivityIndicatorView *connectingActivityIndicatorView;
-@property (retain) IBOutlet UITextField *urlTextField;
+@property (retain) NSURL *serverUrl;
+@property  NSTimeInterval serverConnectionTimeout;
 
 @end

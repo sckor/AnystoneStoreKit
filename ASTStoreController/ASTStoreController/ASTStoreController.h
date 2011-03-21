@@ -54,9 +54,8 @@ typedef enum
 {
     ASTStoreControllerProductDataState productDataState_;
     ASTStoreControllerPurchaseState purchaseState_;
-    
-    NSTimeInterval retryStoreConnectionInterval_;
-    
+    BOOL verifyReceipts_;
+
     id <ASTStoreControllerDelegate> delegate_;
 }
 
@@ -133,6 +132,8 @@ typedef enum
 - (ASTStoreProduct*)storeProductForIdentifier:(NSString*)productIdentifier;
 
 #pragma mark Update Products from iTunes
+// Default to retying store connection every 15 seconds
+@property  NSTimeInterval retryStoreConnectionInterval;
 
 // Requests product data from iTunes (if needed, or if force=YES)
 - (void)requestProductDataFromiTunes:(BOOL)force;
@@ -162,12 +163,25 @@ typedef enum
 // Nonconsumable - does nothing, returns 0
 - (NSUInteger)consumeProduct:(NSString*)productIdentifier quantity:(NSUInteger)amountToConsume;
 
+#pragma mark Server Related
+// These are used if you want to enable access to Google App Engine support
+// for receipt verification - server url should be set to 
+// http://xxx.appspot.com
+// alternatively can use a local server URL for testing with the
+// local appengine instance
+@property (retain) NSURL *serverUrl;
+
+// Enable receipt verification with the server - defaults to YES
+// But the option is only relevant if server URL is defined above
+@property  BOOL verifyReceipts;
+
+// Used to change the timeout waiting for responses from the
+// server - defaults to 15 seconds
+@property NSTimeInterval serverConnectionTimeout;
 
 #pragma mark Delegate
 @property (assign) id <ASTStoreControllerDelegate> delegate;
 
-#pragma mark Retry timeouts
-@property  NSTimeInterval retryStoreConnectionInterval;
 
 @end
 

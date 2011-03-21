@@ -30,9 +30,10 @@
 #import "ASTStoreProduct+Private.h"
 #import "ASTStoreProductPlistReader.h"
 #import "ASTStoreFamilyData.h"
+#import "ASTStoreServer.h"
 
-#define kASTStoreControllerDefaultNetworkTimeout 60
-#define kASTStoreControllerDefaultretryStoreConnectionInterval 20
+#define kASTStoreControllerDefaultRetryStoreConnectionInterval 15.0
+#define kASTStoreServerDefaultVerifyReceipts YES
 
 @interface ASTStoreController() <SKProductsRequestDelegate, SKPaymentTransactionObserver>
 
@@ -41,7 +42,7 @@
 @property (retain) SKProductsRequest *skProductsRequest;
 @property (readonly) SKPaymentQueue *skPaymentQueue;
 @property (nonatomic) ASTStoreControllerPurchaseState purchaseState;
-
+@property (readonly) ASTStoreServer *storeServer;
 @end
 
 
@@ -52,9 +53,11 @@
 @synthesize productDataState = productDataState_;
 @synthesize delegate = delegate_;
 @synthesize skProductsRequest = skProductsRequest_;
-@synthesize retryStoreConnectionInterval = retryStoreConnectionInterval_;
 @synthesize skPaymentQueue;
 @synthesize purchaseState = purchaseState_;
+@synthesize retryStoreConnectionInterval = retryStoreConnectionInterval_;
+@synthesize storeServer = storeServer_;
+@synthesize verifyReceipts = verifyReceipts_;
 
 
 #pragma mark Delegate Selector Stubs
@@ -185,6 +188,51 @@
     return state;
 }
 
+- (ASTStoreServer*)storeServer
+{
+    if( nil != storeServer_ )
+    {
+        return ( storeServer_ );
+    }
+    
+    storeServer_ = [[ASTStoreServer alloc] init];
+    
+    return storeServer_;
+}
+
+// Only want to instantiate a storeServer if one of the values is changed
+// Otherwise there is no point in creating the object; just return default values
+// In the case that the storeServer has not otherwise been created
+
+- (NSURL*)serverUrl
+{
+    if( nil == storeServer_ )
+    {
+        return nil;
+    }
+    
+    return ( self.storeServer.serverUrl );
+}
+
+- (NSTimeInterval)serverConnectionTimeout
+{
+    if( nil == storeServer_ )
+    {
+        return ( kASTStoreServerDefaultNetworkTimeout );
+    }
+    
+    return ( self.storeServer.serverConnectionTimeout );
+}
+
+- (void)setServerUrl:(NSURL *)serverUrl
+{
+    self.storeServer.serverUrl = serverUrl;
+}
+
+- (void)setServerConnectionTimeout:(NSTimeInterval)serverConnectionTimeout
+{
+    self.storeServer.serverConnectionTimeout = serverConnectionTimeout;
+}
 
 #pragma mark Product Setup
 
@@ -437,7 +485,8 @@
         productIdentifier = transaction.payment.productIdentifier;
     }
     
-    DLog(@"Complete: %@ receipt:%@", productIdentifier, transaction.transactionReceipt);
+    
+    DLog(@"Completing: %@", productIdentifier);
     
     // Attempt to get the product object for this - if that fails
     // Then attempt to the product data object for transaction - 
@@ -460,8 +509,32 @@
         return;
     }
     
-    // TODO: Should check with server somewhere in here for receipt verification if configured
-    self.purchaseState = ASTStoreControllerPurchaseStateVerifyingReceipt;
+    DLog(@"serverURL:%@ verify:%d", self.serverUrl, self.verifyReceipts);
+    
+    if(( self.serverUrl != nil ) && ( self.verifyReceipts ))
+    {
+        self.purchaseState = ASTStoreControllerPurchaseStateVerifyingReceipt;
+        
+        // This should probably go off into async land...but sync for now
+        kASTStoreServerReceiptVerificationResult result = [self.storeServer 
+                                                           verifyReceipt:transaction.transactionReceipt 
+                                                           forProductId:productIdentifier];
+        
+        if( kASTStoreServerReceiptVerificationResultFail == result )
+        {
+            // receipt verification failed
+            self.purchaseState = ASTStoreControllerPurchaseStateNone;
+
+            [self invokeDelegateStoreControllerProductIdentifierFailedPurchase:productIdentifier withError:nil];
+            [self.skPaymentQueue finishTransaction:transaction];
+            return;
+        }
+        else if( kASTStoreServerReceiptVerificationResultInconclusive == result )
+        {
+            // TODO: Might want to keep it around and try verifying it later
+        }
+            
+    }
 
     if( productData.type == ASTStoreProductIdentifierTypeConsumable )
     {
@@ -636,6 +709,7 @@
     return ( [aProduct consumeQuantity:amountToConsume] );
 }
 
+
 #pragma mark Initialization and Cleanup
 
 + (id) sharedStoreController
@@ -658,8 +732,9 @@
 
     productDataState_ = ASTStoreControllerProductDataStateUnknown;
     delegate_ = nil;
-    retryStoreConnectionInterval_ = kASTStoreControllerDefaultretryStoreConnectionInterval;
     purchaseState_ = ASTStoreControllerPurchaseStateNone;
+    retryStoreConnectionInterval_ = kASTStoreControllerDefaultRetryStoreConnectionInterval;
+    verifyReceipts_ = kASTStoreServerDefaultVerifyReceipts;
     
     // Register as an observer right away
     [self.skPaymentQueue addTransactionObserver:self];
