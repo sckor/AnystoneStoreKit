@@ -26,13 +26,16 @@
 //  THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import "ASTStoreKit.h"
+
+@protocol ASTStoreServerDelegate;
 
 typedef enum
 {
-    kASTStoreServerReceiptVerificationResultPass,
-    kASTStoreServerReceiptVerificationResultFail,
-    kASTStoreServerReceiptVerificationResultInconclusive
-} kASTStoreServerReceiptVerificationResult;
+    ASTStoreServerReceiptVerificationResultPass,
+    ASTStoreServerReceiptVerificationResultFail,
+    ASTStoreServerReceiptVerificationResultInconclusive
+} ASTStoreServerReceiptVerificationResult;
 
 #define kASTStoreServerDefaultNetworkTimeout 15.0
 
@@ -40,11 +43,40 @@ typedef enum
 {
     NSURL *serverUrl_;
     NSTimeInterval serverConnectionTimeout_;
+    
+    id<ASTStoreServerDelegate> delegate_;
 }
 
-- (kASTStoreServerReceiptVerificationResult)verifyReceipt:(NSData*)receiptData forProductId:(NSString*)productId;
++ (NSString*)productIdentifierForTransaction:(SKPaymentTransaction*)transaction;
+
+- (ASTStoreServerReceiptVerificationResult)verifyTransaction:(SKPaymentTransaction*)transaction; 
+
+
+// Uses delegate method to provide result
+- (void)asyncVerifyTransaction:(SKPaymentTransaction*)transaction;
+
+// Uses blocks to provide result - completion block runs on global default
+// queue - use dispatch_async(dispatch_get_main_queue()) inside the completion block if it needs to run
+// on the main thread
+typedef void (^ASTVerifyReceiptBlock)(SKPaymentTransaction* transaction,
+                                      ASTStoreServerReceiptVerificationResult result);
+
+- (void)asyncVerifyTransaction:(SKPaymentTransaction*)transaction
+           withCompletionBlock:(ASTVerifyReceiptBlock)completionBlock;
 
 @property (retain) NSURL *serverUrl;
 @property  NSTimeInterval serverConnectionTimeout;
+@property (assign) id<ASTStoreServerDelegate> delegate;
+
+@end
+
+@protocol ASTStoreServerDelegate <NSObject>
+@optional
+
+// Delegate is called to provide result for async receipt verification result
+- (void)astStoreServerVerifiedTransaction:(SKPaymentTransaction*)transaction 
+                               withResult:(ASTStoreServerReceiptVerificationResult)result;
+
+
 
 @end

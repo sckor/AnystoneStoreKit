@@ -42,6 +42,36 @@
 @synthesize serverUrl = serverUrl_;
 @synthesize serverConnectionTimeout = serverConnectionTimeout_;
 @synthesize bundleId = bundleId_;
+@synthesize delegate = delegate_;
+
+#pragma mark private methods
+- (void)invokeDelegateStoreServerVerifiedTransaction:(SKPaymentTransaction*)transaction
+                                                withResult:(ASTStoreServerReceiptVerificationResult)result
+
+{
+    if (self.delegate && [self.delegate respondsToSelector: @selector(astStoreServerVerifiedTransaction:withResult:)])
+    {
+        [self.delegate astStoreServerVerifiedTransaction:transaction withResult:result];
+    }
+}
+
+#pragma mark Public Class Methods
++ (NSString*)productIdentifierForTransaction:(SKPaymentTransaction*)transaction
+{
+    NSString *productIdentifier = nil;
+    
+    if( transaction.transactionState == SKPaymentTransactionStateRestored )
+    {
+        productIdentifier = transaction.originalTransaction.payment.productIdentifier;
+    }
+    else
+    {
+        productIdentifier = transaction.payment.productIdentifier;
+    }
+
+    return productIdentifier;
+}
+
 
 #pragma mark Override Synthesized Methods
 
@@ -79,17 +109,20 @@
     return ( serviceRequest );
 }
 
-// Synchronous Verification
-// TODO - Async Verification
-- (kASTStoreServerReceiptVerificationResult)verifyReceipt:(NSData*)receiptData forProductId:(NSString*)productId
+
+- (ASTStoreServerReceiptVerificationResult)verifyTransaction:(SKPaymentTransaction*)transaction
 {
+    NSData *receiptData = transaction.transactionReceipt;
+    NSString *productIdentifier = [ASTStoreServer productIdentifierForTransaction:transaction];
+    
     // If no server URL defined, then assume verification passes
     if( nil == self.serverUrl )
     {
-        return kASTStoreServerReceiptVerificationResultPass;
+        return ASTStoreServerReceiptVerificationResultPass;
     }
     
-    ASIFormDataRequest *serviceRequest = [self formDataRequestFromReceipt:receiptData forProductId:productId];
+    ASIFormDataRequest *serviceRequest = [self formDataRequestFromReceipt:receiptData 
+                                                             forProductId:productIdentifier];
     [serviceRequest startSynchronous];
     
     NSError *error = [serviceRequest error];
@@ -99,7 +132,7 @@
         // This would generally be a network error, so assume the verification passed
         // since we would not want to reject purchase if our server is down
         DLog(@"error: %@", error);
-        return ( kASTStoreServerReceiptVerificationResultInconclusive );
+        return ( ASTStoreServerReceiptVerificationResultInconclusive );
     }
     
    
@@ -111,7 +144,7 @@
     {
         // This should have been a dictionary; do nothing and assume it passed
         DLog(@"Unexpected class on decode from JSONKit: %@", NSStringFromClass([responseObject class]));
-        return ( kASTStoreServerReceiptVerificationResultInconclusive );
+        return ( ASTStoreServerReceiptVerificationResultInconclusive );
     }
     
     NSDictionary *responseDict = responseObject;
@@ -120,18 +153,44 @@
     
     if( nil == status )
     {
-        return ( kASTStoreServerReceiptVerificationResultInconclusive );
+        return ( ASTStoreServerReceiptVerificationResultInconclusive );
     }
     
     if( [status integerValue] == 0 )
     {
         // Passed
-        return ( kASTStoreServerReceiptVerificationResultPass );
+        return ( ASTStoreServerReceiptVerificationResultPass );
     }
     
     // Failed
     DLog(@"response:%@", responseDict);
-    return ( kASTStoreServerReceiptVerificationResultFail );
+    return ( ASTStoreServerReceiptVerificationResultFail );
+}
+
+- (void)asyncVerifyTransaction:(SKPaymentTransaction*)transaction
+{
+    dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    
+    dispatch_async(globalQueue, ^{
+        ASTStoreServerReceiptVerificationResult result = [self verifyTransaction:transaction];
+        
+        // Invoke the delegate on the main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self invokeDelegateStoreServerVerifiedTransaction:transaction withResult:result];
+        });
+        
+    });
+}
+
+- (void)asyncVerifyTransaction:(SKPaymentTransaction*)transaction
+           withCompletionBlock:(ASTVerifyReceiptBlock)completionBlock
+{
+    dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    
+    dispatch_async(globalQueue, ^{
+        ASTStoreServerReceiptVerificationResult result = [self verifyTransaction:transaction];
+        completionBlock(transaction, result);        
+    });
 }
 
 #pragma mark Init/Dealloc
@@ -148,6 +207,7 @@
     serverUrl_ = nil;
     serverConnectionTimeout_ = kASTStoreServerDefaultNetworkTimeout;
     bundleId_ = nil;
+    delegate_ = nil;
     
     DLog(@"Instantiated ASTStoreServer");
     return self;
@@ -160,6 +220,8 @@
     
     [bundleId_ release];
     bundleId_ = nil;
+    
+    delegate_ = nil;
     
     [super dealloc];
 }

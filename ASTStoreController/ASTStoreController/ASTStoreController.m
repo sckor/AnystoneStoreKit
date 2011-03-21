@@ -43,6 +43,8 @@
 @property (readonly) SKPaymentQueue *skPaymentQueue;
 @property (nonatomic) ASTStoreControllerPurchaseState purchaseState;
 @property (readonly) ASTStoreServer *storeServer;
+@property BOOL restoringPurchases;
+
 @end
 
 
@@ -58,7 +60,7 @@
 @synthesize retryStoreConnectionInterval = retryStoreConnectionInterval_;
 @synthesize storeServer = storeServer_;
 @synthesize verifyReceipts = verifyReceipts_;
-
+@synthesize restoringPurchases = restoringPurchases_;
 
 #pragma mark Delegate Selector Stubs
 
@@ -471,28 +473,15 @@
 }
 
 #pragma mark Transaction Handling
-- (void)completeTransaction:(SKPaymentTransaction *)transaction 
-{ 
-    NSString *productIdentifier = nil;
-    
-
-    if( transaction.transactionState == SKPaymentTransactionStateRestored )
-    {
-        productIdentifier = transaction.originalTransaction.payment.productIdentifier;
-    }
-    else
-    {
-        productIdentifier = transaction.payment.productIdentifier;
-    }
-    
-    
-    DLog(@"Completing: %@", productIdentifier);
+- (void)completionHandler:(SKPaymentTransaction *)transaction withVerificationResult:(ASTStoreServerReceiptVerificationResult)result
+{
+    NSString *productIdentifier = [ASTStoreServer productIdentifierForTransaction:transaction];
     
     // Attempt to get the product object for this - if that fails
     // Then attempt to the product data object for transaction - 
     ASTStoreProductData *productData = nil;    
     ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
-
+    
     if( nil != theProduct )
     {
         productData = theProduct.productData;
@@ -509,33 +498,22 @@
         return;
     }
     
-    DLog(@"serverURL:%@ verify:%d", self.serverUrl, self.verifyReceipts);
-    
-    if(( self.serverUrl != nil ) && ( self.verifyReceipts ))
+
+    if( ASTStoreServerReceiptVerificationResultFail == result )
     {
-        self.purchaseState = ASTStoreControllerPurchaseStateVerifyingReceipt;
+        // receipt verification failed
+        self.purchaseState = ASTStoreControllerPurchaseStateNone;
         
-        // This should probably go off into async land...but sync for now
-        kASTStoreServerReceiptVerificationResult result = [self.storeServer 
-                                                           verifyReceipt:transaction.transactionReceipt 
-                                                           forProductId:productIdentifier];
-        
-        if( kASTStoreServerReceiptVerificationResultFail == result )
-        {
-            // receipt verification failed
-            self.purchaseState = ASTStoreControllerPurchaseStateNone;
-
-            [self invokeDelegateStoreControllerProductIdentifierFailedPurchase:productIdentifier withError:nil];
-            [self.skPaymentQueue finishTransaction:transaction];
-            return;
-        }
-        else if( kASTStoreServerReceiptVerificationResultInconclusive == result )
-        {
-            // TODO: Might want to keep it around and try verifying it later
-        }
-            
+        [self invokeDelegateStoreControllerProductIdentifierFailedPurchase:productIdentifier withError:nil];
+        [self.skPaymentQueue finishTransaction:transaction];
+        return;
     }
-
+    else if( ASTStoreServerReceiptVerificationResultInconclusive == result )
+    {
+        // TODO: Should keep it around and try verifying it later as an audit type function
+    }
+    
+    
     if( productData.type == ASTStoreProductIdentifierTypeConsumable )
     {
         // Increment the available quantity for the family
@@ -552,14 +530,46 @@
     {
         DLog(@"Unsupported product type: %d", productData.type);
     }
-        
-    self.purchaseState = ASTStoreControllerPurchaseStateNone;
+    
+    if( self.restoringPurchases )
+    {
+        // If restoring, there may be multiple transactions so set back to processing
+        // Will change state back to none as part of the restore complete callback
+        self.purchaseState = ASTStoreControllerPurchaseStateProcessingPayment;
+    }
+    else
+    {
+        self.purchaseState = ASTStoreControllerPurchaseStateNone;
+    }
+    
     [self invokeDelegateStoreControllerProductIdentifierPurchased:productIdentifier];
     
-    // Remove the transaction from the payment queue: what if things need to be downloaded etc... would 
-    // like that to be async relative to this... though restoring could always run that behaviour again
-    
+    // Remove the transaction from the payment queue
     [self.skPaymentQueue finishTransaction:transaction];
+}
+
+- (void)completeTransaction:(SKPaymentTransaction *)transaction 
+{     
+    DLog(@"serverURL:%@ verify:%d", self.serverUrl, self.verifyReceipts);
+
+    if(( self.serverUrl != nil ) && ( self.verifyReceipts ))
+    {
+        self.purchaseState = ASTStoreControllerPurchaseStateVerifyingReceipt;
+        
+        [self.storeServer asyncVerifyTransaction:transaction 
+                             withCompletionBlock:^(SKPaymentTransaction *transaction, 
+                                                   ASTStoreServerReceiptVerificationResult result) 
+         {
+             dispatch_async(dispatch_get_main_queue(), ^{
+                 [self completionHandler:transaction withVerificationResult:result];
+             });
+         }];
+    }
+    else
+    {
+        // No server verification to do - assume pass and invoke handler directly
+        [self completionHandler:transaction withVerificationResult:ASTStoreServerReceiptVerificationResultPass];
+    }
 }
 
 - (void)failedTransaction:(SKPaymentTransaction *)transaction
@@ -615,6 +625,14 @@
 - (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue
 {
     DLog(@"restore complete");
+    self.restoringPurchases = NO;
+    if( self.purchaseState == ASTStoreControllerPurchaseStateProcessingPayment )
+    {
+        // Could be verifying in the background - only update to none state if 
+        // last known state was processing. Since restoringPurchase flag has been
+        // disabled, the finalize transation will deal with resetting state to none.
+        self.purchaseState = ASTStoreControllerPurchaseStateNone;
+    }
     [self invokeDelegateStoreControllerRestoreComplete];
 }
 
@@ -655,7 +673,6 @@
     
     self.purchaseState = ASTStoreControllerPurchaseStateProcessingPayment;
     
-    // TODO : Set Purchase States.... and check to make sure purchase is allowed
     SKPayment *payment = [SKPayment paymentWithProductIdentifier:productIdentifier]; 
     [self.skPaymentQueue addPayment:payment];
 }
@@ -675,8 +692,8 @@
         return;
     }
     
+    self.restoringPurchases = YES;
     self.purchaseState = ASTStoreControllerPurchaseStateProcessingPayment;
-
     [self.skPaymentQueue restoreCompletedTransactions];
 }
 
@@ -735,6 +752,7 @@
     purchaseState_ = ASTStoreControllerPurchaseStateNone;
     retryStoreConnectionInterval_ = kASTStoreControllerDefaultRetryStoreConnectionInterval;
     verifyReceipts_ = kASTStoreServerDefaultVerifyReceipts;
+    restoringPurchases_ = NO;
     
     // Register as an observer right away
     [self.skPaymentQueue addTransactionObserver:self];
