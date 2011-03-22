@@ -699,18 +699,16 @@
 
 - (void)setProductPurchased:(NSString*)productIdentifier withQuantity:(NSUInteger)totalQuantityAvailable
 {
-    ASTStoreProduct *aProduct = [self storeProductForIdentifier:productIdentifier];
-
-    [aProduct setPurchasedQuantity:totalQuantityAvailable];
+    ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
+    [theProduct setPurchasedQuantity:totalQuantityAvailable];
 }
 
 #pragma mark Querying Purchases
 
 - (BOOL)isProductPurchased:(NSString*)productIdentifier
 {
-    ASTStoreProduct *aProduct = [self storeProductForIdentifier:productIdentifier];
-
-    return ( aProduct.isPurchased );
+    ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
+    return ( theProduct.isPurchased );
 }
 
 - (NSUInteger)availableQuantityForProduct:(NSString*)productIdentifier

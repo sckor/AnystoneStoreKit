@@ -88,5 +88,6 @@
 // Use to set and get the number of units available in the family
 @property  (nonatomic) NSUInteger availableQuantity;
 
+@property (readonly) BOOL isPurchased;
 
 @end

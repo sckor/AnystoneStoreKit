@@ -273,7 +273,26 @@
 
 - (void)setAvailableQuantity:(NSUInteger)availableQuantity
 {
-    self.familyData.availableQuantity = availableQuantity;
+    NSUInteger quantity = availableQuantity;
+    
+    if(( self.type != ASTStoreProductIdentifierTypeConsumable ) && ( quantity > 1 ))
+    {
+        quantity = 1;
+    }
+    
+    self.familyData.availableQuantity = quantity;
+}
+
+- (BOOL)isPurchased
+{
+    NSUInteger quantity = self.availableQuantity;
+    
+    if(( quantity > 0 ) && ( self.type != ASTStoreProductIdentifierTypeConsumable ))
+    {
+        return YES;
+    }
+    
+    return NO;
 }
 
 //---------------------------------------------------------- 

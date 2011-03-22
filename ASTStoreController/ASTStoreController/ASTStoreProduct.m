@@ -169,14 +169,7 @@
 #pragma mark Purchase States and Consumption
 - (BOOL)isPurchased
 {
-    NSUInteger quantity = self.availableQuantity;
-
-    if(( quantity > 0 ) && ( self.type != ASTStoreProductIdentifierTypeConsumable ))
-    {
-        return YES;
-    }
-    
-    return NO;
+    return ( self.productData.isPurchased );
 }
 
 - (NSUInteger)availableQuantity
@@ -208,14 +201,7 @@
 
 - (void)setPurchasedQuantity:(NSUInteger)totalQuantityAvailable
 {
-    NSUInteger quantity = totalQuantityAvailable;
-    
-    if( self.type != ASTStoreProductIdentifierTypeConsumable )
-    {
-        quantity = 1;
-    }
-    
-    self.productData.availableQuantity = quantity;
+    self.productData.availableQuantity = totalQuantityAvailable;
 }
 
 #pragma mark SKProduct related properties
