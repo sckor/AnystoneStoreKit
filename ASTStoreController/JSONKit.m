@@ -752,7 +752,7 @@ static void _JKArrayRemoveObjectAtIndex(JKArray *array, NSUInteger objectIndex) 
 {
   if(anObject    == NULL)                           { [NSException raise:NSInvalidArgumentException format:@"*** -[%@ %@]: attempt to insert nil", NSStringFromClass([self class]), NSStringFromSelector(_cmd)]; }
   if(objectIndex >  _JKArrayCount((JKArray *)self)) { [NSException raise:NSRangeException format:@"*** -[%@ %@]: index (%lu) beyond bounds (%lu)", NSStringFromClass([self class]), NSStringFromSelector(_cmd), objectIndex, _JKArrayCount((JKArray *)self) + 1UL]; }
-  anObject = [anObject retain];
+  [anObject retain];
   _JKArrayInsertObjectAtIndex((JKArray *)self, anObject, objectIndex);
   _JKArrayIncrementMutations((JKArray *)self);
 }
@@ -782,7 +782,7 @@ static void _JKArrayRemoveObjectAtIndex(JKArray *array, NSUInteger objectIndex) 
 {
   if(anObject    == NULL)                           { [NSException raise:NSInvalidArgumentException format:@"*** -[%@ %@]: attempt to insert nil", NSStringFromClass([self class]), NSStringFromSelector(_cmd)]; }
   if(objectIndex >= _JKArrayCount((JKArray *)self)) { [NSException raise:NSRangeException format:@"*** -[%@ %@]: index (%lu) beyond bounds (%lu)", NSStringFromClass([self class]), NSStringFromSelector(_cmd), objectIndex, _JKArrayCount((JKArray *)self)]; }
-  anObject = [anObject retain];
+  [anObject retain];
   _JKArrayReplaceObjectAtIndexWithObject((JKArray *)self, objectIndex, anObject);
   _JKArrayIncrementMutations((JKArray *)self);
 }
@@ -924,7 +924,9 @@ static void _JKDictionaryResizeIfNeccessary(JKDictionary *dictionary) {
     
     NSUInteger idx = 0UL;
     for(idx = 0UL; idx < oldCapacity; idx++) { if(oldEntry[idx].key != NULL) { _JKDictionaryAddObject(dictionary, oldEntry[idx].keyHash, oldEntry[idx].key, oldEntry[idx].object); oldEntry[idx].keyHash = 0UL; oldEntry[idx].key = NULL; oldEntry[idx].object = NULL; } }
+#ifndef NS_BLOCK_ASSERTIONS
     NSCParameterAssert((oldCount == dictionary->count));
+#endif
     free(oldEntry); oldEntry = NULL;
   }
 }

@@ -42,7 +42,6 @@
 		8196CB6513338D83000C5286 /* ASTStoreServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 8196CB6313338D82000C5286 /* ASTStoreServer.h */; };
 		8196CB6613338D83000C5286 /* ASTStoreServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8196CB6413338D82000C5286 /* ASTStoreServer.m */; };
 		8196CB7D1333BDD3000C5286 /* ASIAuthenticationDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 8196CB7B1333BDD3000C5286 /* ASIAuthenticationDialog.h */; };
-		8196CB7E1333BDD3000C5286 /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 8196CB7C1333BDD3000C5286 /* ASIAuthenticationDialog.m */; };
 		8196CB821333BDE1000C5286 /* ASIProgressDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 8196CB801333BDE1000C5286 /* ASIProgressDelegate.h */; };
 		8196CB851333BE05000C5286 /* ASIHTTPRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 8196CB831333BE05000C5286 /* ASIHTTPRequest.h */; };
 		8196CB861333BE05000C5286 /* ASIHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8196CB841333BE05000C5286 /* ASIHTTPRequest.m */; };
@@ -63,6 +62,7 @@
 		8196CBAF1333C088000C5286 /* ASICacheDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 8196CBAE1333C088000C5286 /* ASICacheDelegate.h */; };
 		8196CBBD1333D322000C5286 /* JSONKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 8196CBBB1333D322000C5286 /* JSONKit.h */; };
 		8196CBBE1333D322000C5286 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 8196CBBC1333D322000C5286 /* JSONKit.m */; };
+		81D165011338DEA000CFA269 /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 8196CB7C1333BDD3000C5286 /* ASIAuthenticationDialog.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -397,6 +397,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81D165011338DEA000CFA269 /* ASIAuthenticationDialog.m in Sources */,
 				812FF15C132563000070074B /* ASTStoreController.m in Sources */,
 				8184215E13268E16001D5CDC /* ASTStoreProduct.m in Sources */,
 				8184216F1326B56F001D5CDC /* ASTStoreProductPlistReader.m in Sources */,
@@ -410,7 +411,6 @@
 				8178D5C5132FBAB100A06922 /* ASTStoreProductData.m in Sources */,
 				8178D5D4132FFBF800A06922 /* ASTStoreFamilyData.m in Sources */,
 				8196CB6613338D83000C5286 /* ASTStoreServer.m in Sources */,
-				8196CB7E1333BDD3000C5286 /* ASIAuthenticationDialog.m in Sources */,
 				8196CB861333BE05000C5286 /* ASIHTTPRequest.m in Sources */,
 				8196CB8C1333BE12000C5286 /* ASIDataCompressor.m in Sources */,
 				8196CB8E1333BE12000C5286 /* ASIDataDecompressor.m in Sources */,
