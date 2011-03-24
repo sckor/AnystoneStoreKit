@@ -1,7 +1,16 @@
-***
-*** This project is still being actively developed - please do not attempt to use it yet
-***
+Version 0.3
+-----------
+The Anystone Store Kit is ready to be used for all store kit operations that you might want to do locally on your device.
 
+It currently has the following functionality:
+ - Does not require changing source code to configure products
+ - Supports consumable and nonconsumables
+ - Supports consumable families to enable multiple product ids to manipulate the same resource
+ - Delegate methods for all of the major 
+ - Ability to wipe local data clean (for debug and for dealing with possible corruption)
+
+License
+-------
 This project is licensed under the MIT licence. This basically means you're free to do what you want with the code.
 http://creativecommons.org/licenses/MIT/
 
