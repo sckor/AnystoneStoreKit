@@ -8,6 +8,10 @@ It currently has the following functionality:
  - Supports consumable families to enable multiple product ids to manipulate the same resource
  - Delegate methods for all of the major 
  - Ability to wipe local data clean (for debug and for dealing with possible corruption)
+ - Testing in simulator using the embedded SimStoreKit
+
+For some more information, have a look at:
+http://www.anystonetech.com/blog/2011/03/24/introducing-the-anystone-store-kit/
 
 License
 -------
