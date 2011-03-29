@@ -61,6 +61,8 @@
 @synthesize storeServer = storeServer_;
 @synthesize verifyReceipts = verifyReceipts_;
 @synthesize restoringPurchases = restoringPurchases_;
+@synthesize customerIdentifier = customerIdentifier_;
+@synthesize enableServerConsumables = enableServerConsumables_;
 
 #pragma mark Delegate Selector Stubs
 
@@ -758,6 +760,8 @@
     retryStoreConnectionInterval_ = kASTStoreControllerDefaultRetryStoreConnectionInterval;
     verifyReceipts_ = kASTStoreServerDefaultVerifyReceipts;
     restoringPurchases_ = NO;
+    customerIdentifier_ = nil;
+    enableServerConsumables_ = NO;
     
     // Register as an observer right away
     [self.skPaymentQueue addTransactionObserver:self];

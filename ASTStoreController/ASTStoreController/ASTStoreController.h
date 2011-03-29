@@ -50,14 +50,7 @@ typedef enum
     ASTStoreControllerPurchaseStateDownloadingContent
 } ASTStoreControllerPurchaseState;
 
-@interface ASTStoreController : NSObject 
-{
-    ASTStoreControllerProductDataState productDataState_;
-    ASTStoreControllerPurchaseState purchaseState_;
-    BOOL verifyReceipts_;
-
-    id <ASTStoreControllerDelegate> delegate_;
-}
+@interface ASTStoreController : NSObject {}
 
 + (id)sharedStoreController;
 
@@ -176,13 +169,27 @@ typedef enum
 // local appengine instance
 @property (retain) NSURL *serverUrl;
 
+// Used to change the timeout waiting for responses from the
+// server - defaults to 15 seconds
+@property NSTimeInterval serverConnectionTimeout;
+
 // Enable receipt verification with the server - defaults to YES
 // But the option is only relevant if server URL is defined above
 @property  BOOL verifyReceipts;
 
-// Used to change the timeout waiting for responses from the
-// server - defaults to 15 seconds
-@property NSTimeInterval serverConnectionTimeout;
+#pragma mark Server Consumable Support
+
+// Use this string to uniquely identify a customer on the server; This ID
+// should ideally span devices (for instance a GameCenter player identifier).
+// If this is not set, then the system will only make use of the UDID
+// which will mean that consumables cannot span across multiple devices
+@property (retain) NSString *customerIdentifier;
+
+// Select whether or not to use server management of consumables
+// Defaults to NO. When changed from NO to YES, will query current
+// count from server
+@property BOOL enableServerConsumables;
+
 
 #pragma mark Delegate
 @property (assign) id <ASTStoreControllerDelegate> delegate;
