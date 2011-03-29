@@ -62,7 +62,8 @@
 @synthesize verifyReceipts = verifyReceipts_;
 @synthesize restoringPurchases = restoringPurchases_;
 @synthesize customerIdentifier = customerIdentifier_;
-@synthesize enableServerConsumables = enableServerConsumables_;
+@synthesize serverConsumablesEnabled = serverConsumablesEnabled_;
+@synthesize serverPromoCodesEnabled = serverPromoCodesEnabled_;
 
 #pragma mark Delegate Selector Stubs
 
@@ -475,10 +476,8 @@
 }
 
 #pragma mark Transaction Handling
-- (void)completionHandler:(SKPaymentTransaction *)transaction withVerificationResult:(ASTStoreServerReceiptVerificationResult)result
+- (void)updatePurchaseFromProductIdentifier:(NSString*)productIdentifier
 {
-    NSString *productIdentifier = [ASTStoreServer productIdentifierForTransaction:transaction];
-    
     // Attempt to get the product object for this - if that fails
     // Then attempt to the product data object for transaction - 
     ASTStoreProductData *productData = nil;    
@@ -500,22 +499,6 @@
         return;
     }
     
-
-    if( ASTStoreServerReceiptVerificationResultFail == result )
-    {
-        // receipt verification failed
-        self.purchaseState = ASTStoreControllerPurchaseStateNone;
-        
-        [self invokeDelegateStoreControllerProductIdentifierFailedPurchase:productIdentifier withError:nil];
-        [self.skPaymentQueue finishTransaction:transaction];
-        return;
-    }
-    else if( ASTStoreServerReceiptVerificationResultInconclusive == result )
-    {
-        // TODO: Should keep it around and try verifying it later as an audit type function
-    }
-    
-    
     if( productData.type == ASTStoreProductIdentifierTypeConsumable )
     {
         // Increment the available quantity for the family
@@ -532,7 +515,30 @@
     {
         DLog(@"Unsupported product type: %d", productData.type);
     }
+
+}
+
+- (void)completionHandler:(SKPaymentTransaction *)transaction withVerificationResult:(ASTStoreServerResult)result
+{
+    NSString *productIdentifier = [ASTStoreServer productIdentifierForTransaction:transaction];
     
+    if( ASTStoreServerResultFail == result )
+    {
+        // receipt verification failed
+        self.purchaseState = ASTStoreControllerPurchaseStateNone;
+        
+        [self invokeDelegateStoreControllerProductIdentifierFailedPurchase:productIdentifier withError:nil];
+        [self.skPaymentQueue finishTransaction:transaction];
+        return;
+    }
+    else if( ASTStoreServerResultInconclusive == result )
+    {
+        // TODO: Should keep it around and try verifying it later as an audit type function
+    }
+
+    
+    [self updatePurchaseFromProductIdentifier:productIdentifier];
+            
     if( self.restoringPurchases )
     {
         // If restoring, there may be multiple transactions so set back to processing
@@ -560,7 +566,7 @@
         
         [self.storeServer asyncVerifyTransaction:transaction 
                              withCompletionBlock:^(SKPaymentTransaction *transaction, 
-                                                   ASTStoreServerReceiptVerificationResult result) 
+                                                   ASTStoreServerResult result) 
          {
              dispatch_async(dispatch_get_main_queue(), ^{
                  [self completionHandler:transaction withVerificationResult:result];
@@ -570,7 +576,7 @@
     else
     {
         // No server verification to do - assume pass and invoke handler directly
-        [self completionHandler:transaction withVerificationResult:ASTStoreServerReceiptVerificationResultPass];
+        [self completionHandler:transaction withVerificationResult:ASTStoreServerResultPass];
     }
 }
 
@@ -646,20 +652,34 @@
 }
 
 #pragma mark Purchase
-- (void)purchaseProduct:(NSString*)productIdentifier
+
+- (void)purchaseCompletionHandler:(NSString*)productIdentifier 
+               customerIdentifier:(NSString*)customerIdentifier 
+        productPromoCodeAvailable:(BOOL)productPromoCodeAvailable
 {
-    if( ! [SKPaymentQueue canMakePayments] )
+    if( NO == productPromoCodeAvailable )
     {
-        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Purchases Disabled" 
-                                                         message:@"In App Purchase is Disabled. Please check Settings -> General -> Restrictions." 
+        SKPayment *payment = [SKPayment paymentWithProductIdentifier:productIdentifier]; 
+        [self.skPaymentQueue addPayment:payment];
+    }
+    else
+    {
+        // Promo code accepted - activate product...
+        [self updatePurchaseFromProductIdentifier:productIdentifier];
+        
+        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Thank You" 
+                                                         message:@"Your promo code was successfully redeemed." 
                                                         delegate:self 
                                                cancelButtonTitle:@"OK" 
                                                otherButtonTitles:nil] autorelease];
         [alert show];
-
-        return;
+        
+        self.purchaseState = ASTStoreControllerPurchaseStateNone;
     }
-    
+}
+
+- (void)purchaseProduct:(NSString*)productIdentifier
+{
     if( self.purchaseState != ASTStoreControllerPurchaseStateNone )
     {
         // Not in a terminal purchase state - reject request
@@ -673,10 +693,41 @@
         return;
     }
     
-    self.purchaseState = ASTStoreControllerPurchaseStateProcessingPayment;
+    if( ! [SKPaymentQueue canMakePayments] )
+    {
+        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Purchases Disabled" 
+                                                         message:@"In App Purchase is Disabled. Please check Settings -> General -> Restrictions." 
+                                                        delegate:self 
+                                               cancelButtonTitle:@"OK" 
+                                               otherButtonTitles:nil] autorelease];
+        [alert show];
+
+        return;
+    }
     
-    SKPayment *payment = [SKPayment paymentWithProductIdentifier:productIdentifier]; 
-    [self.skPaymentQueue addPayment:payment];
+    self.purchaseState = ASTStoreControllerPurchaseStateProcessingPayment;
+
+    if( self.serverPromoCodesEnabled )
+    {
+        [self.storeServer asyncIsProductPromoCodeAvailableForProductIdentifier:productIdentifier 
+                                                         andCustomerIdentifier:self.customerIdentifier 
+                                                           withCompletionBlock:^(NSString *productIdentifier,
+                                                                                 NSString *customerIdentifier,
+                                                                                 BOOL result)
+         {
+             dispatch_async(dispatch_get_main_queue(), ^{
+                 [self purchaseCompletionHandler:productIdentifier 
+                              customerIdentifier:customerIdentifier 
+                       productPromoCodeAvailable:result];
+             });
+         }];
+    }
+    else
+    {
+        [self purchaseCompletionHandler:productIdentifier 
+                     customerIdentifier:self.customerIdentifier 
+              productPromoCodeAvailable:NO];
+    }
 }
 
 - (void)restorePreviousPurchases
@@ -761,7 +812,8 @@
     verifyReceipts_ = kASTStoreServerDefaultVerifyReceipts;
     restoringPurchases_ = NO;
     customerIdentifier_ = nil;
-    enableServerConsumables_ = NO;
+    serverConsumablesEnabled_ = NO;
+    serverPromoCodesEnabled_ = NO;
     
     // Register as an observer right away
     [self.skPaymentQueue addTransactionObserver:self];

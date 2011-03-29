@@ -38,10 +38,10 @@
 @interface ASTStoreProductData ()
 
 - (void)save;
-@property (nonatomic, retain) NSString *productDataPath;
+@property (nonatomic, copy) NSString *productDataPath;
 @property (readonly, retain) ASTStoreFamilyData *familyData;
 
-@property (retain) NSString *productIdentifier;
+@property (nonatomic,copy) NSString *productIdentifier;
 @property ASTStoreProductIdentifierType type;
 
 @end
@@ -242,8 +242,7 @@
         return ( productDataPath_ );
     }
     
-    productDataPath_ = [ASTStoreProductData pathForProductDataWithIdentifier:self.productIdentifier];
-    [productDataPath_ retain];
+    productDataPath_ = [[ASTStoreProductData pathForProductDataWithIdentifier:self.productIdentifier] copy];
     
     return ( productDataPath_ );
 }
@@ -354,11 +353,8 @@
     
     type_ = aType;
     
-    productIdentifier_ = aProductIdentifier;
-    [productIdentifier_ retain];
-    
-    familyIdentifier_ = aFamilyIdentifier;
-    [familyIdentifier_ retain];
+    productIdentifier_ = [aProductIdentifier copy];    
+    familyIdentifier_ = [aFamilyIdentifier copy];
     
     familyQuanity_= aFamilyQuantity;
     

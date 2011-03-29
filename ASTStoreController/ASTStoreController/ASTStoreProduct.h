@@ -29,16 +29,7 @@
 #import <Foundation/Foundation.h>
 #import "ASTStoreProductTypes.h"
 
-@interface ASTStoreProduct : NSObject 
-{
-    NSString *title_;
-    NSString *description_;
-    
-    NSString *minimumVersion_;
-    NSString *extraInformation_;
-    BOOL shouldDisplay_;
-    BOOL isValid_;
-}
+@interface ASTStoreProduct : NSObject {}
 
 
 + (id)nonConsumableStoreProductWithIdentifier:(NSString*)aProductIdentifier;
@@ -89,18 +80,18 @@
 @property  NSUInteger familyQuanity;
 
 // Title to send back from localizedTitle if title has not been obtained from app store
-@property (retain) NSString *title;
+@property (copy) NSString *title;
 
 // Description to return from localizedDescription if the description has not been obtained from
 // the app store
-@property (retain) NSString *description;
+@property (copy) NSString *description;
 
 // Can be used to prevent displaying of in app purchases in older versions of the app
 // which do not support it yet
-@property (retain) NSString *minimumVersion;
+@property (copy) NSString *minimumVersion;
 
 // An extra string to display in the store, such as "On sale 50% off for a limited time!"
-@property (retain) NSString *extraInformation;
+@property (copy) NSString *extraInformation;
 
 // Hint to the store view controller whether this item should show up in the list
 @property BOOL shouldDisplay;
