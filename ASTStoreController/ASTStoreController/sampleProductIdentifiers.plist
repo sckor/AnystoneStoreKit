@@ -9,7 +9,7 @@
 		<string>com.anystonetech.storecontroller.nonconsumable</string>
 		<key>title</key>
 		<string>Nonconsumable</string>
-		<key>type</key>
+		<key>productType</key>
 		<string>Nonconsumable</string>
 	</dict>
 	<dict>
@@ -25,7 +25,7 @@
 		<string>com.anystonetech.storecontroller.versionsample</string>
 		<key>title</key>
 		<string>Consumable - 1 berry</string>
-		<key>type</key>
+		<key>productType</key>
 		<string>Consumable</string>
 	</dict>
 	<dict>
@@ -41,12 +41,34 @@
 		<string>1.0</string>
 		<key>productIdentifier</key>
 		<string>com.anystonetech.storecontroller.fullsample</string>
-		<key>hidden</key>
+		<key>isHidden</key>
 		<false/>
 		<key>title</key>
 		<string>Consumable - 10 berries</string>
-		<key>type</key>
+		<key>productType</key>
 		<string>Consumable</string>
+	</dict>
+	<dict>
+		<key>description</key>
+		<string>Consumable with 99 smurfberries</string>
+		<key>extraInformation</key>
+		<string>FREE for a limited time</string>
+		<key>familyIdentifier</key>
+		<string>com.anystonetech.storecontroller.berry</string>
+		<key>familyQuantity</key>
+		<string>99</string>
+		<key>minimumVersion</key>
+		<string>1.0</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.storecontroller.freesample</string>
+		<key>isHidden</key>
+		<false/>
+		<key>title</key>
+		<string>Consumable - 99 berries</string>
+		<key>productType</key>
+		<string>Consumable</string>
+		<key>isFree</key>
+		<true/>
 	</dict>
 </array>
 </plist>

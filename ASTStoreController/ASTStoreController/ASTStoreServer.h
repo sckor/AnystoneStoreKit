@@ -27,6 +27,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ASTStoreKit.h"
+#import "ASTStoreProduct.h"
 
 typedef enum
 {
@@ -42,14 +43,13 @@ typedef enum
 + (NSString*)productIdentifierForTransaction:(SKPaymentTransaction*)transaction;
 
 @property (copy) NSURL *serverUrl;
+@property (copy) NSString *vendorUuid;
 @property  NSTimeInterval serverConnectionTimeout;
 
 #pragma mark Verify Related Methods
 - (ASTStoreServerResult)verifyTransaction:(SKPaymentTransaction*)transaction; 
 
-// Uses blocks to provide result - completion block runs on global default
-// queue - use dispatch_async(dispatch_get_main_queue()) inside the completion block if it needs to run
-// on the main thread
+
 typedef void (^ASTVerifyReceiptBlock)(SKPaymentTransaction* transaction,
                                       ASTStoreServerResult result);
 
@@ -62,9 +62,6 @@ typedef void (^ASTVerifyReceiptBlock)(SKPaymentTransaction* transaction,
                                   andCustomerIdentifier:(NSString*)customerIdentifier;
 
 
-// Uses blocks to provide result - completion block runs on global default
-// queue - use dispatch_async(dispatch_get_main_queue()) inside the completion block if it needs to run
-// on the main thread
 typedef void (^ASTProductPromoCodeBlock)(NSString *productIdentifier,
                                          NSString *customerIdentifier,
                                          BOOL result);
@@ -72,5 +69,25 @@ typedef void (^ASTProductPromoCodeBlock)(NSString *productIdentifier,
 - (void)asyncIsProductPromoCodeAvailableForProductIdentifier:(NSString*)productIdentifier 
                                       andCustomerIdentifier:(NSString*)customerIdentifier
                                         withCompletionBlock:(ASTProductPromoCodeBlock)completionBlock;
+
+#pragma mark Get Basic Product Data from Server
+
+// Obtaining a single product update from the server
+- (ASTStoreProduct*)storeProductForProductIdentifier:(NSString*)productIdentifier;
+
+typedef void (^ASTStoreProductBlock)(NSString *productIdentifier, 
+                                     ASTStoreProduct *storeProduct);
+
+- (void)asyncStoreProductForProductIdentifier:(NSString*)productIdentifier
+                          withCompletionBlock:(ASTStoreProductBlock)completionBlock;
+
+
+// Getting the whole set of product data available on the server
+- (NSArray*)storeProducts;
+
+typedef void (^ASTStoreProductArrayBlock)(NSArray *storeProductsArray);
+
+- (void)asyncStoreProductsWithCompletionBlock:(ASTStoreProductArrayBlock)completionBlock;
+
 
 @end

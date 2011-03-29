@@ -31,13 +31,14 @@
 @implementation ASTStoreProduct
 
 @synthesize minimumVersion = minimumVersion_;
-@synthesize hidden = hidden_;
+@synthesize isHidden = isHidden_;
 @synthesize extraInformation = extraInformation_;
 @synthesize skProduct = skProduct_;
 @synthesize isValid = isValid_;
 @synthesize title = title_;
 @synthesize description = description_;
 @synthesize productData = productData_;
+@synthesize isFree = isFree_;
 
 #pragma mark Class Methods
 
@@ -113,9 +114,9 @@
         self.minimumVersion = aProduct.minimumVersion;
     }
     
-    if( self.hidden != aProduct.hidden )
+    if( self.isHidden != aProduct.isHidden )
     {
-        self.hidden = aProduct.hidden;
+        self.isHidden = aProduct.isHidden;
     }
     
     if( ! [self.extraInformation isEqualToString:aProduct.extraInformation] )
@@ -131,6 +132,11 @@
     if( ! [self.title isEqualToString:aProduct.title] )
     {
         self.title = aProduct.title;
+    }
+    
+    if( self.isFree != aProduct.isFree )
+    {
+        self.isFree = aProduct.isFree;
     }
 }
 
@@ -203,6 +209,11 @@
 
 - (NSString*)localizedPrice
 {
+    if( self.isFree )
+    {
+        return ( NSLocalizedString(@"FREE", @""));
+    }
+    
     if( nil == self.skProduct )
     {
         return ( nil );
@@ -294,10 +305,11 @@
     minimumVersion_ = nil;
     title_ = nil;
     description_ = nil;
-    hidden_ = NO;
+    isHidden_ = NO;
     extraInformation_ = nil;
     skProduct_ = nil;
     isValid_ = YES;
+    isFree_ = NO;
     
     return self;
 }

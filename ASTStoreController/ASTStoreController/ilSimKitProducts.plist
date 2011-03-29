@@ -2,6 +2,23 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>com.anystonetech.storecontroller.fullsample</key>
+	<dict>
+		<key>COMMENT: ProductType meanings</key>
+		<array>
+			<string>Nonconsumable</string>
+			<string>Consumable</string>
+			<string>Subscription</string>
+		</array>
+		<key>Description</key>
+		<string>Consumable with 10 berries - SK</string>
+		<key>ProductType</key>
+		<integer>1</integer>
+		<key>Tier</key>
+		<integer>4</integer>
+		<key>Title</key>
+		<string>Consumable - 10 berry - SK</string>
+	</dict>
 	<key>com.anystonetech.storecontroller.nonconsumable</key>
 	<dict>
 		<key>COMMENT: ProductType meanings</key>
@@ -36,7 +53,7 @@
 		<key>Title</key>
 		<string>Consumable - 1 berry - SK</string>
 	</dict>
-	<key>com.anystonetech.storecontroller.fullsample</key>
+	<key>com.anystonetech.storecontroller.freesample</key>
 	<dict>
 		<key>COMMENT: ProductType meanings</key>
 		<array>
@@ -45,13 +62,13 @@
 			<string>Subscription</string>
 		</array>
 		<key>Description</key>
-		<string>Consumable with 10 berries - SK</string>
+		<string>Free consumable Test</string>
 		<key>ProductType</key>
 		<integer>1</integer>
 		<key>Tier</key>
-		<integer>4</integer>
+		<integer>10</integer>
 		<key>Title</key>
-		<string>Consumable - 10 berry - SK</string>
+		<string>Consumable - 99 berries - SK</string>
 	</dict>
 </dict>
 </plist>
