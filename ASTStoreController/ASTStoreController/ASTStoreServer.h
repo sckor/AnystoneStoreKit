@@ -30,10 +30,10 @@
 
 typedef enum
 {
-    ASTStoreServerReceiptVerificationResultPass,
-    ASTStoreServerReceiptVerificationResultFail,
-    ASTStoreServerReceiptVerificationResultInconclusive
-} ASTStoreServerReceiptVerificationResult;
+    ASTStoreServerResultPass,
+    ASTStoreServerResultFail,
+    ASTStoreServerResultInconclusive
+} ASTStoreServerResult;
 
 #define kASTStoreServerDefaultNetworkTimeout 15.0
 
@@ -41,19 +41,36 @@ typedef enum
 
 + (NSString*)productIdentifierForTransaction:(SKPaymentTransaction*)transaction;
 
-- (ASTStoreServerReceiptVerificationResult)verifyTransaction:(SKPaymentTransaction*)transaction; 
+@property (copy) NSURL *serverUrl;
+@property  NSTimeInterval serverConnectionTimeout;
 
+#pragma mark Verify Related Methods
+- (ASTStoreServerResult)verifyTransaction:(SKPaymentTransaction*)transaction; 
 
 // Uses blocks to provide result - completion block runs on global default
 // queue - use dispatch_async(dispatch_get_main_queue()) inside the completion block if it needs to run
 // on the main thread
 typedef void (^ASTVerifyReceiptBlock)(SKPaymentTransaction* transaction,
-                                      ASTStoreServerReceiptVerificationResult result);
+                                      ASTStoreServerResult result);
 
 - (void)asyncVerifyTransaction:(SKPaymentTransaction*)transaction
            withCompletionBlock:(ASTVerifyReceiptBlock)completionBlock;
 
-@property (copy) NSURL *serverUrl;
-@property  NSTimeInterval serverConnectionTimeout;
+#pragma mark In App Promo Related Methods
+
+- (BOOL)isProductPromoCodeAvailableForProductIdentifier:(NSString*)productIdentifier 
+                                  andCustomerIdentifier:(NSString*)customerIdentifier;
+
+
+// Uses blocks to provide result - completion block runs on global default
+// queue - use dispatch_async(dispatch_get_main_queue()) inside the completion block if it needs to run
+// on the main thread
+typedef void (^ASTProductPromoCodeBlock)(NSString *productIdentifier,
+                                         NSString *customerIdentifier,
+                                         BOOL result);
+
+- (void)asyncIsProductPromoCodeAvailableForProductIdentifier:(NSString*)productIdentifier 
+                                      andCustomerIdentifier:(NSString*)customerIdentifier
+                                        withCompletionBlock:(ASTProductPromoCodeBlock)completionBlock;
 
 @end

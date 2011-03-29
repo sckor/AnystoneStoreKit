@@ -32,16 +32,27 @@
 @interface ASTStoreServer ()
 
 @property (readonly) NSString *bundleId;
+@property (readonly) NSString *udid;
 
 @end
 
 @implementation ASTStoreServer
+
+// Keys match Apple's JSON response definitions for consistency
+static NSString * const kASTServerProductIdKey =  @"product_id";
+static NSString * const kASTServerBundleIdKey =  @"bid";
+static NSString * const kASTServerReceiptDataKey =  @"receipt-data";
+static NSString * const kASTServerStatusKey =  @"status";
+static NSString * const kASTServerUDIDKey =  @"udid";
+static NSString * const kASTServerCustomerIdKey =  @"customer_id";
+
 
 #pragma mark Synthesizers
 
 @synthesize serverUrl = serverUrl_;
 @synthesize serverConnectionTimeout = serverConnectionTimeout_;
 @synthesize bundleId = bundleId_;
+@synthesize udid = udid_;
 
 #pragma mark private methods
 
@@ -78,6 +89,20 @@
     return bundleId_;
 }
 
+- (NSString*)udid
+{
+    if( nil != udid_ )
+    {
+        return udid_;
+    }
+    
+    udid_ = [[UIDevice currentDevice] uniqueIdentifier];
+    [udid_ retain];
+    
+    return udid_;
+}
+
+
 #pragma mark Receipt Verification
 
 - (ASIFormDataRequest*)formDataRequestFromReceipt:(NSData*)receiptData forProductId:(NSString*)productId
@@ -87,19 +112,18 @@
     
     [ASIFormDataRequest setDefaultTimeOutSeconds:self.serverConnectionTimeout];
     
-    // Keys match Apple's JSON response definitions for consistency
-    [serviceRequest setPostValue:productId forKey:@"product_id"];
-    [serviceRequest setPostValue:self.bundleId forKey:@"bid"];
+    [serviceRequest setPostValue:productId forKey:kASTServerProductIdKey];
+    [serviceRequest setPostValue:self.bundleId forKey:kASTServerBundleIdKey];
     
     NSString *receiptString = [ASIHTTPRequest base64forData:receiptData];
     
-    [serviceRequest setPostValue:receiptString forKey:@"receipt-data"];
+    [serviceRequest setPostValue:receiptString forKey:kASTServerReceiptDataKey];
     
     return ( serviceRequest );
 }
 
 
-- (ASTStoreServerReceiptVerificationResult)verifyTransaction:(SKPaymentTransaction*)transaction
+- (ASTStoreServerResult)verifyTransaction:(SKPaymentTransaction*)transaction
 {
     NSData *receiptData = transaction.transactionReceipt;
     NSString *productIdentifier = [ASTStoreServer productIdentifierForTransaction:transaction];
@@ -107,7 +131,7 @@
     // If no server URL defined, then assume verification passes
     if( nil == self.serverUrl )
     {
-        return ASTStoreServerReceiptVerificationResultPass;
+        return ASTStoreServerResultPass;
     }
     
     ASIFormDataRequest *serviceRequest = [self formDataRequestFromReceipt:receiptData 
@@ -121,7 +145,7 @@
         // This would generally be a network error, so assume the verification passed
         // since we would not want to reject purchase if our server is down
         DLog(@"error: %@", error);
-        return ( ASTStoreServerReceiptVerificationResultInconclusive );
+        return ( ASTStoreServerResultInconclusive );
     }
     
    
@@ -133,27 +157,27 @@
     {
         // This should have been a dictionary; do nothing and assume it passed
         DLog(@"Unexpected class on decode from JSONKit: %@", NSStringFromClass([responseObject class]));
-        return ( ASTStoreServerReceiptVerificationResultInconclusive );
+        return ( ASTStoreServerResultInconclusive );
     }
     
     NSDictionary *responseDict = responseObject;
     
-    NSNumber *status = [responseDict objectForKey:@"status"];
+    NSNumber *status = [responseDict objectForKey:kASTServerStatusKey];
     
     if( nil == status )
     {
-        return ( ASTStoreServerReceiptVerificationResultInconclusive );
+        return ( ASTStoreServerResultInconclusive );
     }
     
     if( [status integerValue] == 0 )
     {
         // Passed
-        return ( ASTStoreServerReceiptVerificationResultPass );
+        return ( ASTStoreServerResultPass );
     }
     
     // Failed
     DLog(@"response:%@", responseDict);
-    return ( ASTStoreServerReceiptVerificationResultFail );
+    return ( ASTStoreServerResultFail );
 }
 
 
@@ -163,10 +187,100 @@
     dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     
     dispatch_async(globalQueue, ^{
-        ASTStoreServerReceiptVerificationResult result = [self verifyTransaction:transaction];
+        ASTStoreServerResult result = [self verifyTransaction:transaction];
         completionBlock(transaction, result);        
     });
 }
+
+
+#pragma mark In App Promo Related Methods
+- (ASIFormDataRequest*)formDataRequestFromProductIdentifier:(NSString*)productId andCustomerIdentifier:(NSString*)customerIdentifier
+{
+    NSURL *receiptServiceURL = [self.serverUrl URLByAppendingPathComponent:@"service/promo/validate"];
+    ASIFormDataRequest *serviceRequest = [ASIFormDataRequest requestWithURL:receiptServiceURL];
+    
+    [ASIFormDataRequest setDefaultTimeOutSeconds:self.serverConnectionTimeout];
+    
+    [serviceRequest setPostValue:productId forKey:kASTServerProductIdKey];
+    [serviceRequest setPostValue:self.bundleId forKey:kASTServerBundleIdKey];
+    [serviceRequest setPostValue:self.udid forKey:kASTServerUDIDKey];
+    
+    if( nil != customerIdentifier )
+    {
+        [serviceRequest setPostValue:customerIdentifier forKey:kASTServerCustomerIdKey];
+    }
+    
+    return ( serviceRequest );
+}
+
+
+- (BOOL)isProductPromoCodeAvailableForProductIdentifier:(NSString*)productIdentifier 
+                                  andCustomerIdentifier:(NSString*)customerIdentifier
+{
+    // If no server URL defined, then no promo codes passes
+    if( nil == self.serverUrl )
+    {
+        return NO;
+    }
+    
+    ASIFormDataRequest *serviceRequest = [self formDataRequestFromProductIdentifier:productIdentifier andCustomerIdentifier:customerIdentifier];
+    
+    NSError *error = [serviceRequest error];
+    
+    if( error )
+    {
+        // This would generally be a network error, so assume failure since
+        // we don't want to give away promo codes for free
+        DLog(@"error: %@", error);
+        return ( NO );
+    }
+    
+    // Need to decode response.... JSON format...
+    JSONDecoder *decoder = [JSONDecoder decoder];
+    id responseObject = [decoder objectWithData:[serviceRequest responseData]];
+    
+    if( ! [responseObject isKindOfClass:[NSDictionary class]] )
+    {
+        // This should have been a dictionary; do nothing and assume it passed
+        DLog(@"Unexpected class on decode from JSONKit: %@", NSStringFromClass([responseObject class]));
+        return ( ASTStoreServerResultInconclusive );
+    }
+    
+    NSDictionary *responseDict = responseObject;
+    
+    NSNumber *status = [responseDict objectForKey:kASTServerStatusKey];
+    
+    if( nil == status )
+    {
+        return ( NO );
+    }
+    
+    if( [status integerValue] == 0 )
+    {
+        // Passed
+        return ( YES );
+    }
+    
+    // Failed
+    DLog(@"response:%@", responseDict);
+    return ( NO );
+
+}
+
+- (void)asyncIsProductPromoCodeAvailableForProductIdentifier:(NSString*)productIdentifier 
+                                      andCustomerIdentifier:(NSString*)customerIdentifier
+                                        withCompletionBlock:(ASTProductPromoCodeBlock)completionBlock
+{
+    dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    
+    dispatch_async(globalQueue, ^{
+        BOOL result = [self isProductPromoCodeAvailableForProductIdentifier:productIdentifier 
+                                                                      andCustomerIdentifier:customerIdentifier];
+        
+        completionBlock(productIdentifier, customerIdentifier, result);        
+    });
+}
+
 
 #pragma mark Init/Dealloc
 
@@ -195,6 +309,9 @@
     [bundleId_ release];
     bundleId_ = nil;
         
+    [udid_ release];
+    udid_ = nil;
+    
     [super dealloc];
 }
 

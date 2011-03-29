@@ -187,7 +187,7 @@ typedef enum
 
 // If enabled, will check the server to see if the UDID or customerIdentifier
 // has been given permission to "purchase" the product for free
-@property BOOL enableServerPromoCodes;
+@property BOOL serverPromoCodesEnabled;
 
 #pragma mark Server Consumable Support
 
@@ -195,7 +195,7 @@ typedef enum
 // Select whether or not to use server management of consumables
 // Defaults to NO. When changed from NO to YES, will query current
 // count from server
-@property BOOL enableServerConsumables;
+@property BOOL serverConsumablesEnabled;
 
 
 #pragma mark Delegate
