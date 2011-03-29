@@ -167,7 +167,7 @@
         
         NSString *extraInformation = [dict objectForKey:kASTStoreProductPlistExtraInformation];
         NSString *minimumVersion = [dict objectForKey:kASTStoreProductPlistMinimumVersionKey];
-        NSNumber *boolAsNumber = [dict objectForKey:kASTStoreProductPlistShouldDisplayKey];
+        NSNumber *boolAsNumber = [dict objectForKey:kASTStoreProductPlistHiddenKey];
 
         
         if( title )
@@ -192,7 +192,7 @@
         
         if( boolAsNumber )
         {
-            aProduct.shouldDisplay = [boolAsNumber boolValue];
+            aProduct.hidden = [boolAsNumber boolValue];
         }
         
         [tmpStoreProductArray addObject:aProduct];

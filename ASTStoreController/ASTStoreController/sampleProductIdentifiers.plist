@@ -15,6 +15,10 @@
 	<dict>
 		<key>description</key>
 		<string>Consumable with a minimum version and 1 berry</string>
+		<key>familyIdentifier</key>
+		<string>com.anystonetech.storecontroller.berry</string>
+		<key>familyQuantity</key>
+		<string>1</string>
 		<key>minimumVersion</key>
 		<string>1.2</string>
 		<key>productIdentifier</key>
@@ -23,30 +27,26 @@
 		<string>Consumable - 1 berry</string>
 		<key>type</key>
 		<string>Consumable</string>
-		<key>familyIdentifier</key>
-		<string>com.anystonetech.storecontroller.berry</string>
-		<key>familyQuantity</key>
-		<string>1</string>
 	</dict>
 	<dict>
 		<key>description</key>
 		<string>Consumable with 10 smurfberries</string>
 		<key>extraInformation</key>
 		<string>Limited time sale : 50% off!</string>
-		<key>minimumVersion</key>
-		<string>1.0</string>
-		<key>productIdentifier</key>
-		<string>com.anystonetech.storecontroller.fullsample</string>
-		<key>shouldDisplay</key>
-		<true/>
-		<key>title</key>
-		<string>Consumable - 10 berries</string>
-		<key>type</key>
-		<string>Consumable</string>
 		<key>familyIdentifier</key>
 		<string>com.anystonetech.storecontroller.berry</string>
 		<key>familyQuantity</key>
 		<string>10</string>
+		<key>minimumVersion</key>
+		<string>1.0</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.storecontroller.fullsample</string>
+		<key>hidden</key>
+		<false/>
+		<key>title</key>
+		<string>Consumable - 10 berries</string>
+		<key>type</key>
+		<string>Consumable</string>
 	</dict>
 </array>
 </plist>

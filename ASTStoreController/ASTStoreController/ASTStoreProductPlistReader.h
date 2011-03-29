@@ -33,7 +33,7 @@
 #define kASTStoreProductPlistTitleKey @"title"
 #define kASTStoreProductPlistDescriptionKey @"description"
 #define kASTStoreProductPlistMinimumVersionKey @"minimumVersion"
-#define kASTStoreProductPlistShouldDisplayKey @"shouldDisplay"
+#define kASTStoreProductPlistHiddenKey @"hidden"
 #define kASTStoreProductPlistExtraInformation @"extraInformation"
 
 #define kASTStoreProductPlistTypeConsumableKey @"Consumable"

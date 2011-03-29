@@ -94,7 +94,7 @@
 @property (copy) NSString *extraInformation;
 
 // Hint to the store view controller whether this item should show up in the list
-@property BOOL shouldDisplay;
+@property BOOL hidden;
 
 // Defaults to YES; Will be set to NO if iTunes returns that the product
 // is invalid upon querying for it

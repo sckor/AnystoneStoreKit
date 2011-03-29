@@ -31,7 +31,7 @@
 @implementation ASTStoreProduct
 
 @synthesize minimumVersion = minimumVersion_;
-@synthesize shouldDisplay = shouldDisplay_;
+@synthesize hidden = hidden_;
 @synthesize extraInformation = extraInformation_;
 @synthesize skProduct = skProduct_;
 @synthesize isValid = isValid_;
@@ -113,9 +113,9 @@
         self.minimumVersion = aProduct.minimumVersion;
     }
     
-    if( self.shouldDisplay != aProduct.shouldDisplay )
+    if( self.hidden != aProduct.hidden )
     {
-        self.shouldDisplay = aProduct.shouldDisplay;
+        self.hidden = aProduct.hidden;
     }
     
     if( ! [self.extraInformation isEqualToString:aProduct.extraInformation] )
@@ -131,11 +131,6 @@
     if( ! [self.title isEqualToString:aProduct.title] )
     {
         self.title = aProduct.title;
-    }
-    
-    if( self.shouldDisplay != aProduct.shouldDisplay )
-    {
-        self.shouldDisplay = aProduct.shouldDisplay;
     }
 }
 
@@ -299,7 +294,7 @@
     minimumVersion_ = nil;
     title_ = nil;
     description_ = nil;
-    shouldDisplay_ = YES;
+    hidden_ = NO;
     extraInformation_ = nil;
     skProduct_ = nil;
     isValid_ = YES;

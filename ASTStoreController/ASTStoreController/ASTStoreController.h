@@ -82,7 +82,7 @@ typedef enum
 //
 //       Optional Key: title NSString - title to use until app store title can be retrieved
 //       Optional Key: description NSString - description to use until store description can be retrieved
-//       Optional Key: shouldDisplay boolean
+//       Optional Key: hidden boolean
 //       Optional Key: minimumVersion NSString
 //       Optional Key: extraInformation NSString 
 
