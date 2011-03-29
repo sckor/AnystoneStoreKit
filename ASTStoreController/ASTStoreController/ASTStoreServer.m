@@ -42,18 +42,8 @@
 @synthesize serverUrl = serverUrl_;
 @synthesize serverConnectionTimeout = serverConnectionTimeout_;
 @synthesize bundleId = bundleId_;
-@synthesize delegate = delegate_;
 
 #pragma mark private methods
-- (void)invokeDelegateStoreServerVerifiedTransaction:(SKPaymentTransaction*)transaction
-                                                withResult:(ASTStoreServerReceiptVerificationResult)result
-
-{
-    if (self.delegate && [self.delegate respondsToSelector: @selector(astStoreServerVerifiedTransaction:withResult:)])
-    {
-        [self.delegate astStoreServerVerifiedTransaction:transaction withResult:result];
-    }
-}
 
 #pragma mark Public Class Methods
 + (NSString*)productIdentifierForTransaction:(SKPaymentTransaction*)transaction
@@ -93,7 +83,6 @@
 - (ASIFormDataRequest*)formDataRequestFromReceipt:(NSData*)receiptData forProductId:(NSString*)productId
 {
     NSURL *receiptServiceURL = [self.serverUrl URLByAppendingPathComponent:@"service/receipt/validate"];
-    //NSURL *receiptServiceURL = [self.serverUrl URLByAppendingPathComponent:@"posttttest.php"];
     ASIFormDataRequest *serviceRequest = [ASIFormDataRequest requestWithURL:receiptServiceURL];
     
     [ASIFormDataRequest setDefaultTimeOutSeconds:self.serverConnectionTimeout];
@@ -167,20 +156,6 @@
     return ( ASTStoreServerReceiptVerificationResultFail );
 }
 
-- (void)asyncVerifyTransaction:(SKPaymentTransaction*)transaction
-{
-    dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    
-    dispatch_async(globalQueue, ^{
-        ASTStoreServerReceiptVerificationResult result = [self verifyTransaction:transaction];
-        
-        // Invoke the delegate on the main thread
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self invokeDelegateStoreServerVerifiedTransaction:transaction withResult:result];
-        });
-        
-    });
-}
 
 - (void)asyncVerifyTransaction:(SKPaymentTransaction*)transaction
            withCompletionBlock:(ASTVerifyReceiptBlock)completionBlock
@@ -207,7 +182,6 @@
     serverUrl_ = nil;
     serverConnectionTimeout_ = kASTStoreServerDefaultNetworkTimeout;
     bundleId_ = nil;
-    delegate_ = nil;
     
     DLog(@"Instantiated ASTStoreServer");
     return self;
@@ -220,9 +194,7 @@
     
     [bundleId_ release];
     bundleId_ = nil;
-    
-    delegate_ = nil;
-    
+        
     [super dealloc];
 }
 

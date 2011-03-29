@@ -35,8 +35,8 @@
 
 - (void)save;
 
-@property (nonatomic, retain) NSString *familyDataPath;
-@property (retain) NSString *familyIdentifier;
+@property (nonatomic, copy) NSString *familyDataPath;
+@property (copy) NSString *familyIdentifier;
 
 @end
 
@@ -168,8 +168,7 @@
         return ( familyDataPath_ );
     }
     
-    familyDataPath_ = [ASTStoreFamilyData pathForFamilyDataWithIdentifier:self.familyIdentifier];
-    [familyDataPath_ retain];
+    familyDataPath_ = [[ASTStoreFamilyData pathForFamilyDataWithIdentifier:self.familyIdentifier] copy];
     
     return ( familyDataPath_ );
 }
@@ -246,8 +245,7 @@
     
     
     
-    familyIdentifier_ = aFamilyIdentifier;
-    [familyIdentifier_ retain];
+    familyIdentifier_ = [aFamilyIdentifier copy];
     
     familyDataPath_ = nil;
     availableQuantity_ = 0;

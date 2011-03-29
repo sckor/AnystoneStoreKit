@@ -167,7 +167,7 @@ typedef enum
 // http://xxx.appspot.com
 // alternatively can use a local server URL for testing with the
 // local appengine instance
-@property (retain) NSURL *serverUrl;
+@property (copy) NSURL *serverUrl;
 
 // Used to change the timeout waiting for responses from the
 // server - defaults to 15 seconds
@@ -177,13 +177,20 @@ typedef enum
 // But the option is only relevant if server URL is defined above
 @property  BOOL verifyReceipts;
 
-#pragma mark Server Consumable Support
-
 // Use this string to uniquely identify a customer on the server; This ID
 // should ideally span devices (for instance a GameCenter player identifier).
 // If this is not set, then the system will only make use of the UDID
-// which will mean that consumables cannot span across multiple devices
-@property (retain) NSString *customerIdentifier;
+// which will mean that consumables and promo codes cannot span across multiple devices
+@property (copy) NSString *customerIdentifier;
+
+#pragma mark Server Promo Code Support
+
+// If enabled, will check the server to see if the UDID or customerIdentifier
+// has been given permission to "purchase" the product for free
+@property BOOL enableServerPromoCodes;
+
+#pragma mark Server Consumable Support
+
 
 // Select whether or not to use server management of consumables
 // Defaults to NO. When changed from NO to YES, will query current

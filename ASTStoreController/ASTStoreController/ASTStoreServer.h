@@ -28,8 +28,6 @@
 #import <Foundation/Foundation.h>
 #import "ASTStoreKit.h"
 
-@protocol ASTStoreServerDelegate;
-
 typedef enum
 {
     ASTStoreServerReceiptVerificationResultPass,
@@ -39,21 +37,12 @@ typedef enum
 
 #define kASTStoreServerDefaultNetworkTimeout 15.0
 
-@interface ASTStoreServer : NSObject 
-{
-    NSURL *serverUrl_;
-    NSTimeInterval serverConnectionTimeout_;
-    
-    id<ASTStoreServerDelegate> delegate_;
-}
+@interface ASTStoreServer : NSObject {}
 
 + (NSString*)productIdentifierForTransaction:(SKPaymentTransaction*)transaction;
 
 - (ASTStoreServerReceiptVerificationResult)verifyTransaction:(SKPaymentTransaction*)transaction; 
 
-
-// Uses delegate method to provide result
-- (void)asyncVerifyTransaction:(SKPaymentTransaction*)transaction;
 
 // Uses blocks to provide result - completion block runs on global default
 // queue - use dispatch_async(dispatch_get_main_queue()) inside the completion block if it needs to run
@@ -64,19 +53,7 @@ typedef void (^ASTVerifyReceiptBlock)(SKPaymentTransaction* transaction,
 - (void)asyncVerifyTransaction:(SKPaymentTransaction*)transaction
            withCompletionBlock:(ASTVerifyReceiptBlock)completionBlock;
 
-@property (retain) NSURL *serverUrl;
+@property (copy) NSURL *serverUrl;
 @property  NSTimeInterval serverConnectionTimeout;
-@property (assign) id<ASTStoreServerDelegate> delegate;
-
-@end
-
-@protocol ASTStoreServerDelegate <NSObject>
-@optional
-
-// Delegate is called to provide result for async receipt verification result
-- (void)astStoreServerVerifiedTransaction:(SKPaymentTransaction*)transaction 
-                               withResult:(ASTStoreServerReceiptVerificationResult)result;
-
-
 
 @end

@@ -28,17 +28,13 @@
 #import <Foundation/Foundation.h>
 
 
-@interface ASTStoreFamilyData : NSObject <NSCoding, NSCopying>
-{
-    NSString *familyIdentifier_;
-    NSUInteger availableQuantity_;
-}
+@interface ASTStoreFamilyData : NSObject <NSCoding, NSCopying> {}
 
 + (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier;
 + (void)removeFamilyDataForIdentifier:(NSString*)aFamilyIdentifier;
 - (id)initWithFamilyIdentifier:(NSString*)aFamilyIdentifier;
 
 @property (nonatomic) NSUInteger availableQuantity;
-@property (readonly,retain) NSString *familyIdentifier;
+@property (readonly,copy) NSString *familyIdentifier;
 
 @end
