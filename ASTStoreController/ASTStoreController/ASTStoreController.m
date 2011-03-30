@@ -208,6 +208,20 @@
 // Only want to instantiate a storeServer if one of the values is changed
 // Otherwise there is no point in creating the object; just return default values
 // In the case that the storeServer has not otherwise been created
+- (NSString*)vendorUuid
+{
+    if( nil == storeServer_ )
+    {
+        return nil;
+    }
+    
+    return ( self.storeServer.vendorUuid );
+}
+
+- (void)setVendorUuid:(NSString *)vendorUuid
+{
+    self.storeServer.vendorUuid = vendorUuid;
+}
 
 - (NSURL*)serverUrl
 {
@@ -568,9 +582,7 @@
                              withCompletionBlock:^(SKPaymentTransaction *transaction, 
                                                    ASTStoreServerResult result) 
          {
-             dispatch_async(dispatch_get_main_queue(), ^{
-                 [self completionHandler:transaction withVerificationResult:result];
-             });
+             [self completionHandler:transaction withVerificationResult:result];
          }];
     }
     else
@@ -707,7 +719,18 @@
     
     self.purchaseState = ASTStoreControllerPurchaseStateProcessingPayment;
 
-    if( self.serverPromoCodesEnabled )
+    ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
+    
+    if( theProduct.isFree )
+    {
+        // Treat it like a valid promo code
+        [self purchaseCompletionHandler:productIdentifier 
+                     customerIdentifier:self.customerIdentifier 
+              productPromoCodeAvailable:YES];
+
+
+    }
+    else if( self.serverPromoCodesEnabled )
     {
         [self.storeServer asyncIsProductPromoCodeAvailableForProductIdentifier:productIdentifier 
                                                          andCustomerIdentifier:self.customerIdentifier 
@@ -715,11 +738,9 @@
                                                                                  NSString *customerIdentifier,
                                                                                  BOOL result)
          {
-             dispatch_async(dispatch_get_main_queue(), ^{
-                 [self purchaseCompletionHandler:productIdentifier 
-                              customerIdentifier:customerIdentifier 
-                       productPromoCodeAvailable:result];
-             });
+             [self purchaseCompletionHandler:productIdentifier 
+                          customerIdentifier:customerIdentifier 
+                   productPromoCodeAvailable:result];
          }];
     }
     else

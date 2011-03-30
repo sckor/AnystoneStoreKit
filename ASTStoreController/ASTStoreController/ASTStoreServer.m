@@ -28,6 +28,7 @@
 #import "ASTStoreServer.h"
 #import "ASIFormDataRequest.h"
 #import "JSONKit.h"
+#import "ASTStoreProductInfoKeys.h"
 
 @interface ASTStoreServer ()
 
@@ -38,14 +39,6 @@
 
 @implementation ASTStoreServer
 
-// Keys match Apple's JSON response definitions for consistency
-static NSString * const kASTServerProductIdKey =  @"product_id";
-static NSString * const kASTServerBundleIdKey =  @"bid";
-static NSString * const kASTServerReceiptDataKey =  @"receipt-data";
-static NSString * const kASTServerStatusKey =  @"status";
-static NSString * const kASTServerUDIDKey =  @"udid";
-static NSString * const kASTServerCustomerIdKey =  @"customer_id";
-
 
 #pragma mark Synthesizers
 
@@ -53,6 +46,7 @@ static NSString * const kASTServerCustomerIdKey =  @"customer_id";
 @synthesize serverConnectionTimeout = serverConnectionTimeout_;
 @synthesize bundleId = bundleId_;
 @synthesize udid = udid_;
+@synthesize vendorUuid = vendorUuid_;
 
 #pragma mark private methods
 
@@ -107,17 +101,17 @@ static NSString * const kASTServerCustomerIdKey =  @"customer_id";
 
 - (ASIFormDataRequest*)formDataRequestFromReceipt:(NSData*)receiptData forProductId:(NSString*)productId
 {
-    NSURL *receiptServiceURL = [self.serverUrl URLByAppendingPathComponent:@"service/receipt/validate"];
-    ASIFormDataRequest *serviceRequest = [ASIFormDataRequest requestWithURL:receiptServiceURL];
+    NSURL *serviceURL = [self.serverUrl URLByAppendingPathComponent:@"service/receipt/validate"];
+    ASIFormDataRequest *serviceRequest = [ASIFormDataRequest requestWithURL:serviceURL];
     
     [ASIFormDataRequest setDefaultTimeOutSeconds:self.serverConnectionTimeout];
     
-    [serviceRequest setPostValue:productId forKey:kASTServerProductIdKey];
-    [serviceRequest setPostValue:self.bundleId forKey:kASTServerBundleIdKey];
+    [serviceRequest setPostValue:productId forKey:kASTStoreProductInfoIdentifierKey];
+    [serviceRequest setPostValue:self.bundleId forKey:kASTStoreProductInfoBundleIdKey];
     
     NSString *receiptString = [ASIHTTPRequest base64forData:receiptData];
     
-    [serviceRequest setPostValue:receiptString forKey:kASTServerReceiptDataKey];
+    [serviceRequest setPostValue:receiptString forKey:kASTStoreProductInfoReceiptDataKey];
     
     return ( serviceRequest );
 }
@@ -162,7 +156,7 @@ static NSString * const kASTServerCustomerIdKey =  @"customer_id";
     
     NSDictionary *responseDict = responseObject;
     
-    NSNumber *status = [responseDict objectForKey:kASTServerStatusKey];
+    NSNumber *status = [responseDict objectForKey:kASTStoreProductInfoStatusKey];
     
     if( nil == status )
     {
@@ -188,26 +182,30 @@ static NSString * const kASTServerCustomerIdKey =  @"customer_id";
     
     dispatch_async(globalQueue, ^{
         ASTStoreServerResult result = [self verifyTransaction:transaction];
-        completionBlock(transaction, result);        
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionBlock(transaction, result);
+        });
     });
 }
 
 
 #pragma mark In App Promo Related Methods
-- (ASIFormDataRequest*)formDataRequestFromProductIdentifier:(NSString*)productId andCustomerIdentifier:(NSString*)customerIdentifier
+- (ASIFormDataRequest*)formDataRequestPromoFromProductIdentifier:(NSString*)productId andCustomerIdentifier:(NSString*)customerIdentifier
 {
-    NSURL *receiptServiceURL = [self.serverUrl URLByAppendingPathComponent:@"service/promo/validate"];
-    ASIFormDataRequest *serviceRequest = [ASIFormDataRequest requestWithURL:receiptServiceURL];
+    NSURL *serviceURL = [self.serverUrl URLByAppendingPathComponent:@"service/purchase/validate"];
+    ASIFormDataRequest *serviceRequest = [ASIFormDataRequest requestWithURL:serviceURL];
     
     [ASIFormDataRequest setDefaultTimeOutSeconds:self.serverConnectionTimeout];
     
-    [serviceRequest setPostValue:productId forKey:kASTServerProductIdKey];
-    [serviceRequest setPostValue:self.bundleId forKey:kASTServerBundleIdKey];
-    [serviceRequest setPostValue:self.udid forKey:kASTServerUDIDKey];
+    [serviceRequest setPostValue:self.vendorUuid forKey:kASTStoreProductInfoVendorUuidKey];
+    [serviceRequest setPostValue:productId forKey:kASTStoreProductInfoIdentifierKey];
+    [serviceRequest setPostValue:self.bundleId forKey:kASTStoreProductInfoBundleIdKey];
+    [serviceRequest setPostValue:self.udid forKey:kASTStoreProductInfoUdidKey];
     
     if( nil != customerIdentifier )
     {
-        [serviceRequest setPostValue:customerIdentifier forKey:kASTServerCustomerIdKey];
+        [serviceRequest setPostValue:customerIdentifier forKey:kASTStoreProductInfoCustomerIdentifierKey];
     }
     
     return ( serviceRequest );
@@ -218,12 +216,14 @@ static NSString * const kASTServerCustomerIdKey =  @"customer_id";
                                   andCustomerIdentifier:(NSString*)customerIdentifier
 {
     // If no server URL defined, then no promo codes passes
-    if( nil == self.serverUrl )
+    if(( nil == self.serverUrl ) || ( nil == self.vendorUuid ) || ( [self.vendorUuid isEqualToString:@""] ))
     {
+        DLog(@"Unable to process request for promo code serverURL:%@ vendor:%@", self.serverUrl, self.vendorUuid);
         return NO;
     }
     
-    ASIFormDataRequest *serviceRequest = [self formDataRequestFromProductIdentifier:productIdentifier andCustomerIdentifier:customerIdentifier];
+    ASIFormDataRequest *serviceRequest = [self formDataRequestPromoFromProductIdentifier:productIdentifier 
+                                                                   andCustomerIdentifier:customerIdentifier];
     
     NSError *error = [serviceRequest error];
     
@@ -248,7 +248,7 @@ static NSString * const kASTServerCustomerIdKey =  @"customer_id";
     
     NSDictionary *responseDict = responseObject;
     
-    NSNumber *status = [responseDict objectForKey:kASTServerStatusKey];
+    NSNumber *status = [responseDict objectForKey:kASTStoreProductInfoStatusKey];
     
     if( nil == status )
     {
@@ -275,12 +275,174 @@ static NSString * const kASTServerCustomerIdKey =  @"customer_id";
     
     dispatch_async(globalQueue, ^{
         BOOL result = [self isProductPromoCodeAvailableForProductIdentifier:productIdentifier 
-                                                                      andCustomerIdentifier:customerIdentifier];
+                                                      andCustomerIdentifier:customerIdentifier];
         
-        completionBlock(productIdentifier, customerIdentifier, result);        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionBlock(productIdentifier, customerIdentifier, result);
+        });
     });
 }
 
+#pragma mark Basic Product Data Methods
+- (ASIFormDataRequest*)formDataRequestProductFromProductIdentifier:(NSString*)productId
+{
+    NSURL *serviceURL = [self.serverUrl URLByAppendingPathComponent:@"service/product/query"];
+    ASIFormDataRequest *serviceRequest = [ASIFormDataRequest requestWithURL:serviceURL];
+    
+    [ASIFormDataRequest setDefaultTimeOutSeconds:self.serverConnectionTimeout];
+    
+    [serviceRequest setPostValue:self.vendorUuid forKey:kASTStoreProductInfoVendorUuidKey];
+    [serviceRequest setPostValue:productId forKey:kASTStoreProductInfoIdentifierKey];
+    [serviceRequest setPostValue:self.bundleId forKey:kASTStoreProductInfoBundleIdKey];
+    
+    return ( serviceRequest );
+}
+
+
+- (ASTStoreProduct*)storeProductForProductIdentifier:(NSString*)productIdentifier
+{
+    // If no server URL defined, then nothing to get
+    if(( nil == self.serverUrl ) || ( nil == self.vendorUuid ) || ( [self.vendorUuid isEqualToString:@""] ))
+    {
+        DLog(@"Unable to process request for product id serverURL:%@ vendor:%@", self.serverUrl, self.vendorUuid);
+    }
+    
+    ASIFormDataRequest *serviceRequest = [self formDataRequestProductFromProductIdentifier:productIdentifier];
+    
+    NSError *error = [serviceRequest error];
+    
+    if( error )
+    {
+        // This would generally be a network error, so assume failure since
+        // Cannot provide anything useful
+        DLog(@"error: %@", error);
+        return ( nil );
+    }
+    
+    // Need to decode response.... JSON format...
+    JSONDecoder *decoder = [JSONDecoder decoder];
+    id responseObject = [decoder objectWithData:[serviceRequest responseData]];
+    
+    if( ! [responseObject isKindOfClass:[NSDictionary class]] )
+    {
+        DLog(@"Unexpected class on decode from JSONKit: %@", NSStringFromClass([responseObject class]));
+        return ( nil );
+    }
+    
+    NSDictionary *responseDict = responseObject;
+    
+    NSNumber *status = [responseDict objectForKey:kASTStoreProductInfoStatusKey];
+    
+    if( nil == status )
+    {
+        return ( nil );
+    }
+    
+    if( [status integerValue] != 0 )
+    {
+        // Failed
+        return ( nil );
+    }
+
+    // TODO: Extract data from response and create StoreProduct
+    
+
+    return ( nil );
+}
+
+- (void)asyncStoreProductForProductIdentifier:(NSString*)productIdentifier
+                          withCompletionBlock:(ASTStoreProductBlock)completionBlock
+{
+    dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    
+    dispatch_async(globalQueue, ^{
+        ASTStoreProduct *result = [self storeProductForProductIdentifier:productIdentifier];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionBlock(productIdentifier, result);
+        });
+    });
+}
+
+- (ASIFormDataRequest*)formDataRequestProducts
+{
+    NSURL *serviceURL = [self.serverUrl URLByAppendingPathComponent:@"service/product/list"];
+    ASIFormDataRequest *serviceRequest = [ASIFormDataRequest requestWithURL:serviceURL];
+    
+    [ASIFormDataRequest setDefaultTimeOutSeconds:self.serverConnectionTimeout];
+    
+    [serviceRequest setPostValue:self.vendorUuid forKey:kASTStoreProductInfoVendorUuidKey];
+    [serviceRequest setPostValue:self.bundleId forKey:kASTStoreProductInfoBundleIdKey];
+    [serviceRequest setPostValue:self.udid forKey:kASTStoreProductInfoUdidKey];
+    
+    return ( serviceRequest );
+}
+
+- (NSArray*)storeProducts
+{
+    // If no server URL defined, then nothing to get
+    if(( nil == self.serverUrl ) || ( nil == self.vendorUuid ) || ( [self.vendorUuid isEqualToString:@""] ))
+    {
+        DLog(@"Unable to process request for product list serverURL:%@ vendor:%@", self.serverUrl, self.vendorUuid);
+        return nil;
+    }
+    
+    ASIFormDataRequest *serviceRequest = [self formDataRequestProducts];
+    
+    NSError *error = [serviceRequest error];
+    
+    if( error )
+    {
+        // This would generally be a network error, so assume failure since
+        // Cannot provide anything useful
+        DLog(@"error: %@", error);
+        return ( nil );
+    }
+    
+    // Need to decode response.... JSON format...
+    JSONDecoder *decoder = [JSONDecoder decoder];
+    id responseObject = [decoder objectWithData:[serviceRequest responseData]];
+    
+    if( ! [responseObject isKindOfClass:[NSArray class]] )
+    {
+        DLog(@"Unexpected class on decode from JSONKit: %@", NSStringFromClass([responseObject class]));
+        return ( nil );
+    }
+    
+    NSDictionary *responseDict = responseObject;
+    
+    NSNumber *status = [responseDict objectForKey:kASTStoreProductInfoStatusKey];
+    
+    if( nil == status )
+    {
+        return ( nil );
+    }
+    
+    if( [status integerValue] != 0 )
+    {
+        // Failed
+        return ( nil );
+    }
+    
+    // TODO: Extract data from response and create StoreProducts Array
+    
+    
+    return ( nil );
+}
+
+- (void)asyncStoreProductsWithCompletionBlock:(ASTStoreProductArrayBlock)completionBlock
+{
+    dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    
+    dispatch_async(globalQueue, ^{
+        NSArray *result = [self storeProducts];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionBlock( result );
+        });
+    });
+
+}
 
 #pragma mark Init/Dealloc
 
@@ -296,6 +458,7 @@ static NSString * const kASTServerCustomerIdKey =  @"customer_id";
     serverUrl_ = nil;
     serverConnectionTimeout_ = kASTStoreServerDefaultNetworkTimeout;
     bundleId_ = nil;
+    vendorUuid_ = nil;
     
     DLog(@"Instantiated ASTStoreServer");
     return self;

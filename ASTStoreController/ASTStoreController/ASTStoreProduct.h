@@ -94,15 +94,19 @@
 @property (copy) NSString *extraInformation;
 
 // Hint to the store view controller whether this item should show up in the list
-@property BOOL shouldDisplay;
+@property BOOL isHidden;
+
+// When set, will bypass the store and just process the purchase
+@property BOOL isFree;
 
 // Defaults to YES; Will be set to NO if iTunes returns that the product
 // is invalid upon querying for it
 @property  (readonly) BOOL isValid;
 
 // The following properties are valid when the data has been retrieved from
-// iTunes by the ASTStoreController; If there is not data, the methods
-// will return nil. See SKProduct for more information
+// iTunes by the ASTStoreController; If there is no data, the methods
+// will return nil or use the values provided for title/description above. 
+// See SKProduct for more information
 @property(nonatomic, readonly) NSString *localizedPrice;
 @property(nonatomic, readonly) NSString *localizedDescription;
 @property(nonatomic, readonly) NSString *localizedTitle;
