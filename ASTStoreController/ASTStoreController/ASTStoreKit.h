@@ -28,13 +28,10 @@
 
 #if TARGET_IPHONE_SIMULATOR
 
-// To be 100% sure this code is not built into release builds...
-#ifdef DEBUG
 // The ILSimStoreKit header is smart enough to only enable SimStoreKit 
 // if running on the simulator - it will not enable on the real devices
 #define ILSimReplaceRealStoreKit 1
 #include "ILSimStoreKit.h"
-#endif
 
 #else
 
