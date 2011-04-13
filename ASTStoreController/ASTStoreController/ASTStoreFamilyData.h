@@ -26,15 +26,26 @@
 //  THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import "ASTStoreProductTypes.h"
 
 
 @interface ASTStoreFamilyData : NSObject <NSCoding, NSCopying> {}
 
+// Creates a new instance if necessary
++ (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier productType:(ASTStoreProductIdentifierType)productType;
+
+// Only returns existing entities
 + (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier;
+
 + (void)removeFamilyDataForIdentifier:(NSString*)aFamilyIdentifier;
 - (id)initWithFamilyIdentifier:(NSString*)aFamilyIdentifier;
 
 @property (nonatomic) NSUInteger availableQuantity;
 @property (readonly,copy) NSString *familyIdentifier;
+@property ASTStoreProductIdentifierType type;
+
+
+@property (readonly) BOOL isPurchased;
+- (NSUInteger)consumeQuantity:(NSUInteger)amountToConsume;
 
 @end

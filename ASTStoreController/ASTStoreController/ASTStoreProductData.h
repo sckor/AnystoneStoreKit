@@ -85,4 +85,6 @@
 
 @property (readonly) BOOL isPurchased;
 
+- (NSUInteger)consumeQuantity:(NSUInteger)amountToConsume;
+
 @end

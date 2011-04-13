@@ -29,6 +29,7 @@
 
 #define k_FAMILY_IDENTIFIER 						@"familyIdentifier"
 #define k_PURCHASED_QUANTITY 						@"purchasedQuantity"
+#define k_TYPE                                      @"type"
 
 
 @interface ASTStoreFamilyData()
@@ -45,6 +46,7 @@
 @synthesize availableQuantity = availableQuantity_;
 @synthesize familyIdentifier = familyIdentifier_;
 @synthesize familyDataPath = familyDataPath_;
+@synthesize type = type_;
 
 #pragma mark private class methods
 + (NSMutableDictionary*)familyDataDictionary
@@ -89,19 +91,18 @@
     return ( [pathForFamilyData stringByAppendingPathExtension:@"archive"] );
 }
 
-+ (ASTStoreFamilyData*)createFamilyData:(NSString*)aFamilyIdentifier
++ (ASTStoreFamilyData*)createFamilyData:(NSString*)aFamilyIdentifier productType:(ASTStoreProductIdentifierType)productType
 {
     ASTStoreFamilyData *familyData = [[[ASTStoreFamilyData alloc] initWithFamilyIdentifier:aFamilyIdentifier] autorelease];
+    familyData.type = productType;
+    
     [familyData save];
     [[ASTStoreFamilyData familyDataDictionary] setObject:familyData forKey:aFamilyIdentifier];
     
     return familyData;
 }
-#pragma mark public class methods
 
-
-
-+ (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier
++ (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier productType:(ASTStoreProductIdentifierType)productType createIfNeeded:(BOOL)createIfNeeded
 {
     // Only want 1 instance of the family data across the process, so cache them in a dictionary
     ASTStoreFamilyData *familyData = [[ASTStoreFamilyData familyDataDictionary] objectForKey:aFamilyIdentifier];
@@ -124,7 +125,14 @@
     
     if( NO == [fm fileExistsAtPath:fileName isDirectory:nil] )
     {
-        return( [ASTStoreFamilyData createFamilyData:aFamilyIdentifier] );
+        if( createIfNeeded )
+        {
+            return( [ASTStoreFamilyData createFamilyData:aFamilyIdentifier productType:productType] );
+        }
+        else
+        {
+            return nil;
+        }
     }
     
     @try 
@@ -138,17 +146,49 @@
     
     if( nil == familyData )
     {
-        // Unarchive failed - create a new one
-        DLog(@"Unarchive failed for %@", fileName);
-        return( [ASTStoreFamilyData createFamilyData:aFamilyIdentifier] );
+        if( createIfNeeded )
+        {
+            // Unarchive failed - create a new one
+            DLog(@"Unarchive failed for %@", fileName);
+            return( [ASTStoreFamilyData createFamilyData:aFamilyIdentifier productType:productType] );
+        }
+        else
+        {
+            return nil;
+        }
     }
     
-
+    
     familyData.familyDataPath = fileName;
+    
+    if( familyData.type == ASTStoreProductIdentifierTypeInvalid )
+    {
+        // This may be necessary for old family data which did not have a type
+        familyData.type = productType;
+    }
+    
     [[ASTStoreFamilyData familyDataDictionary] setObject:familyData forKey:aFamilyIdentifier];
     
-    return( familyData );
+    return( familyData );    
 }
+
+#pragma mark public class methods
+
++ (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier
+{
+    return [ASTStoreFamilyData familyDataWithIdentifier:aFamilyIdentifier 
+                                            productType:ASTStoreProductIdentifierTypeInvalid 
+                                         createIfNeeded:NO];
+}
+
++ (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier productType:(ASTStoreProductIdentifierType)productType
+{
+    return [ASTStoreFamilyData familyDataWithIdentifier:aFamilyIdentifier 
+                                            productType:productType 
+                                         createIfNeeded:YES];
+}
+
+
 
 + (void)removeFamilyDataForIdentifier:(NSString*)aFamilyIdentifier
 {
@@ -180,6 +220,40 @@
 }
 
 #pragma mark Synthesizer Override
+- (BOOL)isPurchased
+{
+    NSUInteger quantity = self.availableQuantity;
+    
+    if(( quantity > 0 ) && ( self.type != ASTStoreProductIdentifierTypeConsumable ))
+    {
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (NSUInteger)consumeQuantity:(NSUInteger)amountToConsume
+{
+    if( self.type != ASTStoreProductIdentifierTypeConsumable )
+    {
+        return 0;
+    }
+    
+    NSUInteger currentQuantity = self.availableQuantity;
+    NSUInteger consumeQuantity = amountToConsume;
+    
+    if( currentQuantity < consumeQuantity )
+    {
+        consumeQuantity = currentQuantity;
+    }
+    
+    // Update the amount of consumables in the family
+    currentQuantity -= consumeQuantity;
+    self.availableQuantity = currentQuantity;
+    
+    return consumeQuantity;
+}
+
 - (NSString*)familyDataPath
 {
     if( nil != familyDataPath_ )
@@ -195,7 +269,14 @@
 
 - (void)setAvailableQuantity:(NSUInteger)newQuantity
 {
-    availableQuantity_ = newQuantity;
+    NSUInteger quantity = newQuantity;
+    
+    if(( self.type != ASTStoreProductIdentifierTypeConsumable ) && ( quantity > 1 ))
+    {
+        quantity = 1;
+    }
+    
+    availableQuantity_ = quantity;
     
     [self save];
 }
@@ -229,6 +310,7 @@
 {
     [encoder encodeObject:self.familyIdentifier forKey:k_FAMILY_IDENTIFIER];
     [encoder encodeInteger:self.availableQuantity forKey:k_PURCHASED_QUANTITY];
+    [encoder encodeInteger:self.type forKey:k_TYPE];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder 
@@ -239,6 +321,7 @@
     {
         self.familyIdentifier = [decoder decodeObjectForKey:k_FAMILY_IDENTIFIER];
         self.availableQuantity = [decoder decodeIntegerForKey:k_PURCHASED_QUANTITY];
+        self.type = [decoder decodeIntegerForKey:k_TYPE];
     }
     return self;
 }
@@ -249,6 +332,7 @@
     
     [theCopy setFamilyIdentifier: [[self.familyIdentifier copy] autorelease]];
     [theCopy setAvailableQuantity: self.availableQuantity];
+    [theCopy setType:self.type];
     
     return theCopy;
 }
@@ -262,12 +346,11 @@
         return( nil );
     }
     
-    
-    
     familyIdentifier_ = [aFamilyIdentifier copy];
     
     familyDataPath_ = nil;
     availableQuantity_ = 0;
+    type_ = ASTStoreProductIdentifierTypeInvalid;
     
     [self save];
     

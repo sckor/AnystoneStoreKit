@@ -62,7 +62,7 @@ typedef enum
 // NSArray of
 //    NSDictionary
 //       Mandatory Key: productIdentifier NSString
-//       Mandatory Key: type NSString (@"Consumable", @"Nonconsumable", @"AutoRenewable")
+//       Mandatory Key: productType NSString (@"Consumable", @"Nonconsumable", @"AutoRenewable")
 //       Mandatory Key for Consumable and AutoRenewable: 
 //          familyIdentifier NSString: used to track consumables/AutoRenewables that should be
 //              linked together, but differ based on quanity added when purchased
@@ -82,7 +82,7 @@ typedef enum
 //
 //       Optional Key: title NSString - title to use until app store title can be retrieved
 //       Optional Key: description NSString - description to use until store description can be retrieved
-//       Optional Key: hidden boolean
+//       Optional Key: isHidden boolean
 //       Optional Key: minimumVersion NSString
 //       Optional Key: extraInformation NSString 
 //       Optional Key: isFree boolean - should allow purchase without going to app store
@@ -157,10 +157,12 @@ typedef enum
 // Consumable - Number of items available in the family associated with the product id
 - (NSUInteger)availableQuantityForProduct:(NSString*)productIdentifier;
 
+#pragma mark Consuming Purchases
 // Consumable - returns number of items consumed; if amountToConsume is > available then
 //              it will consume up to the amount available and return the amount actually consumed
 // Nonconsumable - does nothing, returns 0
 - (NSUInteger)consumeProduct:(NSString*)productIdentifier quantity:(NSUInteger)amountToConsume;
+
 
 #pragma mark Server Related
 // These are used if you want to enable access to Google App Engine support
