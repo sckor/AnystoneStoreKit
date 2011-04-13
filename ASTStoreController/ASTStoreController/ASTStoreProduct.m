@@ -180,24 +180,7 @@
 
 - (NSUInteger)consumeQuantity:(NSUInteger)amountToConsume
 {
-    if( self.type != ASTStoreProductIdentifierTypeConsumable )
-    {
-        return 0;
-    }
-
-    NSUInteger currentQuantity = self.availableQuantity;
-    NSUInteger consumeQuantity = amountToConsume;
-    
-    if( currentQuantity < consumeQuantity )
-    {
-        consumeQuantity = currentQuantity;
-    }
-    
-    // Update the amount of consumables in the family
-    currentQuantity -= consumeQuantity;
-    self.productData.availableQuantity = currentQuantity;
-    
-    return consumeQuantity;
+    return ( [self.productData consumeQuantity:amountToConsume] );
 }
 
 - (void)setPurchasedQuantity:(NSUInteger)totalQuantityAvailable

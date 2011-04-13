@@ -774,7 +774,20 @@
 - (void)setProductPurchased:(NSString*)productIdentifier withQuantity:(NSUInteger)totalQuantityAvailable
 {
     ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
-    [theProduct setPurchasedQuantity:totalQuantityAvailable];
+    
+    if( nil != theProduct )
+    {
+        [theProduct setPurchasedQuantity:totalQuantityAvailable];
+        return;
+    }
+    
+    // In the event a family id was provided instead of a product id, set directly against family
+    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:productIdentifier];
+    
+    if( nil != familyData )
+    {
+        [familyData setAvailableQuantity:totalQuantityAvailable];
+    }
 }
 
 #pragma mark Querying Purchases
@@ -782,27 +795,63 @@
 - (BOOL)isProductPurchased:(NSString*)productIdentifier
 {
     ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
-    return ( theProduct.isPurchased );
+    
+    if( nil != theProduct )
+    {
+        return ( theProduct.isPurchased );
+    }
+    
+    // In the event a family id was provided instead of a product id, attempt to directly access family id
+    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:productIdentifier];
+    
+    if( nil != familyData )
+    {
+        return ( familyData.isPurchased );
+    }
+    
+    return NO;
 }
 
 - (NSUInteger)availableQuantityForProduct:(NSString*)productIdentifier
 {
-    ASTStoreProduct *aProduct = [self storeProductForIdentifier:productIdentifier];
+    ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
     
-    if( nil == aProduct )
+    if( nil != theProduct )
     {
-        DLog(@"Failed to get product data for:%@", productIdentifier);
-        return 0;
+        return ( theProduct.availableQuantity );
     }
     
-    return ( aProduct.availableQuantity );
+    // In the event a family id was provided instead of a product id, attempt to directly access family id
+    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:productIdentifier];
+    
+    if( nil != familyData )
+    {
+        return( familyData.availableQuantity );
+    }
+    
+    DLog(@"Failed to get product data for:%@", productIdentifier);
+
+    return 0;
 }
 
 - (NSUInteger)consumeProduct:(NSString*)productIdentifier quantity:(NSUInteger)amountToConsume
 {
-    ASTStoreProduct *aProduct = [self storeProductForIdentifier:productIdentifier];
+    ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
+ 
+    if( nil != theProduct )
+    {
+        return ( [theProduct consumeQuantity:amountToConsume] );        
+    }
 
-    return ( [aProduct consumeQuantity:amountToConsume] );
+    // In the event a family id was provided instead of a product id, attempt to directly access family id
+    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:productIdentifier];
+    
+    if( nil != familyData )
+    {
+        return ( [familyData consumeQuantity:amountToConsume] );
+    }
+
+    return 0;
 }
 
 

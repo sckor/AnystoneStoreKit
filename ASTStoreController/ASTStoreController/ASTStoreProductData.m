@@ -268,7 +268,7 @@
         return ( familyData_ );
     }
     
-    familyData_ = [ASTStoreFamilyData familyDataWithIdentifier:self.familyIdentifier];
+    familyData_ = [ASTStoreFamilyData familyDataWithIdentifier:self.familyIdentifier productType:self.type];
     [familyData_ retain];
     
     return ( familyData_ );
@@ -286,26 +286,17 @@
 
 - (void)setAvailableQuantity:(NSUInteger)availableQuantity
 {
-    NSUInteger quantity = availableQuantity;
-    
-    if(( self.type != ASTStoreProductIdentifierTypeConsumable ) && ( quantity > 1 ))
-    {
-        quantity = 1;
-    }
-    
-    self.familyData.availableQuantity = quantity;
+    self.familyData.availableQuantity = availableQuantity;
 }
 
 - (BOOL)isPurchased
 {
-    NSUInteger quantity = self.availableQuantity;
-    
-    if(( quantity > 0 ) && ( self.type != ASTStoreProductIdentifierTypeConsumable ))
-    {
-        return YES;
-    }
-    
-    return NO;
+    return self.familyData.isPurchased;
+}
+
+- (NSUInteger)consumeQuantity:(NSUInteger)amountToConsume
+{
+    return [self.familyData consumeQuantity:amountToConsume];
 }
 
 //---------------------------------------------------------- 
