@@ -74,8 +74,8 @@
         NSError *error;
         BOOL result = [fm createDirectoryAtPath:directoryPath 
                     withIntermediateDirectories:YES 
-                       attributes:nil 
-                            error:&error];
+                                     attributes:nil 
+                                          error:&error];
         
         if( NO == result )
         {
@@ -89,8 +89,18 @@
     return ( [pathForFamilyData stringByAppendingPathExtension:@"archive"] );
 }
 
-
++ (ASTStoreFamilyData*)createFamilyData:(NSString*)aFamilyIdentifier
+{
+    ASTStoreFamilyData *familyData = [[[ASTStoreFamilyData alloc] initWithFamilyIdentifier:aFamilyIdentifier] autorelease];
+    [familyData save];
+    [[ASTStoreFamilyData familyDataDictionary] setObject:familyData forKey:aFamilyIdentifier];
+    
+    return familyData;
+}
 #pragma mark public class methods
+
+
+
 + (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier
 {
     // Only want 1 instance of the family data across the process, so cache them in a dictionary
@@ -114,18 +124,27 @@
     
     if( NO == [fm fileExistsAtPath:fileName isDirectory:nil] )
     {
-        // File does not exist - create a new instance
-        familyData = [[[ASTStoreFamilyData alloc] initWithFamilyIdentifier:aFamilyIdentifier] autorelease];
-        [familyData save];
-        
-        [[ASTStoreFamilyData familyDataDictionary] setObject:familyData forKey:aFamilyIdentifier];
-        
-        return ( familyData );
+        return( [ASTStoreFamilyData createFamilyData:aFamilyIdentifier] );
     }
     
-    familyData = [NSKeyedUnarchiver unarchiveObjectWithFile:fileName];    
-    familyData.familyDataPath = fileName;
+    @try 
+    {
+        familyData = [NSKeyedUnarchiver unarchiveObjectWithFile:fileName];
+    }
+    @catch (NSException *exception) 
+    {
+        familyData = nil;
+    }
+    
+    if( nil == familyData )
+    {
+        // Unarchive failed - create a new one
+        DLog(@"Unarchive failed for %@", fileName);
+        return( [ASTStoreFamilyData createFamilyData:aFamilyIdentifier] );
+    }
+    
 
+    familyData.familyDataPath = fileName;
     [[ASTStoreFamilyData familyDataDictionary] setObject:familyData forKey:aFamilyIdentifier];
     
     return( familyData );

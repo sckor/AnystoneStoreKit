@@ -111,7 +111,7 @@
     
     if( nil == fileName )
     {
-        DLog(@"Failed to get filename for family id:%@", aProductIdentifier);
+        DLog(@"Failed to get filename for product id:%@", aProductIdentifier);
         return nil;
     }
     
@@ -124,7 +124,21 @@
         return ( nil );
     }
     
-    productData = [NSKeyedUnarchiver unarchiveObjectWithFile:fileName];    
+    @try 
+    {
+        productData = [NSKeyedUnarchiver unarchiveObjectWithFile:fileName];
+    }
+    @catch (NSException *exception) 
+    {
+        productData = nil;
+    }
+    
+    if( nil == productData )
+    {
+        DLog(@"Unarchive failed for %@", fileName);
+        return nil;
+    }
+    
     productData.productDataPath = fileName;
     
     return( productData );
