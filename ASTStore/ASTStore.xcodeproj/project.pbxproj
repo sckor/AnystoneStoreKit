@@ -394,7 +394,6 @@
 				INFOPLIST_FILE = "ASTStore/ASTStore-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../../../Library/Developer/Xcode/DerivedData/ASTStoreController-ekelukrnpdaouhgcjxxcqfhcqmcj/Build/Products/Debug-iphoneos\"",
 					"\"$(SRCROOT)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -412,7 +411,6 @@
 				INFOPLIST_FILE = "ASTStore/ASTStore-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../../../Library/Developer/Xcode/DerivedData/ASTStoreController-ekelukrnpdaouhgcjxxcqfhcqmcj/Build/Products/Debug-iphoneos\"",
 					"\"$(SRCROOT)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
