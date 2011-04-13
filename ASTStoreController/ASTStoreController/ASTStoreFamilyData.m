@@ -276,6 +276,7 @@
         quantity = 1;
     }
     
+    DLog(@"Updating quanity to %d for %@", quantity, self.familyIdentifier);
     availableQuantity_ = quantity;
     
     [self save];
@@ -319,9 +320,9 @@
     
     if (self)
     {
-        self.familyIdentifier = [decoder decodeObjectForKey:k_FAMILY_IDENTIFIER];
-        self.availableQuantity = [decoder decodeIntegerForKey:k_PURCHASED_QUANTITY];
-        self.type = [decoder decodeIntegerForKey:k_TYPE];
+        familyIdentifier_ = [[decoder decodeObjectForKey:k_FAMILY_IDENTIFIER] copy];
+        availableQuantity_ = [decoder decodeIntegerForKey:k_PURCHASED_QUANTITY];
+        type_ = [decoder decodeIntegerForKey:k_TYPE];
     }
     return self;
 }
