@@ -142,7 +142,13 @@ typedef enum
 - (void)purchaseProduct:(NSString*)productIdentifier;
 - (void)restorePreviousPurchases;
 
-// If you need to force the local purchase state (perhaps migrating from another in-app purchase state)
+#pragma mark Producing Products
+// Consumable - increments the number of available units by amountToConsume; returns
+//              total number of products available
+// Nonconsumable - does nothing, returns 0 (use setProductPurchased for Nonconsumables)
+- (NSUInteger)produceProduct:(NSString*)productIdentifier quantity:(NSUInteger)amountToProduce;
+
+// If you need to force the local purchase state (perhaps migrating from another in-app purchase system)
 // This function will allow for setting the purchase quanity without going through the app store
 // directly; quantity is only used if type is consumable
 - (void)setProductPurchased:(NSString*)productIdentifier withQuantity:(NSUInteger)totalQuantityAvailable;
@@ -162,6 +168,7 @@ typedef enum
 //              it will consume up to the amount available and return the amount actually consumed
 // Nonconsumable - does nothing, returns 0
 - (NSUInteger)consumeProduct:(NSString*)productIdentifier quantity:(NSUInteger)amountToConsume;
+
 
 
 #pragma mark Server Related

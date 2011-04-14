@@ -790,6 +790,46 @@
     }
 }
 
+- (NSUInteger)produceProduct:(NSString*)productIdentifier quantity:(NSUInteger)amountToProduce
+{
+    ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
+    NSUInteger quantity;
+    
+    if( nil != theProduct )
+    {
+        if( theProduct.type != ASTStoreProductIdentifierTypeConsumable )
+        {
+            return 0;
+        }
+        
+        quantity = theProduct.availableQuantity;
+        quantity += amountToProduce;
+        
+        [theProduct setPurchasedQuantity:quantity];
+        return quantity;
+    }
+    
+    // In the event a family id was provided instead of a product id, set directly against family
+    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:productIdentifier];
+    
+    if( nil != familyData )
+    {
+        if( familyData.type != ASTStoreProductIdentifierTypeConsumable )
+        {
+            return 0;
+        }
+        
+        quantity = familyData.availableQuantity;
+        quantity += amountToProduce;
+        
+        [familyData setAvailableQuantity:quantity];
+        
+        return quantity;
+    }
+    
+    return 0;
+}
+
 #pragma mark Querying Purchases
 
 - (BOOL)isProductPurchased:(NSString*)productIdentifier
