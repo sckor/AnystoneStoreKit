@@ -30,6 +30,8 @@
 #define kASTStoreProductInfoIdentifierKey @"productIdentifier"
 
 #define kASTStoreProductInfoTypeKey @"productType"
+#define kASTStoreProductPlistTypeKey @"type" // deprecated
+
 #define kASTStoreProductInfoTypeConsumableKey @"Consumable"
 #define kASTStoreProductInfoTypeNonconsumableKey @"Nonconsumable"
 #define kASTStoreProductInfoTypeAutoRenewableKey @"AutoRenewable"
@@ -39,6 +41,8 @@
 #define kASTStoreProductInfoMinimumVersionKey @"minimumVersion"
 #define kASTStoreProductInfoIsFreeKey @"isFree"
 #define kASTStoreProductInfoIsHiddenKey @"isHidden"
+#define kASTStoreProductPlistShouldDisplayKey @"shouldDisplay" // deprecated
+
 #define kASTStoreProductInfoExtraInformationKey @"extraInformation"
 
 

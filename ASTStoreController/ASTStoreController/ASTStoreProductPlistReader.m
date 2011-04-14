@@ -121,6 +121,21 @@
         NSString *familyIdentifier = nil;
         NSUInteger familyQuantity = 0;
         
+        if( nil == typeAsString )
+        {
+            // attempt to read from deprecated plist key for product type
+            typeAsString = [dict objectForKey:kASTStoreProductPlistTypeKey];
+            
+#ifdef DEBUG
+            if( nil != typeAsString )
+            {
+                DLog(@"Warning, plist key %@ is deprecated and should be changed to %@", 
+                     kASTStoreProductPlistTypeKey,
+                     kASTStoreProductInfoTypeKey);
+            }
+#endif
+        }
+        
         if(( nil == identifier ) || ( nil == typeAsString ))
         {
             DLog(@"Failed to read mandatory keys from plist (identifier:%p type:%p)",
@@ -195,7 +210,30 @@
         {
             aProduct.isHidden = [isHiddenAsNumber boolValue];
         }
-        
+        else
+        {
+            // Check for shouldDisplay
+            NSNumber *shouldDisplay = [dict objectForKey:kASTStoreProductPlistShouldDisplayKey];
+            
+            if( shouldDisplay )
+            {
+                BOOL sd = [shouldDisplay boolValue];
+                
+                if( YES == sd )
+                {
+                    aProduct.isHidden = NO;                    
+                }
+                else
+                {
+                    aProduct.isHidden = YES;
+                }
+                
+                DLog(@"Warning, plist key %@ is deprecated and should be changed to %@", 
+                     kASTStoreProductPlistShouldDisplayKey, 
+                     kASTStoreProductInfoIsHiddenKey);
+
+            }            
+        }
         
         if( isFreeAsNumber )
         {

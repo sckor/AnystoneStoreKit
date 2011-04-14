@@ -7,9 +7,9 @@
 		<string>Typical Nonconsumable Purchase</string>
 		<key>productIdentifier</key>
 		<string>com.anystonetech.storecontroller.nonconsumable</string>
-		<key>title</key>
-		<string>Nonconsumable</string>
 		<key>productType</key>
+		<string>Nonconsumable</string>
+		<key>title</key>
 		<string>Nonconsumable</string>
 	</dict>
 	<dict>
@@ -23,10 +23,10 @@
 		<string>1.2</string>
 		<key>productIdentifier</key>
 		<string>com.anystonetech.storecontroller.versionsample</string>
-		<key>title</key>
-		<string>Consumable - 1 berry</string>
 		<key>productType</key>
 		<string>Consumable</string>
+		<key>title</key>
+		<string>Consumable - 1 berry</string>
 	</dict>
 	<dict>
 		<key>description</key>
@@ -37,16 +37,16 @@
 		<string>com.anystonetech.storecontroller.berry</string>
 		<key>familyQuantity</key>
 		<string>10</string>
+		<key>isHidden</key>
+		<false/>
 		<key>minimumVersion</key>
 		<string>1.0</string>
 		<key>productIdentifier</key>
 		<string>com.anystonetech.storecontroller.fullsample</string>
-		<key>isHidden</key>
-		<false/>
-		<key>title</key>
-		<string>Consumable - 10 berries</string>
 		<key>productType</key>
 		<string>Consumable</string>
+		<key>title</key>
+		<string>Consumable - 10 berries</string>
 	</dict>
 	<dict>
 		<key>description</key>
@@ -57,18 +57,30 @@
 		<string>com.anystonetech.storecontroller.berry</string>
 		<key>familyQuantity</key>
 		<string>99</string>
+		<key>isFree</key>
+		<true/>
+		<key>isHidden</key>
+		<false/>
 		<key>minimumVersion</key>
 		<string>1.0</string>
 		<key>productIdentifier</key>
 		<string>com.anystonetech.storecontroller.freesample</string>
-		<key>isHidden</key>
-		<false/>
-		<key>title</key>
-		<string>Consumable - 99 berries</string>
 		<key>productType</key>
 		<string>Consumable</string>
-		<key>isFree</key>
-		<true/>
+		<key>title</key>
+		<string>Consumable - 99 berries</string>
+	</dict>
+	<dict>
+		<key>description</key>
+		<string>Deprecated Keys</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.storecontroller.nonconsumable.deprecated</string>
+		<key>type</key>
+		<string>Nonconsumable</string>
+		<key>title</key>
+		<string>Use Deprecated PList Keys</string>
+		<key>shouldDisplay</key>
+		<string>YES</string>
 	</dict>
 </array>
 </plist>
