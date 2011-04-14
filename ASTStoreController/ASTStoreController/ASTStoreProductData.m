@@ -303,7 +303,7 @@
 //  Keyed Archiving
 //
 //---------------------------------------------------------- 
-- (void) encodeWithCoder: (NSCoder *)encoder 
+- (void) encodeWithCoder:(NSCoder *)encoder 
 {
     [encoder encodeObject:self.productIdentifier forKey:k_PRODUCT_IDENTIFIER];
     [encoder encodeInteger:self.type forKey:k_TYPE];
