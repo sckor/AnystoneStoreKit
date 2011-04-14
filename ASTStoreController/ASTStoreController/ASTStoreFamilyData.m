@@ -26,6 +26,9 @@
 //  THE SOFTWARE.
 
 #import "ASTStoreFamilyData.h"
+#import "ASTKeychainCrypto.h"
+#import "NSKeyedArchiver+Encryption.h"
+#import "NSKeyedUnarchiver+Encryption.h"
 
 #define k_FAMILY_IDENTIFIER 						@"familyIdentifier"
 #define k_PURCHASED_QUANTITY 						@"purchasedQuantity"
@@ -91,13 +94,22 @@
     return ( [pathForFamilyData stringByAppendingPathExtension:@"archive"] );
 }
 
++ (NSString*)appendEncryptionNameToPathForFamilyData:(NSString*)pathForFamilyData
+{
+    NSString *tmp = [pathForFamilyData stringByDeletingPathExtension];
+    
+    return ( [tmp stringByAppendingPathExtension:@"enc-archive"] );
+}
+
 + (ASTStoreFamilyData*)createFamilyData:(NSString*)aFamilyIdentifier productType:(ASTStoreProductIdentifierType)productType
 {
     ASTStoreFamilyData *familyData = [[[ASTStoreFamilyData alloc] initWithFamilyIdentifier:aFamilyIdentifier] autorelease];
     familyData.type = productType;
     
-    [familyData save];
+    
     [[ASTStoreFamilyData familyDataDictionary] setObject:familyData forKey:aFamilyIdentifier];
+
+    [familyData save];
     
     return familyData;
 }
@@ -114,60 +126,73 @@
     
     
     NSString *fileName = [ASTStoreFamilyData pathForFamilyDataWithIdentifier:aFamilyIdentifier];
-    
+
     if( nil == fileName )
     {
         DLog(@"Failed to get filename for family id:%@", aFamilyIdentifier);
         return nil;
     }
+
+    NSString *encFileName = [ASTStoreFamilyData appendEncryptionNameToPathForFamilyData:fileName];
     
     NSFileManager *fm = [NSFileManager defaultManager];
     
-    if( NO == [fm fileExistsAtPath:fileName isDirectory:nil] )
+    // See if encrypted version exists first - as that will be the default now
+    if( YES == [fm fileExistsAtPath:encFileName isDirectory:nil] )
     {
-        if( createIfNeeded )
+        @try 
         {
-            return( [ASTStoreFamilyData createFamilyData:aFamilyIdentifier productType:productType] );
+            ASTKeychainCrypto *kc = [ASTKeychainCrypto sharedASTKeychainCrypto];
+            NSData *key = kc.cachedKey;
+            familyData = [NSKeyedUnarchiver decryptArchiveObjectWithFile:encFileName usingKey:key];
         }
-        else
+        @catch (NSException *exception) 
         {
-            return nil;
-        }
-    }
-    
-    @try 
-    {
-        familyData = [NSKeyedUnarchiver unarchiveObjectWithFile:fileName];
-    }
-    @catch (NSException *exception) 
-    {
-        familyData = nil;
-    }
-    
-    if( nil == familyData )
-    {
-        if( createIfNeeded )
-        {
-            // Unarchive failed - create a new one
-            DLog(@"Unarchive failed for %@", fileName);
-            return( [ASTStoreFamilyData createFamilyData:aFamilyIdentifier productType:productType] );
-        }
-        else
-        {
-            return nil;
+            familyData = nil;
         }
     }
-    
-    
-    familyData.familyDataPath = fileName;
-    
-    if( familyData.type == ASTStoreProductIdentifierTypeInvalid )
+    else if( YES == [fm fileExistsAtPath:fileName isDirectory:nil] )
     {
-        // This may be necessary for old family data which did not have a type
-        familyData.type = productType;
+        // No encrypted file exists, so attempt to read from non-encrypted archive
+        @try 
+        {
+            familyData = [NSKeyedUnarchiver unarchiveObjectWithFile:fileName];
+            
+            if( familyData )
+            {
+                if( familyData.type == ASTStoreProductIdentifierTypeInvalid )
+                {
+                    // This may be necessary for old family data which did not have a type
+                    familyData.type = productType;
+                }
+                
+                // Invoke a save since the old file is about to be removed
+                [familyData save];
+            }
+        }
+        @catch (NSException *exception) 
+        {
+            familyData = nil;
+        }
+        
+        // Now remove it - do not want to keep old format around
+        [fm removeItemAtPath:fileName error:nil];
     }
     
-    [[ASTStoreFamilyData familyDataDictionary] setObject:familyData forKey:aFamilyIdentifier];
+    if(( nil != familyData ) && ( YES == [familyData isKindOfClass:[ASTStoreFamilyData class]] ))
+    {
+        [[ASTStoreFamilyData familyDataDictionary] setObject:familyData forKey:aFamilyIdentifier];
+    }
+    else if( createIfNeeded )
+    {
+        familyData = [ASTStoreFamilyData createFamilyData:aFamilyIdentifier productType:productType];        
+    }
+    else
+    {
+        return nil;
+    }
+    
+    familyData.familyDataPath = encFileName;
     
     return( familyData );    
 }
@@ -217,6 +242,23 @@
             DLog(@"Remove family data failed for id:%@ error:%@", aFamilyIdentifier, error);
         }
     }
+    
+    NSString *encFileName = [ASTStoreFamilyData appendEncryptionNameToPathForFamilyData:fileName];
+
+    if( YES == [fm fileExistsAtPath:encFileName isDirectory:nil] )
+    {
+        NSError *error;
+        BOOL result = [fm removeItemAtPath:encFileName error:&error];
+        if( result )
+        {
+            DLog(@"Removed family data from disk for id:%@", aFamilyIdentifier);
+        }
+        else
+        {
+            DLog(@"Remove family data failed for id:%@ error:%@", aFamilyIdentifier, error);
+        }
+    }
+
 }
 
 #pragma mark Synthesizer Override
@@ -261,7 +303,9 @@
         return ( familyDataPath_ );
     }
     
-    familyDataPath_ = [[ASTStoreFamilyData pathForFamilyDataWithIdentifier:self.familyIdentifier] copy];
+    NSString *fileName = [ASTStoreFamilyData pathForFamilyDataWithIdentifier:self.familyIdentifier];
+    familyDataPath_ = [[ASTStoreFamilyData appendEncryptionNameToPathForFamilyData:fileName] 
+                       copy];
     
     return ( familyDataPath_ );
 }
@@ -291,7 +335,11 @@
 
 - (void)save
 {
-    BOOL result = [NSKeyedArchiver archiveRootObject:self toFile:self.familyDataPath];
+    ASTKeychainCrypto *kc = [ASTKeychainCrypto sharedASTKeychainCrypto];
+    
+    NSData *key = kc.cachedKey;
+    
+    BOOL result = [NSKeyedArchiver encryptArchiveRootObject:self toFile:self.familyDataPath usingKey:key];
     
     if( ! result )
     {
