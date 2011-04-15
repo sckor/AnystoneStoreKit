@@ -928,7 +928,10 @@ static void _JKDictionaryResizeIfNeccessary(JKDictionary *dictionary) {
     
     NSUInteger idx = 0UL;
     for(idx = 0UL; idx < oldCapacity; idx++) { if(oldEntry[idx].key != NULL) { _JKDictionaryAddObject(dictionary, oldEntry[idx].keyHash, oldEntry[idx].key, oldEntry[idx].object); oldEntry[idx].keyHash = 0UL; oldEntry[idx].key = NULL; oldEntry[idx].object = NULL; } }
+#ifndef NS_BLOCK_ASSERTIONS
     NSCParameterAssert((oldCount == dictionary->count));
+#endif
+      
     free(oldEntry); oldEntry = NULL;
   }
 }
