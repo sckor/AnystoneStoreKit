@@ -1,5 +1,6 @@
-Version 0.3
+Version 0.4
 -----------
+
 The Anystone Store Kit is ready to be used for all store kit operations that you might want to do locally on your device.
 
 It currently has the following functionality:
@@ -9,14 +10,36 @@ It currently has the following functionality:
  - Delegate methods for all of the major 
  - Ability to wipe local data clean (for debug and for dealing with possible corruption)
  - Testing in simulator using the embedded SimStoreKit
+ - Encrypted family data storage for purchase quantities
 
 For some more information, have a look at:
 http://www.anystonetech.com/blog/2011/03/24/introducing-the-anystone-store-kit/
+
+Changes in Version 0.4
+----------------------
+ - Prep support for communication with app engine server
+ - Upversion JSONKit and Fix bug when compiled for release mode
+ - Encrypt family data
+ - Change key names for plist definition of products and mark old ones as deprecated via a log
+ - Ability to produce consumables locally without requiring a purchase
+ - Provide ability to consume and produce based on family id in addition to product id
+ - Fix warnings stemming from ilsimkit
+ - Cleanup error handling when reading bad archive files
+ - Enable use of SimKit on simulator when built in release mode
+ - Implement promo code device side support
 
 License
 -------
 This project is licensed under the MIT licence. This basically means you're free to do what you want with the code.
 http://creativecommons.org/licenses/MIT/
+
+Also note that ASTStoreKit includes the following packages, which have their own licenses. If you use the ASTStoreKit
+you will also need to abide by any licenses associated with the other packages.
+ - SSKeychain
+ - JSONKit
+ - Reachability
+ - ASIHTTPRequest
+ - SimStoreKit
 
 If you do make use of this code, Anystone Technologies Inc would *appreciate* it if you would:
  - make an attribution reference in your app or on your website
