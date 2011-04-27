@@ -1,3 +1,14 @@
+The Third Party related components include differing licenses and copyrights. If you make use of the Anystone Store Kit
+You will also be required to adhere to the license requirements as specified by the owners of the following
+components:
+ - SSKeychain
+ - JSONKit
+ - Reachability
+ - ASIHTTPRequest
+ - SimStoreKit
+
+All of the Anystone Technologies Developed Content is provided under an MIT license as written below.
+
 //  Copyright (c) 2011 Anystone Technologies, Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
