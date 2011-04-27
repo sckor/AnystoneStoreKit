@@ -110,7 +110,6 @@
 		812FF11E132561F00070074B = {
 			isa = PBXGroup;
 			children = (
-				818A398813577EC000C5DC77 /* Security.framework */,
 				812FF133132561F00070074B /* ASTStore */,
 				812FF12C132561F00070074B /* Frameworks */,
 				812FF12A132561F00070074B /* Products */,
@@ -128,6 +127,7 @@
 		812FF12C132561F00070074B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				818A398813577EC000C5DC77 /* Security.framework */,
 				8196CBB01333C42C000C5286 /* CFNetwork.framework */,
 				8196CBAC1333BF67000C5286 /* libz.1.2.3.dylib */,
 				8196CBAA1333BF4B000C5286 /* MobileCoreServices.framework */,
