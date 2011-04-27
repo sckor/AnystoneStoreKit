@@ -26,17 +26,21 @@
 //  THE SOFTWARE.
 
 #import "ASTStoreFamilyData.h"
+#import "ASTKeychainCrypto.h"
+#import "NSKeyedArchiver+Encryption.h"
+#import "NSKeyedUnarchiver+Encryption.h"
 
 #define k_FAMILY_IDENTIFIER 						@"familyIdentifier"
 #define k_PURCHASED_QUANTITY 						@"purchasedQuantity"
+#define k_TYPE                                      @"type"
 
 
 @interface ASTStoreFamilyData()
 
 - (void)save;
 
-@property (nonatomic, retain) NSString *familyDataPath;
-@property (retain) NSString *familyIdentifier;
+@property (nonatomic, copy) NSString *familyDataPath;
+@property (copy) NSString *familyIdentifier;
 
 @end
 
@@ -45,6 +49,7 @@
 @synthesize availableQuantity = availableQuantity_;
 @synthesize familyIdentifier = familyIdentifier_;
 @synthesize familyDataPath = familyDataPath_;
+@synthesize type = type_;
 
 #pragma mark private class methods
 + (NSMutableDictionary*)familyDataDictionary
@@ -74,8 +79,8 @@
         NSError *error;
         BOOL result = [fm createDirectoryAtPath:directoryPath 
                     withIntermediateDirectories:YES 
-                       attributes:nil 
-                            error:&error];
+                                     attributes:nil 
+                                          error:&error];
         
         if( NO == result )
         {
@@ -89,9 +94,27 @@
     return ( [pathForFamilyData stringByAppendingPathExtension:@"archive"] );
 }
 
++ (NSString*)appendEncryptionNameToPathForFamilyData:(NSString*)pathForFamilyData
+{
+    NSString *tmp = [pathForFamilyData stringByDeletingPathExtension];
+    
+    return ( [tmp stringByAppendingPathExtension:@"enc-archive"] );
+}
 
-#pragma mark public class methods
-+ (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier
++ (ASTStoreFamilyData*)createFamilyData:(NSString*)aFamilyIdentifier productType:(ASTStoreProductIdentifierType)productType
+{
+    ASTStoreFamilyData *familyData = [[[ASTStoreFamilyData alloc] initWithFamilyIdentifier:aFamilyIdentifier] autorelease];
+    familyData.type = productType;
+    
+    
+    [[ASTStoreFamilyData familyDataDictionary] setObject:familyData forKey:aFamilyIdentifier];
+
+    [familyData save];
+    
+    return familyData;
+}
+
++ (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier productType:(ASTStoreProductIdentifierType)productType createIfNeeded:(BOOL)createIfNeeded
 {
     // Only want 1 instance of the family data across the process, so cache them in a dictionary
     ASTStoreFamilyData *familyData = [[ASTStoreFamilyData familyDataDictionary] objectForKey:aFamilyIdentifier];
@@ -103,33 +126,94 @@
     
     
     NSString *fileName = [ASTStoreFamilyData pathForFamilyDataWithIdentifier:aFamilyIdentifier];
-    
+
     if( nil == fileName )
     {
         DLog(@"Failed to get filename for family id:%@", aFamilyIdentifier);
         return nil;
     }
+
+    NSString *encFileName = [ASTStoreFamilyData appendEncryptionNameToPathForFamilyData:fileName];
     
     NSFileManager *fm = [NSFileManager defaultManager];
     
-    if( NO == [fm fileExistsAtPath:fileName isDirectory:nil] )
+    // See if encrypted version exists first - as that will be the default now
+    if( YES == [fm fileExistsAtPath:encFileName isDirectory:nil] )
     {
-        // File does not exist - create a new instance
-        familyData = [[[ASTStoreFamilyData alloc] initWithFamilyIdentifier:aFamilyIdentifier] autorelease];
-        [familyData save];
+        @try 
+        {
+            ASTKeychainCrypto *kc = [ASTKeychainCrypto sharedASTKeychainCrypto];
+            NSData *key = kc.cachedKey;
+            familyData = [NSKeyedUnarchiver decryptArchiveObjectWithFile:encFileName usingKey:key];
+        }
+        @catch (NSException *exception) 
+        {
+            familyData = nil;
+        }
+    }
+    else if( YES == [fm fileExistsAtPath:fileName isDirectory:nil] )
+    {
+        // No encrypted file exists, so attempt to read from non-encrypted archive
+        @try 
+        {
+            familyData = [NSKeyedUnarchiver unarchiveObjectWithFile:fileName];
+            
+            if( familyData )
+            {
+                if( familyData.type == ASTStoreProductIdentifierTypeInvalid )
+                {
+                    // This may be necessary for old family data which did not have a type
+                    familyData.type = productType;
+                }
+                
+                // Invoke a save since the old file is about to be removed
+                [familyData save];
+            }
+        }
+        @catch (NSException *exception) 
+        {
+            familyData = nil;
+        }
         
-        [[ASTStoreFamilyData familyDataDictionary] setObject:familyData forKey:aFamilyIdentifier];
-        
-        return ( familyData );
+        // Now remove it - do not want to keep old format around
+        [fm removeItemAtPath:fileName error:nil];
     }
     
-    familyData = [NSKeyedUnarchiver unarchiveObjectWithFile:fileName];    
-    familyData.familyDataPath = fileName;
-
-    [[ASTStoreFamilyData familyDataDictionary] setObject:familyData forKey:aFamilyIdentifier];
+    if(( nil != familyData ) && ( YES == [familyData isKindOfClass:[ASTStoreFamilyData class]] ))
+    {
+        [[ASTStoreFamilyData familyDataDictionary] setObject:familyData forKey:aFamilyIdentifier];
+    }
+    else if( createIfNeeded )
+    {
+        familyData = [ASTStoreFamilyData createFamilyData:aFamilyIdentifier productType:productType];        
+    }
+    else
+    {
+        return nil;
+    }
     
-    return( familyData );
+    familyData.familyDataPath = encFileName;
+    
+    return( familyData );    
 }
+
+#pragma mark public class methods
+
++ (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier
+{
+    return [ASTStoreFamilyData familyDataWithIdentifier:aFamilyIdentifier 
+                                            productType:ASTStoreProductIdentifierTypeInvalid 
+                                         createIfNeeded:NO];
+}
+
++ (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier productType:(ASTStoreProductIdentifierType)productType
+{
+    return [ASTStoreFamilyData familyDataWithIdentifier:aFamilyIdentifier 
+                                            productType:productType 
+                                         createIfNeeded:YES];
+}
+
+
 
 + (void)removeFamilyDataForIdentifier:(NSString*)aFamilyIdentifier
 {
@@ -158,9 +242,60 @@
             DLog(@"Remove family data failed for id:%@ error:%@", aFamilyIdentifier, error);
         }
     }
+    
+    NSString *encFileName = [ASTStoreFamilyData appendEncryptionNameToPathForFamilyData:fileName];
+
+    if( YES == [fm fileExistsAtPath:encFileName isDirectory:nil] )
+    {
+        NSError *error;
+        BOOL result = [fm removeItemAtPath:encFileName error:&error];
+        if( result )
+        {
+            DLog(@"Removed family data from disk for id:%@", aFamilyIdentifier);
+        }
+        else
+        {
+            DLog(@"Remove family data failed for id:%@ error:%@", aFamilyIdentifier, error);
+        }
+    }
+
 }
 
 #pragma mark Synthesizer Override
+- (BOOL)isPurchased
+{
+    NSUInteger quantity = self.availableQuantity;
+    
+    if(( quantity > 0 ) && ( self.type != ASTStoreProductIdentifierTypeConsumable ))
+    {
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (NSUInteger)consumeQuantity:(NSUInteger)amountToConsume
+{
+    if( self.type != ASTStoreProductIdentifierTypeConsumable )
+    {
+        return 0;
+    }
+    
+    NSUInteger currentQuantity = self.availableQuantity;
+    NSUInteger consumeQuantity = amountToConsume;
+    
+    if( currentQuantity < consumeQuantity )
+    {
+        consumeQuantity = currentQuantity;
+    }
+    
+    // Update the amount of consumables in the family
+    currentQuantity -= consumeQuantity;
+    self.availableQuantity = currentQuantity;
+    
+    return consumeQuantity;
+}
+
 - (NSString*)familyDataPath
 {
     if( nil != familyDataPath_ )
@@ -168,8 +303,9 @@
         return ( familyDataPath_ );
     }
     
-    familyDataPath_ = [ASTStoreFamilyData pathForFamilyDataWithIdentifier:self.familyIdentifier];
-    [familyDataPath_ retain];
+    NSString *fileName = [ASTStoreFamilyData pathForFamilyDataWithIdentifier:self.familyIdentifier];
+    familyDataPath_ = [[ASTStoreFamilyData appendEncryptionNameToPathForFamilyData:fileName] 
+                       copy];
     
     return ( familyDataPath_ );
 }
@@ -177,7 +313,15 @@
 
 - (void)setAvailableQuantity:(NSUInteger)newQuantity
 {
-    availableQuantity_ = newQuantity;
+    NSUInteger quantity = newQuantity;
+    
+    if(( self.type != ASTStoreProductIdentifierTypeConsumable ) && ( quantity > 1 ))
+    {
+        quantity = 1;
+    }
+    
+    DLog(@"Updating quanity to %d for %@", quantity, self.familyIdentifier);
+    availableQuantity_ = quantity;
     
     [self save];
 }
@@ -191,7 +335,11 @@
 
 - (void)save
 {
-    BOOL result = [NSKeyedArchiver archiveRootObject:self toFile:self.familyDataPath];
+    ASTKeychainCrypto *kc = [ASTKeychainCrypto sharedASTKeychainCrypto];
+    
+    NSData *key = kc.cachedKey;
+    
+    BOOL result = [NSKeyedArchiver encryptArchiveRootObject:self toFile:self.familyDataPath usingKey:key];
     
     if( ! result )
     {
@@ -211,6 +359,7 @@
 {
     [encoder encodeObject:self.familyIdentifier forKey:k_FAMILY_IDENTIFIER];
     [encoder encodeInteger:self.availableQuantity forKey:k_PURCHASED_QUANTITY];
+    [encoder encodeInteger:self.type forKey:k_TYPE];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder 
@@ -219,8 +368,9 @@
     
     if (self)
     {
-        self.familyIdentifier = [decoder decodeObjectForKey:k_FAMILY_IDENTIFIER];
-        self.availableQuantity = [decoder decodeIntegerForKey:k_PURCHASED_QUANTITY];
+        familyIdentifier_ = [[decoder decodeObjectForKey:k_FAMILY_IDENTIFIER] copy];
+        availableQuantity_ = [decoder decodeIntegerForKey:k_PURCHASED_QUANTITY];
+        type_ = [decoder decodeIntegerForKey:k_TYPE];
     }
     return self;
 }
@@ -231,6 +381,7 @@
     
     [theCopy setFamilyIdentifier: [[self.familyIdentifier copy] autorelease]];
     [theCopy setAvailableQuantity: self.availableQuantity];
+    [theCopy setType:self.type];
     
     return theCopy;
 }
@@ -244,13 +395,11 @@
         return( nil );
     }
     
-    
-    
-    familyIdentifier_ = aFamilyIdentifier;
-    [familyIdentifier_ retain];
+    familyIdentifier_ = [aFamilyIdentifier copy];
     
     familyDataPath_ = nil;
     availableQuantity_ = 0;
+    type_ = ASTStoreProductIdentifierTypeInvalid;
     
     [self save];
     

@@ -1,10 +1,10 @@
 //
-//  ASTStoreFamilyData.h
+//  NSKeyedUnarchiver+Encryption.m
 //  ASTStoreController
 //
-//  Created by Sean Kormilo on 11-03-15.
+//  Created by Sean Kormilo on 11-04-14.
 //  http://www.anystonetech.com
-
+//
 //  Copyright (c) 2011 Anystone Technologies, Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,27 +25,29 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-#import "ASTStoreProductTypes.h"
+#import "NSKeyedUnarchiver+Encryption.h"
+#import "NSData+Encryption.h"
 
+@implementation NSKeyedUnarchiver (Encryption)
 
-@interface ASTStoreFamilyData : NSObject <NSCoding, NSCopying> {}
-
-// Creates a new instance if necessary
-+ (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier productType:(ASTStoreProductIdentifierType)productType;
-
-// Only returns existing entities
-+ (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier;
-
-+ (void)removeFamilyDataForIdentifier:(NSString*)aFamilyIdentifier;
-- (id)initWithFamilyIdentifier:(NSString*)aFamilyIdentifier;
-
-@property (nonatomic) NSUInteger availableQuantity;
-@property (readonly,copy) NSString *familyIdentifier;
-@property ASTStoreProductIdentifierType type;
-
-
-@property (readonly) BOOL isPurchased;
-- (NSUInteger)consumeQuantity:(NSUInteger)amountToConsume;
++ (id)decryptArchiveObjectWithFile:(NSString *)path usingKey:(NSData*)key
+{
+    // Read in the file as NSData
+    NSData *encryptedData = [NSData dataWithContentsOfFile:path];
+    
+    if( nil == encryptedData )
+    {
+        return nil;
+    }
+    
+    NSData *decryptedData = [encryptedData decryptWithKey:key];
+    
+    if( nil == decryptedData )
+    {
+        return nil;
+    }
+        
+    return( [NSKeyedUnarchiver unarchiveObjectWithData:decryptedData] );
+}
 
 @end

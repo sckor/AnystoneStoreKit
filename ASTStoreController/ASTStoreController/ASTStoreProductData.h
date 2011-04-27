@@ -28,15 +28,7 @@
 #import <Foundation/Foundation.h>
 #import "ASTStoreProductTypes.h"
 
-@interface ASTStoreProductData : NSObject <NSCoding, NSCopying>
-{
-    // Values needed to handle transactions if they occur on startup prior
-    // to the StoreController being initialized with the products
-    NSString *productIdentifier_;
-    ASTStoreProductIdentifierType type_;
-    NSString *familyIdentifier_;
-    NSUInteger familyQuanity_;
-}
+@interface ASTStoreProductData : NSObject <NSCoding, NSCopying> {}
 
 // Used to get access to the store product data from the filesystem
 // if the infrastructure not yet initialized. ie: on startup if there
@@ -76,11 +68,14 @@
 
 - (void)removeData;
 
-@property (readonly,retain) NSString *productIdentifier;
+@property (nonatomic,readonly,copy) NSString *productIdentifier;
 @property (readonly) ASTStoreProductIdentifierType type;
 
+// Values needed to handle transactions if they occur on startup prior
+// to the StoreController being initialized with the products
+
 // Used to track consumables/AutoRenewables; Required for Consumable and AutoRenewable types
-@property (retain) NSString *familyIdentifier;
+@property (copy) NSString *familyIdentifier;
 
 // Used to manage increments and decrements of item quantities for consumables and autorenewables
 @property  (nonatomic) NSUInteger familyQuanity;
@@ -89,5 +84,7 @@
 @property  (nonatomic) NSUInteger availableQuantity;
 
 @property (readonly) BOOL isPurchased;
+
+- (NSUInteger)consumeQuantity:(NSUInteger)amountToConsume;
 
 @end

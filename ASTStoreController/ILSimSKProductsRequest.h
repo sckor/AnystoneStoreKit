@@ -14,7 +14,14 @@
 
 #import "ILSimSKRequest.h"
 
-@protocol ILSimSKProductsRequestDelegate;
+@class ILSimSKProductsRequest;
+@class ILSimSKProductsResponse;
+
+@protocol ILSimSKProductsRequestDelegate <ILSimSKRequestDelegate>
+
+- (void) productsRequest:(ILSimSKProductsRequest*) request didReceiveResponse:(ILSimSKProductsResponse*) response;
+
+@end
 
 @interface ILSimSKProductsRequest : ILSimSKRequest 
 {
@@ -43,10 +50,5 @@
 
 
 
-@protocol ILSimSKProductsRequestDelegate <ILSimSKRequestDelegate>
-
-- (void) productsRequest:(ILSimSKProductsRequest*) request didReceiveResponse:(ILSimSKProductsResponse*) response;
-
-@end
 
 #endif // #if kILSimAllowSimulatedStoreKit

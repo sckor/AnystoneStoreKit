@@ -1,9 +1,12 @@
 //
-//  ASTStoreFamilyData.h
+//  NSData+Encryption.h
 //  ASTStoreController
 //
-//  Created by Sean Kormilo on 11-03-15.
+//  Created by Sean Kormilo on 11-04-14.
 //  http://www.anystonetech.com
+
+//  NOTE: This code is based on code from Karl as found on the following thread
+//  http://www.cocos2d-iphone.org/forum/topic/6982 
 
 //  Copyright (c) 2011 Anystone Technologies, Inc.
 //
@@ -26,26 +29,11 @@
 //  THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
-#import "ASTStoreProductTypes.h"
 
 
-@interface ASTStoreFamilyData : NSObject <NSCoding, NSCopying> {}
+@interface NSData (Encryption)
 
-// Creates a new instance if necessary
-+ (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier productType:(ASTStoreProductIdentifierType)productType;
-
-// Only returns existing entities
-+ (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier;
-
-+ (void)removeFamilyDataForIdentifier:(NSString*)aFamilyIdentifier;
-- (id)initWithFamilyIdentifier:(NSString*)aFamilyIdentifier;
-
-@property (nonatomic) NSUInteger availableQuantity;
-@property (readonly,copy) NSString *familyIdentifier;
-@property ASTStoreProductIdentifierType type;
-
-
-@property (readonly) BOOL isPurchased;
-- (NSUInteger)consumeQuantity:(NSUInteger)amountToConsume;
+- (NSData*)encryptWithKey:(NSData*)key;
+- (NSData*)decryptWithKey:(NSData*)key;
 
 @end

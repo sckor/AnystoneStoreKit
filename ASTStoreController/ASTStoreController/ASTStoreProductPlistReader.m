@@ -27,6 +27,7 @@
 
 
 #import "ASTStoreProductPlistReader.h"
+#import "ASTStoreProductInfoKeys.h"
 #import "ASTStoreProduct.h"
 
 @implementation ASTStoreProductPlistReader
@@ -35,17 +36,17 @@
 {
     NSString *lowerTypeAsString = [typeAsString lowercaseString];
     
-    if( [lowerTypeAsString isEqualToString:[kASTStoreProductPlistTypeConsumableKey lowercaseString]] )
+    if( [lowerTypeAsString isEqualToString:[kASTStoreProductInfoTypeConsumableKey lowercaseString]] )
     {
         return ( ASTStoreProductIdentifierTypeConsumable );
     }
     
-    if( [lowerTypeAsString isEqualToString:[kASTStoreProductPlistTypeNonconsumableKey lowercaseString]] )
+    if( [lowerTypeAsString isEqualToString:[kASTStoreProductInfoTypeNonconsumableKey lowercaseString]] )
     {
         return ( ASTStoreProductIdentifierTypeNonconsumable );
     }
 
-    if( [lowerTypeAsString isEqualToString:[kASTStoreProductPlistTypeAutoRenewable lowercaseString]] )
+    if( [lowerTypeAsString isEqualToString:[kASTStoreProductInfoTypeAutoRenewableKey lowercaseString]] )
     {
         return ( ASTStoreProductIdentifierTypeAutoRenewable );
     }
@@ -67,32 +68,32 @@
     {
         NSString *lowerAutoRenewable = [quantityAsString lowercaseString];
         
-        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductPlistAutoRenewQuantity7Days lowercaseString]] )
+        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductInfoAutoRenewQuantity7Days lowercaseString]] )
         {
             return ( ASTStoreProductAutoRenewableType7Days );
         }
         
-        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductPlistAutoRenewQuantity1Month lowercaseString]] )
+        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductInfoAutoRenewQuantity1Month lowercaseString]] )
         {
             return ( ASTStoreProductAutoRenewableType1Month );
         }
 
-        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductPlistAutoRenewQuantity2Months lowercaseString]] )
+        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductInfoAutoRenewQuantity2Months lowercaseString]] )
         {
             return ( ASTStoreProductAutoRenewableType2Months );
         }
 
-        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductPlistAutoRenewQuantity3Months lowercaseString]] )
+        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductInfoAutoRenewQuantity3Months lowercaseString]] )
         {
             return ( ASTStoreProductAutoRenewableType2Months );
         }
         
-        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductPlistAutoRenewQuantity6Months lowercaseString]] )
+        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductInfoAutoRenewQuantity6Months lowercaseString]] )
         {
             return ( ASTStoreProductAutoRenewableType2Months );
         }
 
-        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductPlistAutoRenewQuantity1Year lowercaseString]] )
+        if( [lowerAutoRenewable isEqualToString:[kASTStoreProductInfoAutoRenewQuantity1Year lowercaseString]] )
         {
             return ( ASTStoreProductAutoRenewableType1Year );
         }
@@ -115,10 +116,25 @@
     
     for( NSDictionary *dict in plistArray )
     {
-        NSString *identifier = [dict objectForKey:kASTStoreProductPlistIdentifierKey];
-        NSString *typeAsString = [dict objectForKey:kASTStoreProductPlistTypeKey];
+        NSString *identifier = [dict objectForKey:kASTStoreProductInfoIdentifierKey];
+        NSString *typeAsString = [dict objectForKey:kASTStoreProductInfoTypeKey];
         NSString *familyIdentifier = nil;
         NSUInteger familyQuantity = 0;
+        
+        if( nil == typeAsString )
+        {
+            // attempt to read from deprecated plist key for product type
+            typeAsString = [dict objectForKey:kASTStoreProductPlistTypeKey];
+            
+#ifdef DEBUG
+            if( nil != typeAsString )
+            {
+                DLog(@"Warning, plist key %@ is deprecated and should be changed to %@", 
+                     kASTStoreProductPlistTypeKey,
+                     kASTStoreProductInfoTypeKey);
+            }
+#endif
+        }
         
         if(( nil == identifier ) || ( nil == typeAsString ))
         {
@@ -138,8 +154,8 @@
         if(( ASTStoreProductIdentifierTypeConsumable == type ) || 
            ( ASTStoreProductIdentifierTypeAutoRenewable == type ))
         {
-            familyIdentifier = [dict objectForKey:kASTStoreProductPlistTypeFamilyIdentifier];
-            NSString *familyQuantityAsString = [dict objectForKey:kASTStoreProductPlistTypeFamilyQuantity];
+            familyIdentifier = [dict objectForKey:kASTStoreProductInfoTypeFamilyIdentifierKey];
+            NSString *familyQuantityAsString = [dict objectForKey:kASTStoreProductInfoTypeFamilyQuantityKey];
             
             familyQuantity = [ASTStoreProductPlistReader stringToQuantity:familyQuantityAsString fromType:type];
         }
@@ -162,13 +178,13 @@
             continue;
         }
         
-        NSString *title = [dict objectForKey:kASTStoreProductPlistTitleKey];
-        NSString *description = [dict objectForKey:kASTStoreProductPlistDescriptionKey];
+        NSString *title = [dict objectForKey:kASTStoreProductInfoTitleKey];
+        NSString *description = [dict objectForKey:kASTStoreProductInfoDescriptionKey];
         
-        NSString *extraInformation = [dict objectForKey:kASTStoreProductPlistExtraInformation];
-        NSString *minimumVersion = [dict objectForKey:kASTStoreProductPlistMinimumVersionKey];
-        NSNumber *boolAsNumber = [dict objectForKey:kASTStoreProductPlistShouldDisplayKey];
-
+        NSString *extraInformation = [dict objectForKey:kASTStoreProductInfoExtraInformationKey];
+        NSString *minimumVersion = [dict objectForKey:kASTStoreProductInfoMinimumVersionKey];
+        NSNumber *isHiddenAsNumber = [dict objectForKey:kASTStoreProductInfoIsHiddenKey];
+        NSNumber *isFreeAsNumber = [dict objectForKey:kASTStoreProductInfoIsFreeKey];
         
         if( title )
         {
@@ -190,10 +206,40 @@
             aProduct.minimumVersion = minimumVersion;
         }
         
-        if( boolAsNumber )
+        if( isHiddenAsNumber )
         {
-            aProduct.shouldDisplay = [boolAsNumber boolValue];
+            aProduct.isHidden = [isHiddenAsNumber boolValue];
         }
+        else
+        {
+            // Check for shouldDisplay
+            NSNumber *shouldDisplay = [dict objectForKey:kASTStoreProductPlistShouldDisplayKey];
+            
+            if( shouldDisplay )
+            {
+                BOOL sd = [shouldDisplay boolValue];
+                
+                if( YES == sd )
+                {
+                    aProduct.isHidden = NO;                    
+                }
+                else
+                {
+                    aProduct.isHidden = YES;
+                }
+                
+                DLog(@"Warning, plist key %@ is deprecated and should be changed to %@", 
+                     kASTStoreProductPlistShouldDisplayKey, 
+                     kASTStoreProductInfoIsHiddenKey);
+
+            }            
+        }
+        
+        if( isFreeAsNumber )
+        {
+            aProduct.isFree = [isFreeAsNumber boolValue];
+        }
+
         
         [tmpStoreProductArray addObject:aProduct];
     }

@@ -61,6 +61,9 @@
 @synthesize storeServer = storeServer_;
 @synthesize verifyReceipts = verifyReceipts_;
 @synthesize restoringPurchases = restoringPurchases_;
+@synthesize customerIdentifier = customerIdentifier_;
+@synthesize serverConsumablesEnabled = serverConsumablesEnabled_;
+@synthesize serverPromoCodesEnabled = serverPromoCodesEnabled_;
 
 #pragma mark Delegate Selector Stubs
 
@@ -205,6 +208,20 @@
 // Only want to instantiate a storeServer if one of the values is changed
 // Otherwise there is no point in creating the object; just return default values
 // In the case that the storeServer has not otherwise been created
+- (NSString*)vendorUuid
+{
+    if( nil == storeServer_ )
+    {
+        return nil;
+    }
+    
+    return ( self.storeServer.vendorUuid );
+}
+
+- (void)setVendorUuid:(NSString *)vendorUuid
+{
+    self.storeServer.vendorUuid = vendorUuid;
+}
 
 - (NSURL*)serverUrl
 {
@@ -473,10 +490,8 @@
 }
 
 #pragma mark Transaction Handling
-- (void)completionHandler:(SKPaymentTransaction *)transaction withVerificationResult:(ASTStoreServerReceiptVerificationResult)result
+- (void)updatePurchaseFromProductIdentifier:(NSString*)productIdentifier
 {
-    NSString *productIdentifier = [ASTStoreServer productIdentifierForTransaction:transaction];
-    
     // Attempt to get the product object for this - if that fails
     // Then attempt to the product data object for transaction - 
     ASTStoreProductData *productData = nil;    
@@ -498,22 +513,6 @@
         return;
     }
     
-
-    if( ASTStoreServerReceiptVerificationResultFail == result )
-    {
-        // receipt verification failed
-        self.purchaseState = ASTStoreControllerPurchaseStateNone;
-        
-        [self invokeDelegateStoreControllerProductIdentifierFailedPurchase:productIdentifier withError:nil];
-        [self.skPaymentQueue finishTransaction:transaction];
-        return;
-    }
-    else if( ASTStoreServerReceiptVerificationResultInconclusive == result )
-    {
-        // TODO: Should keep it around and try verifying it later as an audit type function
-    }
-    
-    
     if( productData.type == ASTStoreProductIdentifierTypeConsumable )
     {
         // Increment the available quantity for the family
@@ -530,7 +529,30 @@
     {
         DLog(@"Unsupported product type: %d", productData.type);
     }
+
+}
+
+- (void)completionHandler:(SKPaymentTransaction *)transaction withVerificationResult:(ASTStoreServerResult)result
+{
+    NSString *productIdentifier = [ASTStoreServer productIdentifierForTransaction:transaction];
     
+    if( ASTStoreServerResultFail == result )
+    {
+        // receipt verification failed
+        self.purchaseState = ASTStoreControllerPurchaseStateNone;
+        
+        [self invokeDelegateStoreControllerProductIdentifierFailedPurchase:productIdentifier withError:nil];
+        [self.skPaymentQueue finishTransaction:transaction];
+        return;
+    }
+    else if( ASTStoreServerResultInconclusive == result )
+    {
+        // TODO: Should keep it around and try verifying it later as an audit type function
+    }
+
+    
+    [self updatePurchaseFromProductIdentifier:productIdentifier];
+            
     if( self.restoringPurchases )
     {
         // If restoring, there may be multiple transactions so set back to processing
@@ -558,17 +580,15 @@
         
         [self.storeServer asyncVerifyTransaction:transaction 
                              withCompletionBlock:^(SKPaymentTransaction *transaction, 
-                                                   ASTStoreServerReceiptVerificationResult result) 
+                                                   ASTStoreServerResult result) 
          {
-             dispatch_async(dispatch_get_main_queue(), ^{
-                 [self completionHandler:transaction withVerificationResult:result];
-             });
+             [self completionHandler:transaction withVerificationResult:result];
          }];
     }
     else
     {
         // No server verification to do - assume pass and invoke handler directly
-        [self completionHandler:transaction withVerificationResult:ASTStoreServerReceiptVerificationResultPass];
+        [self completionHandler:transaction withVerificationResult:ASTStoreServerResultPass];
     }
 }
 
@@ -644,20 +664,34 @@
 }
 
 #pragma mark Purchase
-- (void)purchaseProduct:(NSString*)productIdentifier
+
+- (void)purchaseCompletionHandler:(NSString*)productIdentifier 
+               customerIdentifier:(NSString*)customerIdentifier 
+        productPromoCodeAvailable:(BOOL)productPromoCodeAvailable
 {
-    if( ! [SKPaymentQueue canMakePayments] )
+    if( NO == productPromoCodeAvailable )
     {
-        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Purchases Disabled" 
-                                                         message:@"In App Purchase is Disabled. Please check Settings -> General -> Restrictions." 
+        SKPayment *payment = [SKPayment paymentWithProductIdentifier:productIdentifier]; 
+        [self.skPaymentQueue addPayment:payment];
+    }
+    else
+    {
+        // Promo code accepted - activate product...
+        [self updatePurchaseFromProductIdentifier:productIdentifier];
+        
+        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Thank You" 
+                                                         message:@"Your promo code was successfully redeemed." 
                                                         delegate:self 
                                                cancelButtonTitle:@"OK" 
                                                otherButtonTitles:nil] autorelease];
         [alert show];
-
-        return;
+        
+        self.purchaseState = ASTStoreControllerPurchaseStateNone;
     }
-    
+}
+
+- (void)purchaseProduct:(NSString*)productIdentifier
+{
     if( self.purchaseState != ASTStoreControllerPurchaseStateNone )
     {
         // Not in a terminal purchase state - reject request
@@ -671,10 +705,50 @@
         return;
     }
     
-    self.purchaseState = ASTStoreControllerPurchaseStateProcessingPayment;
+    if( ! [SKPaymentQueue canMakePayments] )
+    {
+        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Purchases Disabled" 
+                                                         message:@"In App Purchase is Disabled. Please check Settings -> General -> Restrictions." 
+                                                        delegate:self 
+                                               cancelButtonTitle:@"OK" 
+                                               otherButtonTitles:nil] autorelease];
+        [alert show];
+
+        return;
+    }
     
-    SKPayment *payment = [SKPayment paymentWithProductIdentifier:productIdentifier]; 
-    [self.skPaymentQueue addPayment:payment];
+    self.purchaseState = ASTStoreControllerPurchaseStateProcessingPayment;
+
+    ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
+    
+    if( theProduct.isFree )
+    {
+        // Treat it like a valid promo code
+        [self purchaseCompletionHandler:productIdentifier 
+                     customerIdentifier:self.customerIdentifier 
+              productPromoCodeAvailable:YES];
+
+
+    }
+    else if( self.serverPromoCodesEnabled )
+    {
+        [self.storeServer asyncIsProductPromoCodeAvailableForProductIdentifier:productIdentifier 
+                                                         andCustomerIdentifier:self.customerIdentifier 
+                                                           withCompletionBlock:^(NSString *productIdentifier,
+                                                                                 NSString *customerIdentifier,
+                                                                                 BOOL result)
+         {
+             [self purchaseCompletionHandler:productIdentifier 
+                          customerIdentifier:customerIdentifier 
+                   productPromoCodeAvailable:result];
+         }];
+    }
+    else
+    {
+        [self purchaseCompletionHandler:productIdentifier 
+                     customerIdentifier:self.customerIdentifier 
+              productPromoCodeAvailable:NO];
+    }
 }
 
 - (void)restorePreviousPurchases
@@ -700,7 +774,60 @@
 - (void)setProductPurchased:(NSString*)productIdentifier withQuantity:(NSUInteger)totalQuantityAvailable
 {
     ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
-    [theProduct setPurchasedQuantity:totalQuantityAvailable];
+    
+    if( nil != theProduct )
+    {
+        [theProduct setPurchasedQuantity:totalQuantityAvailable];
+        return;
+    }
+    
+    // In the event a family id was provided instead of a product id, set directly against family
+    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:productIdentifier];
+    
+    if( nil != familyData )
+    {
+        [familyData setAvailableQuantity:totalQuantityAvailable];
+    }
+}
+
+- (NSUInteger)produceProduct:(NSString*)productIdentifier quantity:(NSUInteger)amountToProduce
+{
+    ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
+    NSUInteger quantity;
+    
+    if( nil != theProduct )
+    {
+        if( theProduct.type != ASTStoreProductIdentifierTypeConsumable )
+        {
+            return 0;
+        }
+        
+        quantity = theProduct.availableQuantity;
+        quantity += amountToProduce;
+        
+        [theProduct setPurchasedQuantity:quantity];
+        return quantity;
+    }
+    
+    // In the event a family id was provided instead of a product id, set directly against family
+    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:productIdentifier];
+    
+    if( nil != familyData )
+    {
+        if( familyData.type != ASTStoreProductIdentifierTypeConsumable )
+        {
+            return 0;
+        }
+        
+        quantity = familyData.availableQuantity;
+        quantity += amountToProduce;
+        
+        [familyData setAvailableQuantity:quantity];
+        
+        return quantity;
+    }
+    
+    return 0;
 }
 
 #pragma mark Querying Purchases
@@ -708,27 +835,63 @@
 - (BOOL)isProductPurchased:(NSString*)productIdentifier
 {
     ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
-    return ( theProduct.isPurchased );
+    
+    if( nil != theProduct )
+    {
+        return ( theProduct.isPurchased );
+    }
+    
+    // In the event a family id was provided instead of a product id, attempt to directly access family id
+    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:productIdentifier];
+    
+    if( nil != familyData )
+    {
+        return ( familyData.isPurchased );
+    }
+    
+    return NO;
 }
 
 - (NSUInteger)availableQuantityForProduct:(NSString*)productIdentifier
 {
-    ASTStoreProduct *aProduct = [self storeProductForIdentifier:productIdentifier];
+    ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
     
-    if( nil == aProduct )
+    if( nil != theProduct )
     {
-        DLog(@"Failed to get product data for:%@", productIdentifier);
-        return 0;
+        return ( theProduct.availableQuantity );
     }
     
-    return ( aProduct.availableQuantity );
+    // In the event a family id was provided instead of a product id, attempt to directly access family id
+    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:productIdentifier];
+    
+    if( nil != familyData )
+    {
+        return( familyData.availableQuantity );
+    }
+    
+    DLog(@"Failed to get product data for:%@", productIdentifier);
+
+    return 0;
 }
 
 - (NSUInteger)consumeProduct:(NSString*)productIdentifier quantity:(NSUInteger)amountToConsume
 {
-    ASTStoreProduct *aProduct = [self storeProductForIdentifier:productIdentifier];
+    ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
+ 
+    if( nil != theProduct )
+    {
+        return ( [theProduct consumeQuantity:amountToConsume] );        
+    }
 
-    return ( [aProduct consumeQuantity:amountToConsume] );
+    // In the event a family id was provided instead of a product id, attempt to directly access family id
+    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:productIdentifier];
+    
+    if( nil != familyData )
+    {
+        return ( [familyData consumeQuantity:amountToConsume] );
+    }
+
+    return 0;
 }
 
 
@@ -758,6 +921,9 @@
     retryStoreConnectionInterval_ = kASTStoreControllerDefaultRetryStoreConnectionInterval;
     verifyReceipts_ = kASTStoreServerDefaultVerifyReceipts;
     restoringPurchases_ = NO;
+    customerIdentifier_ = nil;
+    serverConsumablesEnabled_ = NO;
+    serverPromoCodesEnabled_ = NO;
     
     // Register as an observer right away
     [self.skPaymentQueue addTransactionObserver:self];

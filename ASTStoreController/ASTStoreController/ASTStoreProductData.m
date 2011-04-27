@@ -38,10 +38,10 @@
 @interface ASTStoreProductData ()
 
 - (void)save;
-@property (nonatomic, retain) NSString *productDataPath;
+@property (nonatomic, copy) NSString *productDataPath;
 @property (readonly, retain) ASTStoreFamilyData *familyData;
 
-@property (retain) NSString *productIdentifier;
+@property (nonatomic,copy) NSString *productIdentifier;
 @property ASTStoreProductIdentifierType type;
 
 @end
@@ -111,7 +111,7 @@
     
     if( nil == fileName )
     {
-        DLog(@"Failed to get filename for family id:%@", aProductIdentifier);
+        DLog(@"Failed to get filename for product id:%@", aProductIdentifier);
         return nil;
     }
     
@@ -124,7 +124,21 @@
         return ( nil );
     }
     
-    productData = [NSKeyedUnarchiver unarchiveObjectWithFile:fileName];    
+    @try 
+    {
+        productData = [NSKeyedUnarchiver unarchiveObjectWithFile:fileName];
+    }
+    @catch (NSException *exception) 
+    {
+        productData = nil;
+    }
+    
+    if( nil == productData )
+    {
+        DLog(@"Unarchive failed for %@", fileName);
+        return nil;
+    }
+    
     productData.productDataPath = fileName;
     
     return( productData );
@@ -242,8 +256,7 @@
         return ( productDataPath_ );
     }
     
-    productDataPath_ = [ASTStoreProductData pathForProductDataWithIdentifier:self.productIdentifier];
-    [productDataPath_ retain];
+    productDataPath_ = [[ASTStoreProductData pathForProductDataWithIdentifier:self.productIdentifier] copy];
     
     return ( productDataPath_ );
 }
@@ -255,7 +268,7 @@
         return ( familyData_ );
     }
     
-    familyData_ = [ASTStoreFamilyData familyDataWithIdentifier:self.familyIdentifier];
+    familyData_ = [ASTStoreFamilyData familyDataWithIdentifier:self.familyIdentifier productType:self.type];
     [familyData_ retain];
     
     return ( familyData_ );
@@ -273,33 +286,24 @@
 
 - (void)setAvailableQuantity:(NSUInteger)availableQuantity
 {
-    NSUInteger quantity = availableQuantity;
-    
-    if(( self.type != ASTStoreProductIdentifierTypeConsumable ) && ( quantity > 1 ))
-    {
-        quantity = 1;
-    }
-    
-    self.familyData.availableQuantity = quantity;
+    self.familyData.availableQuantity = availableQuantity;
 }
 
 - (BOOL)isPurchased
 {
-    NSUInteger quantity = self.availableQuantity;
-    
-    if(( quantity > 0 ) && ( self.type != ASTStoreProductIdentifierTypeConsumable ))
-    {
-        return YES;
-    }
-    
-    return NO;
+    return self.familyData.isPurchased;
+}
+
+- (NSUInteger)consumeQuantity:(NSUInteger)amountToConsume
+{
+    return [self.familyData consumeQuantity:amountToConsume];
 }
 
 //---------------------------------------------------------- 
 //  Keyed Archiving
 //
 //---------------------------------------------------------- 
-- (void) encodeWithCoder: (NSCoder *)encoder 
+- (void) encodeWithCoder:(NSCoder *)encoder 
 {
     [encoder encodeObject:self.productIdentifier forKey:k_PRODUCT_IDENTIFIER];
     [encoder encodeInteger:self.type forKey:k_TYPE];
@@ -354,11 +358,8 @@
     
     type_ = aType;
     
-    productIdentifier_ = aProductIdentifier;
-    [productIdentifier_ retain];
-    
-    familyIdentifier_ = aFamilyIdentifier;
-    [familyIdentifier_ retain];
+    productIdentifier_ = [aProductIdentifier copy];    
+    familyIdentifier_ = [aFamilyIdentifier copy];
     
     familyQuanity_= aFamilyQuantity;
     

@@ -23,6 +23,7 @@
 		81671D0B1328186C00B12E3D /* default-purchase-image.png in Resources */ = {isa = PBXBuildFile; fileRef = 81671D091328186C00B12E3D /* default-purchase-image.png */; };
 		8178D5EA1331302E00A06922 /* ASTStoreDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8178D5E81331302D00A06922 /* ASTStoreDetailViewController.m */; };
 		8178D5EB1331302E00A06922 /* ASTStoreDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8178D5E91331302E00A06922 /* ASTStoreDetailViewController.xib */; };
+		818A398913577EC000C5DC77 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 818A398813577EC000C5DC77 /* Security.framework */; };
 		8196CBA91333BF42000C5286 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8196CBA81333BF42000C5286 /* SystemConfiguration.framework */; };
 		8196CBAB1333BF4B000C5286 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8196CBAA1333BF4B000C5286 /* MobileCoreServices.framework */; };
 		8196CBAD1333BF67000C5286 /* libz.1.2.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8196CBAC1333BF67000C5286 /* libz.1.2.3.dylib */; };
@@ -75,6 +76,7 @@
 		8178D5E71331302D00A06922 /* ASTStoreDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreDetailViewController.h; sourceTree = "<group>"; };
 		8178D5E81331302D00A06922 /* ASTStoreDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreDetailViewController.m; sourceTree = "<group>"; };
 		8178D5E91331302E00A06922 /* ASTStoreDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreDetailViewController.xib; sourceTree = "<group>"; };
+		818A398813577EC000C5DC77 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		8196CBA81333BF42000C5286 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		8196CBAA1333BF4B000C5286 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		8196CBAC1333BF67000C5286 /* libz.1.2.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.3.dylib; path = usr/lib/libz.1.2.3.dylib; sourceTree = SDKROOT; };
@@ -89,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				818A398913577EC000C5DC77 /* Security.framework in Frameworks */,
 				8196CBB11333C42C000C5286 /* CFNetwork.framework in Frameworks */,
 				8196CBAD1333BF67000C5286 /* libz.1.2.3.dylib in Frameworks */,
 				8196CBAB1333BF4B000C5286 /* MobileCoreServices.framework in Frameworks */,
@@ -124,6 +127,7 @@
 		812FF12C132561F00070074B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				818A398813577EC000C5DC77 /* Security.framework */,
 				8196CBB01333C42C000C5286 /* CFNetwork.framework */,
 				8196CBAC1333BF67000C5286 /* libz.1.2.3.dylib */,
 				8196CBAA1333BF4B000C5286 /* MobileCoreServices.framework */,
@@ -360,6 +364,10 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "";
@@ -377,6 +385,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "";
@@ -394,7 +406,6 @@
 				INFOPLIST_FILE = "ASTStore/ASTStore-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../../../Library/Developer/Xcode/DerivedData/ASTStoreController-ekelukrnpdaouhgcjxxcqfhcqmcj/Build/Products/Debug-iphoneos\"",
 					"\"$(SRCROOT)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -412,7 +423,6 @@
 				INFOPLIST_FILE = "ASTStore/ASTStore-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../../../Library/Developer/Xcode/DerivedData/ASTStoreController-ekelukrnpdaouhgcjxxcqfhcqmcj/Build/Products/Debug-iphoneos\"",
 					"\"$(SRCROOT)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";

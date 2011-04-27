@@ -1,10 +1,10 @@
 //
-//  ASTStoreFamilyData.h
+//  NSKeyedArchiver+Encryption.m
 //  ASTStoreController
 //
-//  Created by Sean Kormilo on 11-03-15.
+//  Created by Sean Kormilo on 11-04-14.
 //  http://www.anystonetech.com
-
+//
 //  Copyright (c) 2011 Anystone Technologies, Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,27 +25,30 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-#import "ASTStoreProductTypes.h"
+#import "NSKeyedArchiver+Encryption.h"
+#import "NSData+Encryption.h"
 
 
-@interface ASTStoreFamilyData : NSObject <NSCoding, NSCopying> {}
+@implementation NSKeyedArchiver (Encryption)
 
-// Creates a new instance if necessary
-+ (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier productType:(ASTStoreProductIdentifierType)productType;
++ (BOOL)encryptArchiveRootObject:(id)rootObject toFile:(NSString *)path usingKey:(NSData*)key
+{
+    NSData *decryptedData = [NSKeyedArchiver archivedDataWithRootObject:rootObject];
+    
+    if( nil == decryptedData )
+    {
+        return NO;
+    }
+    
 
-// Only returns existing entities
-+ (ASTStoreFamilyData*)familyDataWithIdentifier:(NSString*)aFamilyIdentifier;
-
-+ (void)removeFamilyDataForIdentifier:(NSString*)aFamilyIdentifier;
-- (id)initWithFamilyIdentifier:(NSString*)aFamilyIdentifier;
-
-@property (nonatomic) NSUInteger availableQuantity;
-@property (readonly,copy) NSString *familyIdentifier;
-@property ASTStoreProductIdentifierType type;
-
-
-@property (readonly) BOOL isPurchased;
-- (NSUInteger)consumeQuantity:(NSUInteger)amountToConsume;
+    NSData *encryptedData = [decryptedData encryptWithKey:key];
+    
+    if( nil == encryptedData ) 
+    {
+        return NO;
+    }
+    
+    return( [encryptedData writeToFile:path atomically:YES] );
+}
 
 @end

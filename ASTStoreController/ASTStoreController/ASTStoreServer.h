@@ -27,56 +27,67 @@
 
 #import <Foundation/Foundation.h>
 #import "ASTStoreKit.h"
-
-@protocol ASTStoreServerDelegate;
+#import "ASTStoreProduct.h"
 
 typedef enum
 {
-    ASTStoreServerReceiptVerificationResultPass,
-    ASTStoreServerReceiptVerificationResultFail,
-    ASTStoreServerReceiptVerificationResultInconclusive
-} ASTStoreServerReceiptVerificationResult;
+    ASTStoreServerResultPass,
+    ASTStoreServerResultFail,
+    ASTStoreServerResultInconclusive
+} ASTStoreServerResult;
 
 #define kASTStoreServerDefaultNetworkTimeout 15.0
 
-@interface ASTStoreServer : NSObject 
-{
-    NSURL *serverUrl_;
-    NSTimeInterval serverConnectionTimeout_;
-    
-    id<ASTStoreServerDelegate> delegate_;
-}
+@interface ASTStoreServer : NSObject {}
 
 + (NSString*)productIdentifierForTransaction:(SKPaymentTransaction*)transaction;
 
-- (ASTStoreServerReceiptVerificationResult)verifyTransaction:(SKPaymentTransaction*)transaction; 
+@property (copy) NSURL *serverUrl;
+@property (copy) NSString *vendorUuid;
+@property  NSTimeInterval serverConnectionTimeout;
+
+#pragma mark Verify Related Methods
+- (ASTStoreServerResult)verifyTransaction:(SKPaymentTransaction*)transaction; 
 
 
-// Uses delegate method to provide result
-- (void)asyncVerifyTransaction:(SKPaymentTransaction*)transaction;
-
-// Uses blocks to provide result - completion block runs on global default
-// queue - use dispatch_async(dispatch_get_main_queue()) inside the completion block if it needs to run
-// on the main thread
 typedef void (^ASTVerifyReceiptBlock)(SKPaymentTransaction* transaction,
-                                      ASTStoreServerReceiptVerificationResult result);
+                                      ASTStoreServerResult result);
 
 - (void)asyncVerifyTransaction:(SKPaymentTransaction*)transaction
            withCompletionBlock:(ASTVerifyReceiptBlock)completionBlock;
 
-@property (retain) NSURL *serverUrl;
-@property  NSTimeInterval serverConnectionTimeout;
-@property (assign) id<ASTStoreServerDelegate> delegate;
+#pragma mark In App Promo Related Methods
 
-@end
+- (BOOL)isProductPromoCodeAvailableForProductIdentifier:(NSString*)productIdentifier 
+                                  andCustomerIdentifier:(NSString*)customerIdentifier;
 
-@protocol ASTStoreServerDelegate <NSObject>
-@optional
 
-// Delegate is called to provide result for async receipt verification result
-- (void)astStoreServerVerifiedTransaction:(SKPaymentTransaction*)transaction 
-                               withResult:(ASTStoreServerReceiptVerificationResult)result;
+typedef void (^ASTProductPromoCodeBlock)(NSString *productIdentifier,
+                                         NSString *customerIdentifier,
+                                         BOOL result);
 
+- (void)asyncIsProductPromoCodeAvailableForProductIdentifier:(NSString*)productIdentifier 
+                                      andCustomerIdentifier:(NSString*)customerIdentifier
+                                        withCompletionBlock:(ASTProductPromoCodeBlock)completionBlock;
+
+#pragma mark Get Basic Product Data from Server
+
+// Obtaining a single product update from the server
+- (ASTStoreProduct*)storeProductForProductIdentifier:(NSString*)productIdentifier;
+
+typedef void (^ASTStoreProductBlock)(NSString *productIdentifier, 
+                                     ASTStoreProduct *storeProduct);
+
+- (void)asyncStoreProductForProductIdentifier:(NSString*)productIdentifier
+                          withCompletionBlock:(ASTStoreProductBlock)completionBlock;
+
+
+// Getting the whole set of product data available on the server
+- (NSArray*)storeProducts;
+
+typedef void (^ASTStoreProductArrayBlock)(NSArray *storeProductsArray);
+
+- (void)asyncStoreProductsWithCompletionBlock:(ASTStoreProductArrayBlock)completionBlock;
 
 
 @end

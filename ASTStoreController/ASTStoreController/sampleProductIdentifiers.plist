@@ -7,46 +7,80 @@
 		<string>Typical Nonconsumable Purchase</string>
 		<key>productIdentifier</key>
 		<string>com.anystonetech.storecontroller.nonconsumable</string>
-		<key>title</key>
+		<key>productType</key>
 		<string>Nonconsumable</string>
-		<key>type</key>
+		<key>title</key>
 		<string>Nonconsumable</string>
 	</dict>
 	<dict>
 		<key>description</key>
 		<string>Consumable with a minimum version and 1 berry</string>
-		<key>minimumVersion</key>
-		<string>1.2</string>
-		<key>productIdentifier</key>
-		<string>com.anystonetech.storecontroller.versionsample</string>
-		<key>title</key>
-		<string>Consumable - 1 berry</string>
-		<key>type</key>
-		<string>Consumable</string>
 		<key>familyIdentifier</key>
 		<string>com.anystonetech.storecontroller.berry</string>
 		<key>familyQuantity</key>
 		<string>1</string>
+		<key>minimumVersion</key>
+		<string>1.2</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.storecontroller.versionsample</string>
+		<key>productType</key>
+		<string>Consumable</string>
+		<key>title</key>
+		<string>Consumable - 1 berry</string>
 	</dict>
 	<dict>
 		<key>description</key>
 		<string>Consumable with 10 smurfberries</string>
 		<key>extraInformation</key>
 		<string>Limited time sale : 50% off!</string>
-		<key>minimumVersion</key>
-		<string>1.0</string>
-		<key>productIdentifier</key>
-		<string>com.anystonetech.storecontroller.fullsample</string>
-		<key>shouldDisplay</key>
-		<true/>
-		<key>title</key>
-		<string>Consumable - 10 berries</string>
-		<key>type</key>
-		<string>Consumable</string>
 		<key>familyIdentifier</key>
 		<string>com.anystonetech.storecontroller.berry</string>
 		<key>familyQuantity</key>
 		<string>10</string>
+		<key>isHidden</key>
+		<false/>
+		<key>minimumVersion</key>
+		<string>1.0</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.storecontroller.fullsample</string>
+		<key>productType</key>
+		<string>Consumable</string>
+		<key>title</key>
+		<string>Consumable - 10 berries</string>
+	</dict>
+	<dict>
+		<key>description</key>
+		<string>Consumable with 99 smurfberries</string>
+		<key>extraInformation</key>
+		<string>FREE for a limited time</string>
+		<key>familyIdentifier</key>
+		<string>com.anystonetech.storecontroller.berry</string>
+		<key>familyQuantity</key>
+		<string>99</string>
+		<key>isFree</key>
+		<true/>
+		<key>isHidden</key>
+		<false/>
+		<key>minimumVersion</key>
+		<string>1.0</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.storecontroller.freesample</string>
+		<key>productType</key>
+		<string>Consumable</string>
+		<key>title</key>
+		<string>Consumable - 99 berries</string>
+	</dict>
+	<dict>
+		<key>description</key>
+		<string>Deprecated Keys</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.storecontroller.nonconsumable.deprecated</string>
+		<key>type</key>
+		<string>Nonconsumable</string>
+		<key>title</key>
+		<string>Use Deprecated PList Keys</string>
+		<key>shouldDisplay</key>
+		<string>YES</string>
 	</dict>
 </array>
 </plist>

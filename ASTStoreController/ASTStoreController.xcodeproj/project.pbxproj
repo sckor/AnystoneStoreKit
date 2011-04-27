@@ -39,6 +39,17 @@
 		8184216B1326AB78001D5CDC /* ASTStoreProduct+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8184216A1326AB78001D5CDC /* ASTStoreProduct+Private.h */; };
 		8184216E1326B56F001D5CDC /* ASTStoreProductPlistReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 8184216C1326B56F001D5CDC /* ASTStoreProductPlistReader.h */; };
 		8184216F1326B56F001D5CDC /* ASTStoreProductPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 8184216D1326B56F001D5CDC /* ASTStoreProductPlistReader.m */; };
+		818A3971135724C800C5DC77 /* NSData+Encryption.h in Headers */ = {isa = PBXBuildFile; fileRef = 818A396F135724C800C5DC77 /* NSData+Encryption.h */; };
+		818A3972135724C800C5DC77 /* NSData+Encryption.m in Sources */ = {isa = PBXBuildFile; fileRef = 818A3970135724C800C5DC77 /* NSData+Encryption.m */; };
+		818A39781357291400C5DC77 /* SSKeychain.h in Headers */ = {isa = PBXBuildFile; fileRef = 818A39761357291400C5DC77 /* SSKeychain.h */; };
+		818A39791357291400C5DC77 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 818A39771357291400C5DC77 /* SSKeychain.m */; };
+		818A397D1357432A00C5DC77 /* ASTKeychainCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 818A397B1357432A00C5DC77 /* ASTKeychainCrypto.h */; };
+		818A397E1357432A00C5DC77 /* ASTKeychainCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 818A397C1357432A00C5DC77 /* ASTKeychainCrypto.m */; };
+		818A39811357675400C5DC77 /* NSKeyedUnarchiver+Encryption.h in Headers */ = {isa = PBXBuildFile; fileRef = 818A397F1357675400C5DC77 /* NSKeyedUnarchiver+Encryption.h */; };
+		818A39821357675400C5DC77 /* NSKeyedUnarchiver+Encryption.m in Sources */ = {isa = PBXBuildFile; fileRef = 818A39801357675400C5DC77 /* NSKeyedUnarchiver+Encryption.m */; };
+		818A39861357687500C5DC77 /* NSKeyedArchiver+Encryption.h in Headers */ = {isa = PBXBuildFile; fileRef = 818A39841357687500C5DC77 /* NSKeyedArchiver+Encryption.h */; };
+		818A39871357687500C5DC77 /* NSKeyedArchiver+Encryption.m in Sources */ = {isa = PBXBuildFile; fileRef = 818A39851357687500C5DC77 /* NSKeyedArchiver+Encryption.m */; };
+		8193B9571342633C00508914 /* ASTStoreProductInfoKeys.h in Headers */ = {isa = PBXBuildFile; fileRef = 8193B9561342633B00508914 /* ASTStoreProductInfoKeys.h */; };
 		8196CB6513338D83000C5286 /* ASTStoreServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 8196CB6313338D82000C5286 /* ASTStoreServer.h */; };
 		8196CB6613338D83000C5286 /* ASTStoreServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8196CB6413338D82000C5286 /* ASTStoreServer.m */; };
 		8196CB7D1333BDD3000C5286 /* ASIAuthenticationDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 8196CB7B1333BDD3000C5286 /* ASIAuthenticationDialog.h */; };
@@ -102,6 +113,20 @@
 		8184216A1326AB78001D5CDC /* ASTStoreProduct+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ASTStoreProduct+Private.h"; sourceTree = "<group>"; };
 		8184216C1326B56F001D5CDC /* ASTStoreProductPlistReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreProductPlistReader.h; sourceTree = "<group>"; };
 		8184216D1326B56F001D5CDC /* ASTStoreProductPlistReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ASTStoreProductPlistReader.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		818A396F135724C800C5DC77 /* NSData+Encryption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Encryption.h"; sourceTree = "<group>"; };
+		818A3970135724C800C5DC77 /* NSData+Encryption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Encryption.m"; sourceTree = "<group>"; };
+		818A39741357291400C5DC77 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		818A39751357291400C5DC77 /* Readme.markdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Readme.markdown; sourceTree = "<group>"; };
+		818A39761357291400C5DC77 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychain.h; sourceTree = "<group>"; };
+		818A39771357291400C5DC77 /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychain.m; sourceTree = "<group>"; };
+		818A397A13572C0600C5DC77 /* README-JSONKit.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "README-JSONKit.md"; sourceTree = "<group>"; };
+		818A397B1357432A00C5DC77 /* ASTKeychainCrypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTKeychainCrypto.h; sourceTree = "<group>"; };
+		818A397C1357432A00C5DC77 /* ASTKeychainCrypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTKeychainCrypto.m; sourceTree = "<group>"; };
+		818A397F1357675400C5DC77 /* NSKeyedUnarchiver+Encryption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSKeyedUnarchiver+Encryption.h"; sourceTree = "<group>"; };
+		818A39801357675400C5DC77 /* NSKeyedUnarchiver+Encryption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSKeyedUnarchiver+Encryption.m"; sourceTree = "<group>"; };
+		818A39841357687500C5DC77 /* NSKeyedArchiver+Encryption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSKeyedArchiver+Encryption.h"; sourceTree = "<group>"; };
+		818A39851357687500C5DC77 /* NSKeyedArchiver+Encryption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSKeyedArchiver+Encryption.m"; sourceTree = "<group>"; };
+		8193B9561342633B00508914 /* ASTStoreProductInfoKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreProductInfoKeys.h; sourceTree = "<group>"; };
 		8196CB6313338D82000C5286 /* ASTStoreServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreServer.h; sourceTree = "<group>"; };
 		8196CB6413338D82000C5286 /* ASTStoreServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreServer.m; sourceTree = "<group>"; };
 		8196CB7B1333BDD3000C5286 /* ASIAuthenticationDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIAuthenticationDialog.h; sourceTree = "<group>"; };
@@ -182,6 +207,10 @@
 			isa = PBXGroup;
 			children = (
 				812FF1181325607F0070074B /* ASTStoreController-Prefix.pch */,
+				818A397F1357675400C5DC77 /* NSKeyedUnarchiver+Encryption.h */,
+				818A39801357675400C5DC77 /* NSKeyedUnarchiver+Encryption.m */,
+				818A39841357687500C5DC77 /* NSKeyedArchiver+Encryption.h */,
+				818A39851357687500C5DC77 /* NSKeyedArchiver+Encryption.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -237,6 +266,7 @@
 				812FF15A132563000070074B /* ASTStoreController.m */,
 				8184215C13268E16001D5CDC /* ASTStoreProduct.m */,
 				8184216A1326AB78001D5CDC /* ASTStoreProduct+Private.h */,
+				8193B9561342633B00508914 /* ASTStoreProductInfoKeys.h */,
 				8184216C1326B56F001D5CDC /* ASTStoreProductPlistReader.h */,
 				8184216D1326B56F001D5CDC /* ASTStoreProductPlistReader.m */,
 				81671D561329490C00B12E3D /* ASTStoreKit.h */,
@@ -246,8 +276,30 @@
 				8178D5D2132FFBF700A06922 /* ASTStoreFamilyData.m */,
 				8196CB6313338D82000C5286 /* ASTStoreServer.h */,
 				8196CB6413338D82000C5286 /* ASTStoreServer.m */,
+				818A397B1357432A00C5DC77 /* ASTKeychainCrypto.h */,
+				818A397C1357432A00C5DC77 /* ASTKeychainCrypto.m */,
 			);
 			name = Classes;
+			sourceTree = "<group>";
+		};
+		818A396D1357249300C5DC77 /* NSDataEncryption */ = {
+			isa = PBXGroup;
+			children = (
+				818A396F135724C800C5DC77 /* NSData+Encryption.h */,
+				818A3970135724C800C5DC77 /* NSData+Encryption.m */,
+			);
+			name = NSDataEncryption;
+			sourceTree = "<group>";
+		};
+		818A3973135728FC00C5DC77 /* SSKeychain */ = {
+			isa = PBXGroup;
+			children = (
+				818A39741357291400C5DC77 /* LICENSE */,
+				818A39751357291400C5DC77 /* Readme.markdown */,
+				818A39761357291400C5DC77 /* SSKeychain.h */,
+				818A39771357291400C5DC77 /* SSKeychain.m */,
+			);
+			name = SSKeychain;
 			sourceTree = "<group>";
 		};
 		8196CB791333ADEC000C5286 /* ASIHttpRequest */ = {
@@ -278,6 +330,8 @@
 		8196CB7A1333AE68000C5286 /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
+				818A3973135728FC00C5DC77 /* SSKeychain */,
+				818A396D1357249300C5DC77 /* NSDataEncryption */,
 				8196CBBA1333D2CF000C5286 /* JSONKit */,
 				8196CB9F1333BE52000C5286 /* Reachability */,
 				8196CB791333ADEC000C5286 /* ASIHttpRequest */,
@@ -298,6 +352,7 @@
 		8196CBBA1333D2CF000C5286 /* JSONKit */ = {
 			isa = PBXGroup;
 			children = (
+				818A397A13572C0600C5DC77 /* README-JSONKit.md */,
 				8196CBBB1333D322000C5286 /* JSONKit.h */,
 				8196CBBC1333D322000C5286 /* JSONKit.m */,
 			);
@@ -344,6 +399,12 @@
 				8196CBA71333BE7C000C5286 /* ASIHTTPRequestDelegate.h in Headers */,
 				8196CBAF1333C088000C5286 /* ASICacheDelegate.h in Headers */,
 				8196CBBD1333D322000C5286 /* JSONKit.h in Headers */,
+				8193B9571342633C00508914 /* ASTStoreProductInfoKeys.h in Headers */,
+				818A3971135724C800C5DC77 /* NSData+Encryption.h in Headers */,
+				818A39781357291400C5DC77 /* SSKeychain.h in Headers */,
+				818A397D1357432A00C5DC77 /* ASTKeychainCrypto.h in Headers */,
+				818A39811357675400C5DC77 /* NSKeyedUnarchiver+Encryption.h in Headers */,
+				818A39861357687500C5DC77 /* NSKeyedArchiver+Encryption.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,6 +480,11 @@
 				8196CB9A1333BE33000C5286 /* ASINetworkQueue.m in Sources */,
 				8196CBA31333BE52000C5286 /* Reachability.m in Sources */,
 				8196CBBE1333D322000C5286 /* JSONKit.m in Sources */,
+				818A3972135724C800C5DC77 /* NSData+Encryption.m in Sources */,
+				818A39791357291400C5DC77 /* SSKeychain.m in Sources */,
+				818A397E1357432A00C5DC77 /* ASTKeychainCrypto.m in Sources */,
+				818A39821357675400C5DC77 /* NSKeyedUnarchiver+Encryption.m in Sources */,
+				818A39871357687500C5DC77 /* NSKeyedArchiver+Encryption.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
