@@ -36,7 +36,6 @@
     <
     UITableViewDataSource, 
     UITableViewDelegate,
-    UITextFieldDelegate,
     ASTStoreControllerDelegate
     >
 {
@@ -58,7 +57,6 @@
 @property (nonatomic, assign) id<ASTStoreViewControllerDelegate> delegate;
 
 - (IBAction)restorePreviousPurchaseButtonPressed:(id)sender;
-- (IBAction)removeAllPurchaseDataButtonPressed:(id)sender;
 
 @property (retain) IBOutlet UIView *tableContainerView;
 @property (retain) IBOutlet UITableView *tableView;
@@ -68,7 +66,6 @@
 @property (retain) IBOutlet UIButton *removeAllPurchaseButton;
 @property (retain) IBOutlet UILabel *connectingToStoreLabel;
 @property (retain) IBOutlet UIActivityIndicatorView *connectingActivityIndicatorView;
-@property (retain) IBOutlet UITextField *urlTextField;
 
 @end
 

@@ -30,7 +30,6 @@
 #import "ASTStoreDetailViewController.h"
 #import "WebViewController.h"
 
-#define kASTStoreViewControllerServerURLKey @"serverURL"
 
 @interface ASTStoreViewController()
 
@@ -49,7 +48,6 @@
 @synthesize restorePreviousPurchaseButton = restorePreviousPurchaseButton_;
 @synthesize connectingToStoreLabel = connectingToStoreLabel_;
 @synthesize connectingActivityIndicatorView = connectingActivityIndicatorView_;
-@synthesize urlTextField = urlTextField_;
 @synthesize productIdentifiers = productIdentifiers_;
 @synthesize delegate;
 @synthesize removeAllPurchaseButton = removeAllPurchaseButton_;
@@ -70,15 +68,6 @@
     return [[productIdentifiers_ retain] autorelease];
 }
 
-- (NSURL*)serverURL
-{
-    return ( [[NSUserDefaults standardUserDefaults] URLForKey:kASTStoreViewControllerServerURLKey] );
-}
-
-- (void)setServerURL:(NSURL*)serverURL
-{
-    [[NSUserDefaults standardUserDefaults] setURL:serverURL forKey:kASTStoreViewControllerServerURLKey];
-}
 
 #pragma mark User Interface
 
@@ -87,10 +76,7 @@
     [self.storeController restorePreviousPurchases];
 }
 
-- (IBAction)removeAllPurchaseDataButtonPressed:(id)sender 
-{
-    [self.storeController resetAllProducts];
-}
+
 
 - (void)updateStoreStateDisplay
 {
@@ -139,34 +125,6 @@
     }
 }
 
-#pragma mark Text Field Delegate
-- (BOOL)textFieldShouldReturn:(UITextField *)textField 
-{
-    [textField resignFirstResponder];
-    return NO;
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    BOOL didChange = NO;
-    
-    if( [self.urlTextField.text length] == 0 )
-    {
-        self.storeController.serverUrl = nil;
-        didChange = YES;
-    }
-    else if( NO == [self.urlTextField.text isEqualToString:[self.storeController.serverUrl absoluteString]] )
-    {
-        self.storeController.serverUrl = [NSURL URLWithString:self.urlTextField.text];
-        didChange = YES;
-    }
-    
-    if( didChange )
-    {
-        // Persist to NSUserDefaults
-        [self setServerURL:self.storeController.serverUrl];
-    }
-}
 
 #pragma mark - Table View Datasource
 
@@ -392,13 +350,10 @@
     [self updateThisView];
     
     self.storeController.delegate = self;
-    self.storeController.serverUrl = [self serverURL];
-    self.urlTextField.text = [self.storeController.serverUrl absoluteString];
         
     [self.storeController requestProductDataFromiTunes:NO];
     [self updateStoreStateDisplay];
     [self.tableView reloadData];
-
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -419,8 +374,6 @@
 
 - (void)viewDidUnload
 {
-    [urlTextField_ release];
-    urlTextField_ = nil;
     [super viewDidUnload];
     
     self.tableContainerView = nil;
@@ -430,7 +383,6 @@
     self.removeAllPurchaseButton = nil;
     self.connectingToStoreLabel = nil;
     self.connectingActivityIndicatorView = nil;
-
 }
 
 #pragma  mark - Memory Management

@@ -29,14 +29,12 @@
 
 #import <UIKit/UIKit.h>
 
-@class ASTRootViewController;
-
 @interface ASTStoreAppDelegate : NSObject <UIApplicationDelegate> 
 {
-
+    UITabBarController *tabBarController;
 }
 
+@property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
 @property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet ASTRootViewController *viewController;
 
 @end

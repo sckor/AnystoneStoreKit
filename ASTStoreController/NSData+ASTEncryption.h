@@ -33,7 +33,7 @@
 
 @interface NSData (Encryption)
 
-- (NSData*)encryptWithKey:(NSData*)key;
-- (NSData*)decryptWithKey:(NSData*)key;
+- (NSData*)astEncryptWithKey:(NSData*)key;
+- (NSData*)astDecryptWithKey:(NSData*)key;
 
 @end

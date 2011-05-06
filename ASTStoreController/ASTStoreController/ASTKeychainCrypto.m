@@ -26,7 +26,7 @@
 //  THE SOFTWARE.
 
 #import "ASTKeychainCrypto.h"
-#import "NSData+Encryption.h"
+#import "NSData+ASTEncryption.h"
 #import "SSKeychain.h"
 
 @interface ASTKeychainCrypto ()
@@ -174,7 +174,7 @@
         return nil;
     }
     
-    return( [dataToEncrypt encryptWithKey:key] );
+    return( [dataToEncrypt astEncryptWithKey:key] );
 }
 
 - (NSData*)decryptData:(NSData *)dataToDecrypt
@@ -186,7 +186,7 @@
         return nil;
     }
     
-    return( [dataToDecrypt decryptWithKey:key] );
+    return( [dataToDecrypt astDecryptWithKey:key] );
 }
 
 
