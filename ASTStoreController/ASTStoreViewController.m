@@ -28,7 +28,7 @@
 
 #import "ASTStoreViewController.h"
 #import "ASTStoreDetailViewController.h"
-#import "WebViewController.h"
+#import "ASTWebViewController.h"
 
 
 @interface ASTStoreViewController()
@@ -253,11 +253,10 @@
     switch ([alertView tag]) {
         case 0:
             if (buttonIndex == 1) {                
-                //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://anystonetech.com"]];
-                WebViewController *targetViewController = [[WebViewController alloc] initWithNibName:(isAniPad ? @"WebView-iPad" : @"WebView") bundle:nil];
+                ASTWebViewController *targetViewController = [[ASTWebViewController alloc] initWithNibName:(isAniPad ? @"ASTWebView-iPad" : @"ASTWebView") bundle:nil];
                 targetViewController.location = [NSURL URLWithString:@"http://anystonetech.com"];
                [self presentModalViewController:targetViewController animated:YES];
-                targetViewController.theTitle.text = @"Anystone Tech";
+                targetViewController.theTitle.text = @"Anystone";
                 [targetViewController release];
             }
             break;            

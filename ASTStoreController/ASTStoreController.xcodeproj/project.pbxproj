@@ -11,8 +11,8 @@
 		812099021374686600907BED /* ASTStoreDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 812098FC1374686600907BED /* ASTStoreDetailViewController.m */; };
 		812099031374686600907BED /* ASTStoreViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 812098FF1374686600907BED /* ASTStoreViewController.h */; };
 		812099041374686600907BED /* ASTStoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 812099001374686600907BED /* ASTStoreViewController.m */; };
-		812099A01374893600907BED /* WebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8120999E1374893600907BED /* WebViewController.h */; };
-		812099A11374893600907BED /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8120999F1374893600907BED /* WebViewController.m */; };
+		812099A01374893600907BED /* ASTWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8120999E1374893600907BED /* ASTWebViewController.h */; };
+		812099A11374893600907BED /* ASTWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8120999F1374893600907BED /* ASTWebViewController.m */; };
 		812FF1151325607F0070074B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 812FF1141325607F0070074B /* Foundation.framework */; };
 		812FF15B132563000070074B /* ASTStoreController.h in Headers */ = {isa = PBXBuildFile; fileRef = 812FF159132563000070074B /* ASTStoreController.h */; };
 		812FF15C132563000070074B /* ASTStoreController.m in Sources */ = {isa = PBXBuildFile; fileRef = 812FF15A132563000070074B /* ASTStoreController.m */; };
@@ -92,13 +92,13 @@
 		812099061374687A00907BED /* default-purchase-image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default-purchase-image.png"; sourceTree = "<group>"; };
 		812099071374687A00907BED /* default-purchase-image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default-purchase-image@2x.png"; sourceTree = "<group>"; };
 		8120992613746B1900907BED /* ASTStoreViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreViewController.xib; sourceTree = "<group>"; };
-		8120999E1374893600907BED /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
-		8120999F1374893600907BED /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
+		8120999E1374893600907BED /* ASTWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTWebViewController.h; sourceTree = "<group>"; };
+		8120999F1374893600907BED /* ASTWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTWebViewController.m; sourceTree = "<group>"; };
 		812099A31374897600907BED /* ASTStoreDetailViewController-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ASTStoreDetailViewController-iPad.xib"; sourceTree = "<group>"; };
 		812099A41374897600907BED /* ASTStoreTableViewCell-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ASTStoreTableViewCell-iPad.xib"; sourceTree = "<group>"; };
 		812099A51374897600907BED /* ASTStoreViewController-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ASTStoreViewController-iPad.xib"; sourceTree = "<group>"; };
-		812099A61374898800907BED /* WebView-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "WebView-iPad.xib"; sourceTree = "<group>"; };
-		812099A71374898800907BED /* WebView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WebView.xib; sourceTree = "<group>"; };
+		812099A61374898800907BED /* ASTWebView-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; path = "ASTWebView-iPad.xib"; sourceTree = "<group>"; };
+		812099A71374898800907BED /* ASTWebView.xib */ = {isa = PBXFileReference; fileEncoding = 4; path = ASTWebView.xib; sourceTree = "<group>"; };
 		812099A8137489B400907BED /* DropShadow-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DropShadow-iPad.png"; sourceTree = "<group>"; };
 		812099A9137489B400907BED /* DropShadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DropShadow.png; sourceTree = "<group>"; };
 		812099AA137489B400907BED /* DropShadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DropShadow@2x.png"; sourceTree = "<group>"; };
@@ -199,8 +199,8 @@
 				812098FB1374686600907BED /* ASTStoreDetailViewController.h */,
 				812098FC1374686600907BED /* ASTStoreDetailViewController.m */,
 				812099001374686600907BED /* ASTStoreViewController.m */,
-				8120999E1374893600907BED /* WebViewController.h */,
-				8120999F1374893600907BED /* WebViewController.m */,
+				8120999E1374893600907BED /* ASTWebViewController.h */,
+				8120999F1374893600907BED /* ASTWebViewController.m */,
 			);
 			name = ASTStoreViewController;
 			sourceTree = "<group>";
@@ -238,8 +238,8 @@
 				812099A31374897600907BED /* ASTStoreDetailViewController-iPad.xib */,
 				812099A41374897600907BED /* ASTStoreTableViewCell-iPad.xib */,
 				812099A51374897600907BED /* ASTStoreViewController-iPad.xib */,
-				812099A61374898800907BED /* WebView-iPad.xib */,
-				812099A71374898800907BED /* WebView.xib */,
+				812099A61374898800907BED /* ASTWebView-iPad.xib */,
+				812099A71374898800907BED /* ASTWebView.xib */,
 			);
 			name = XIB;
 			sourceTree = "<group>";
@@ -487,7 +487,7 @@
 				818A39861357687500C5DC77 /* NSKeyedArchiver+Encryption.h in Headers */,
 				812099011374686600907BED /* ASTStoreDetailViewController.h in Headers */,
 				812099031374686600907BED /* ASTStoreViewController.h in Headers */,
-				812099A01374893600907BED /* WebViewController.h in Headers */,
+				812099A01374893600907BED /* ASTWebViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -570,7 +570,7 @@
 				818A39871357687500C5DC77 /* NSKeyedArchiver+Encryption.m in Sources */,
 				812099021374686600907BED /* ASTStoreDetailViewController.m in Sources */,
 				812099041374686600907BED /* ASTStoreViewController.m in Sources */,
-				812099A11374893600907BED /* WebViewController.m in Sources */,
+				812099A11374893600907BED /* ASTWebViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

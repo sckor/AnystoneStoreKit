@@ -1,6 +1,5 @@
-//
-//  ASTRootViewController.h
-//  ASTStore
+// 
+//  WebViewController.h
 //
 //  Created by Greg Meach on 5/6/11.
 //  http://www.meachware.com
@@ -26,16 +25,19 @@
 //  THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
-#import "ASTStoreViewController.h"
 
-
-
-@interface ASTRootViewController : UIViewController <ASTStoreViewControllerDelegate> {
- 
-    BOOL isAniPad;
+@interface ASTWebViewController : UIViewController {
+	IBOutlet UIWebView			*webView;
+	IBOutlet UINavigationBar	*navBar;
+	NSURL *location;
+	IBOutlet UILabel *theTitle;
 
 }
+@property(retain) NSURL *location;
+@property (nonatomic, retain) IBOutlet UILabel *theTitle;
+@property (nonatomic, retain) IBOutlet UIWebView *webView;
+@property (nonatomic, retain) IBOutlet UINavigationBar *navBar;
 
-- (IBAction)showASTStoreBtnPressed:(id)sender;
+-(IBAction)closeViewAction;
 
 @end

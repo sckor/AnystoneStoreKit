@@ -1,6 +1,5 @@
-//
-//  ASTRootViewController.h
-//  ASTStore
+// 
+//  WebViewController.m
 //
 //  Created by Greg Meach on 5/6/11.
 //  http://www.meachware.com
@@ -25,17 +24,49 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
-#import "ASTStoreViewController.h"
+#import "ASTWebViewController.h"
 
+@implementation ASTWebViewController
 
+@synthesize navBar, webView, location, theTitle;
 
-@interface ASTRootViewController : UIViewController <ASTStoreViewControllerDelegate> {
- 
-    BOOL isAniPad;
+-(IBAction)closeViewAction {
+	[self dismissModalViewControllerAnimated:YES];
+}
+
+-(void)dealloc {
+	[navBar release];
+	[webView release];
+	[location release];
+	[theTitle release];
+	
+	[super dealloc];	
+}
+
+-(void)viewDidUnload {
+	[super viewDidUnload];
+	self.navBar = nil;
+	self.webView = nil;
+	self.location = nil;
+	self.theTitle = nil;
+}
+
+-(void)viewDidLoad {
+	[super viewDidLoad];
+	[webView loadRequest:[NSURLRequest requestWithURL:location]];
 
 }
 
-- (IBAction)showASTStoreBtnPressed:(id)sender;
+// Ensure that the view controller supports rotation and that the split view can therefore show in both portrait and landscape.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	return YES;
+	//	return (interfaceOrientation == UIInterfaceOrientationPortrait ||
+	//			interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
+}
+
+- (void)didReceiveMemoryWarning {
+	// Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+}
 
 @end
