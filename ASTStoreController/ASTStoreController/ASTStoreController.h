@@ -119,8 +119,20 @@ typedef enum
 
 #pragma mark Query lists of products being managed
 
-// Returns an array of the product identifiers which are being managed
+// Returns an array of the all of product identifiers which are being managed
 - (NSArray*)productIdentifiers;
+
+// Returns an array of all of the product identifiers which are being managed
+// sorted by consumable, nonconsumable and autorenewable with each
+// section sorted alphabetically by localized title
+- (NSArray*)sortedProductIdentifiers;
+
+// Returns a sorted array of the product identifiers for a specific type of product
+// If cmptr is nil, then it will sort alphabetically by localized title
+// comparator objects are of type ASTStoreProduct
+- (NSArray*)productIdentifiersForProductType:(ASTStoreProductIdentifierType)type 
+                       sortedUsingComparator:(NSComparator)cmptr;
+
 
 // Provides access to the ASTStoreProduct associated with a managed productIdentifier
 - (ASTStoreProduct*)storeProductForIdentifier:(NSString*)productIdentifier;

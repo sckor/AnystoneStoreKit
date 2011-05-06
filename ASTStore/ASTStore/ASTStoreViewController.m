@@ -34,7 +34,7 @@
 @interface ASTStoreViewController()
 
 @property (readonly) ASTStoreController *storeController;
-@property (readonly) NSArray *productIdentifiers;
+@property (nonatomic,retain) NSArray *productIdentifiers;
 @end
 
 
@@ -49,6 +49,7 @@
 @synthesize connectingToStoreLabel = connectingToStoreLabel_;
 @synthesize connectingActivityIndicatorView = connectingActivityIndicatorView_;
 @synthesize urlTextField = urlTextField_;
+@synthesize productIdentifiers = productIdentifiers_;
 
 - (ASTStoreController*)storeController
 {
@@ -57,7 +58,12 @@
 
 - (NSArray*)productIdentifiers
 {
-    return ( [self.storeController productIdentifiers] );
+    if( nil == productIdentifiers_ )
+    {
+        self.productIdentifiers = [self.storeController sortedProductIdentifiers];
+    }
+    
+    return [[productIdentifiers_ retain] autorelease];
 }
 
 - (NSURL*)serverURL
@@ -93,6 +99,8 @@
             
         case ASTStoreControllerProductDataStateUpToDate:
             self.connectingToStoreLabel.text = nil;
+            self.productIdentifiers = nil;
+            [self.tableView reloadData];
             [self.connectingActivityIndicatorView stopAnimating];
             break;
             
@@ -331,6 +339,9 @@
 
 - (void)dealloc
 {
+    
+    [productIdentifiers_ release], productIdentifiers_ = nil;
+    
     [tableContainerView_ release];
     tableContainerView_ = nil;
     

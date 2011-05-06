@@ -391,6 +391,65 @@
     return ( [self.storeProductDictionary allKeys] );
 }
 
+- (NSArray*)sortedProductIdentifiers
+{
+    NSMutableArray *sortedArray = [[[NSMutableArray alloc] 
+                                    initWithCapacity:[self.storeProductDictionary count]] 
+                                   autorelease];
+    
+    [sortedArray addObjectsFromArray:[self productIdentifiersForProductType:ASTStoreProductIdentifierTypeNonconsumable 
+                                                      sortedUsingComparator:nil]];
+    
+    [sortedArray addObjectsFromArray:[self productIdentifiersForProductType:ASTStoreProductIdentifierTypeConsumable 
+                                                      sortedUsingComparator:nil]];
+
+    [sortedArray addObjectsFromArray:[self productIdentifiersForProductType:ASTStoreProductIdentifierTypeAutoRenewable 
+                                                      sortedUsingComparator:nil]];
+
+    return [NSArray arrayWithArray:sortedArray];
+}
+
+- (NSArray*)productIdentifiersForProductType:(ASTStoreProductIdentifierType)type sortedUsingComparator:(NSComparator)cmptr
+{
+    NSMutableArray *unsortedArray = [[[NSMutableArray alloc] init] autorelease];
+    
+    for( NSString *aProductId in self.storeProductDictionary )
+    {
+        ASTStoreProduct *aProduct = [self.storeProductDictionary objectForKey:aProductId];
+        
+        if( aProduct.type == type )
+        {
+            [unsortedArray addObject:aProduct];
+        }
+    }
+    
+    if( nil == cmptr )
+    {
+        // if no comparator supplied, sort alphabetically by localizedTitle
+        cmptr = ^NSComparisonResult(id obj1, id obj2) 
+        {
+            ASTStoreProduct *p1 = obj1;
+            ASTStoreProduct *p2 = obj2;
+            
+            NSComparisonResult compResult = [p1.localizedTitle localizedCompare:p2.localizedTitle];
+            
+            return compResult;
+        };
+    }
+    
+    NSArray *titleSortedArray = [unsortedArray sortedArrayUsingComparator:cmptr];
+    
+    // Create the final array by creating an array of product identifiers
+    NSMutableArray *sortedProductIdArray = [[[NSMutableArray alloc] initWithCapacity:[titleSortedArray count]] autorelease];
+    for( ASTStoreProduct *aProduct in titleSortedArray )
+    {
+        [sortedProductIdArray addObject:aProduct.productIdentifier];
+    }
+    
+    return [NSArray arrayWithArray:sortedProductIdArray];
+}
+
+
 - (ASTStoreProduct*)storeProductForIdentifier:(NSString*)productIdentifier
 {
     return ( [self.storeProductDictionary objectForKey:productIdentifier] );
