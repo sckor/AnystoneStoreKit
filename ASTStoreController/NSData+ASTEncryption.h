@@ -1,10 +1,13 @@
 //
-//  NSKeyedArchiver+Encryption.m
+//  NSData+Encryption.h
 //  ASTStoreController
 //
 //  Created by Sean Kormilo on 11-04-14.
 //  http://www.anystonetech.com
-//
+
+//  NOTE: This code is based on code from Karl as found on the following thread
+//  http://www.cocos2d-iphone.org/forum/topic/6982 
+
 //  Copyright (c) 2011 Anystone Technologies, Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,30 +28,12 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "NSKeyedArchiver+Encryption.h"
-#import "NSData+ASTEncryption.h"
+#import <Foundation/Foundation.h>
 
 
-@implementation NSKeyedArchiver (Encryption)
+@interface NSData (Encryption)
 
-+ (BOOL)encryptArchiveRootObject:(id)rootObject toFile:(NSString *)path usingKey:(NSData*)key
-{
-    NSData *decryptedData = [NSKeyedArchiver archivedDataWithRootObject:rootObject];
-    
-    if( nil == decryptedData )
-    {
-        return NO;
-    }
-    
-
-    NSData *encryptedData = [decryptedData astEncryptWithKey:key];
-    
-    if( nil == encryptedData ) 
-    {
-        return NO;
-    }
-    
-    return( [encryptedData writeToFile:path atomically:YES] );
-}
+- (NSData*)astEncryptWithKey:(NSData*)key;
+- (NSData*)astDecryptWithKey:(NSData*)key;
 
 @end
