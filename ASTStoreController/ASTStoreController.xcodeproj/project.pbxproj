@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		812099011374686600907BED /* ASTStoreDetailViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 812098FB1374686600907BED /* ASTStoreDetailViewController.h */; };
+		812099021374686600907BED /* ASTStoreDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 812098FC1374686600907BED /* ASTStoreDetailViewController.m */; };
+		812099031374686600907BED /* ASTStoreViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 812098FF1374686600907BED /* ASTStoreViewController.h */; };
+		812099041374686600907BED /* ASTStoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 812099001374686600907BED /* ASTStoreViewController.m */; };
 		812FF1151325607F0070074B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 812FF1141325607F0070074B /* Foundation.framework */; };
 		812FF15B132563000070074B /* ASTStoreController.h in Headers */ = {isa = PBXBuildFile; fileRef = 812FF159132563000070074B /* ASTStoreController.h */; };
 		812FF15C132563000070074B /* ASTStoreController.m in Sources */ = {isa = PBXBuildFile; fileRef = 812FF15A132563000070074B /* ASTStoreController.m */; };
@@ -77,6 +81,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		812098FB1374686600907BED /* ASTStoreDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreDetailViewController.h; sourceTree = "<group>"; };
+		812098FC1374686600907BED /* ASTStoreDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreDetailViewController.m; sourceTree = "<group>"; };
+		812098FD1374686600907BED /* ASTStoreDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreDetailViewController.xib; sourceTree = "<group>"; };
+		812098FE1374686600907BED /* ASTStoreTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreTableViewCell.xib; sourceTree = "<group>"; };
+		812098FF1374686600907BED /* ASTStoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreViewController.h; sourceTree = "<group>"; };
+		812099001374686600907BED /* ASTStoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreViewController.m; sourceTree = "<group>"; };
+		812099061374687A00907BED /* default-purchase-image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default-purchase-image.png"; sourceTree = "<group>"; };
+		812099071374687A00907BED /* default-purchase-image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default-purchase-image@2x.png"; sourceTree = "<group>"; };
+		8120992613746B1900907BED /* ASTStoreViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreViewController.xib; sourceTree = "<group>"; };
 		812FF1111325607F0070074B /* libASTStoreController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libASTStoreController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		812FF1141325607F0070074B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		812FF1181325607F0070074B /* ASTStoreController-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ASTStoreController-Prefix.pch"; sourceTree = "<group>"; };
@@ -166,10 +179,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		812098ED137467FB00907BED /* ASTStoreViewController */ = {
+			isa = PBXGroup;
+			children = (
+				812099051374686A00907BED /* Resources */,
+				812098FB1374686600907BED /* ASTStoreDetailViewController.h */,
+				812098FC1374686600907BED /* ASTStoreDetailViewController.m */,
+				812098FD1374686600907BED /* ASTStoreDetailViewController.xib */,
+				812098FE1374686600907BED /* ASTStoreTableViewCell.xib */,
+				812099001374686600907BED /* ASTStoreViewController.m */,
+				8120992613746B1900907BED /* ASTStoreViewController.xib */,
+			);
+			name = ASTStoreViewController;
+			sourceTree = "<group>";
+		};
+		812099051374686A00907BED /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				812099061374687A00907BED /* default-purchase-image.png */,
+				812099071374687A00907BED /* default-purchase-image@2x.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		812FF1061325607F0070074B = {
 			isa = PBXGroup;
 			children = (
 				8184214713268177001D5CDC /* ASTStoreControllerHeaders */,
+				812098ED137467FB00907BED /* ASTStoreViewController */,
 				812FF1161325607F0070074B /* ASTStoreController */,
 				8196CB7A1333AE68000C5286 /* Third Party */,
 				812FF1131325607F0070074B /* Frameworks */,
@@ -243,6 +280,7 @@
 		8184214713268177001D5CDC /* ASTStoreControllerHeaders */ = {
 			isa = PBXGroup;
 			children = (
+				812098FF1374686600907BED /* ASTStoreViewController.h */,
 				812FF159132563000070074B /* ASTStoreController.h */,
 				8184215B13268E15001D5CDC /* ASTStoreProduct.h */,
 				8178D5CE132FC6C100A06922 /* ASTStoreProductTypes.h */,
@@ -405,6 +443,8 @@
 				818A397D1357432A00C5DC77 /* ASTKeychainCrypto.h in Headers */,
 				818A39811357675400C5DC77 /* NSKeyedUnarchiver+Encryption.h in Headers */,
 				818A39861357687500C5DC77 /* NSKeyedArchiver+Encryption.h in Headers */,
+				812099011374686600907BED /* ASTStoreDetailViewController.h in Headers */,
+				812099031374686600907BED /* ASTStoreViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -485,6 +525,8 @@
 				818A397E1357432A00C5DC77 /* ASTKeychainCrypto.m in Sources */,
 				818A39821357675400C5DC77 /* NSKeyedUnarchiver+Encryption.m in Sources */,
 				818A39871357687500C5DC77 /* NSKeyedArchiver+Encryption.m in Sources */,
+				812099021374686600907BED /* ASTStoreDetailViewController.m in Sources */,
+				812099041374686600907BED /* ASTStoreViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
