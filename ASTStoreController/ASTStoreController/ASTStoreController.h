@@ -129,6 +129,7 @@ typedef enum
 
 // Returns a sorted array of the product identifiers for a specific type of product
 // If cmptr is nil, then it will sort alphabetically by localized title
+// comparator objects are of type ASTStoreProduct
 - (NSArray*)productIdentifiersForProductType:(ASTStoreProductIdentifierType)type 
                        sortedUsingComparator:(NSComparator)cmptr;
 
