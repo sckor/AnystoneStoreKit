@@ -33,7 +33,6 @@
     <
     UITableViewDataSource, 
     UITableViewDelegate,
-    UITextFieldDelegate,
     ASTStoreControllerDelegate
     >
 {
@@ -44,12 +43,9 @@
     UIButton *restorePreviousPurchaseButton_;
     UILabel *connectingToStoreLabel_;
     UIActivityIndicatorView *connectingActivityIndicatorView_;
-    
-    UITextField *urlTextField_;
 }
 
 - (IBAction)restorePreviousPurchaseButtonPressed:(id)sender;
-- (IBAction)removeAllPurchaseDataButtonPressed:(id)sender;
 
 @property (retain) IBOutlet UIView *tableContainerView;
 @property (retain) IBOutlet UITableView *tableView;
@@ -58,6 +54,5 @@
 @property (retain) IBOutlet UIButton *restorePreviousPurchaseButton;
 @property (retain) IBOutlet UILabel *connectingToStoreLabel;
 @property (retain) IBOutlet UIActivityIndicatorView *connectingActivityIndicatorView;
-@property (retain) IBOutlet UITextField *urlTextField;
 
 @end

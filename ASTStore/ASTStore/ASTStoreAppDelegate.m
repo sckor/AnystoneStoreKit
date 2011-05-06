@@ -33,6 +33,7 @@
 @implementation ASTStoreAppDelegate
 
 
+@synthesize tabBarController;
 @synthesize window=window_;
 @synthesize viewController=viewController_;
 @synthesize navigationController = navigationController_;
@@ -51,7 +52,7 @@
         DLog(@"Could not read from sampleProductIdentifiers - oh no!");
     }
     
-    self.window.rootViewController = self.navigationController;
+    self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -100,6 +101,7 @@
     [window_ release];
     [navigationController_ release];
     [viewController_ release];
+    [tabBarController release];
     [super dealloc];
 }
 
