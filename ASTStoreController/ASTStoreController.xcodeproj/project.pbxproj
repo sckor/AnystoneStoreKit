@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		812099011374686600907BED /* ASTStoreDetailViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 812098FB1374686600907BED /* ASTStoreDetailViewController.h */; };
+		812099021374686600907BED /* ASTStoreDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 812098FC1374686600907BED /* ASTStoreDetailViewController.m */; };
+		812099031374686600907BED /* ASTStoreViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 812098FF1374686600907BED /* ASTStoreViewController.h */; };
+		812099041374686600907BED /* ASTStoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 812099001374686600907BED /* ASTStoreViewController.m */; };
+		812099A01374893600907BED /* WebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8120999E1374893600907BED /* WebViewController.h */; };
+		812099A11374893600907BED /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8120999F1374893600907BED /* WebViewController.m */; };
 		812FF1151325607F0070074B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 812FF1141325607F0070074B /* Foundation.framework */; };
 		812FF15B132563000070074B /* ASTStoreController.h in Headers */ = {isa = PBXBuildFile; fileRef = 812FF159132563000070074B /* ASTStoreController.h */; };
 		812FF15C132563000070074B /* ASTStoreController.m in Sources */ = {isa = PBXBuildFile; fileRef = 812FF15A132563000070074B /* ASTStoreController.m */; };
@@ -33,14 +39,14 @@
 		8178D5CF132FC6C100A06922 /* ASTStoreProductTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 8178D5CE132FC6C100A06922 /* ASTStoreProductTypes.h */; };
 		8178D5D3132FFBF800A06922 /* ASTStoreFamilyData.h in Headers */ = {isa = PBXBuildFile; fileRef = 8178D5D1132FFBF700A06922 /* ASTStoreFamilyData.h */; };
 		8178D5D4132FFBF800A06922 /* ASTStoreFamilyData.m in Sources */ = {isa = PBXBuildFile; fileRef = 8178D5D2132FFBF700A06922 /* ASTStoreFamilyData.m */; };
-		8184214A1326819C001D5CDC /* ASTPrefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 818421491326819C001D5CDC /* ASTPrefix.pch */; };
+		8184214A1326819C001D5CDC /* ASTStorePrefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 818421491326819C001D5CDC /* ASTStorePrefix.pch */; };
 		8184215D13268E16001D5CDC /* ASTStoreProduct.h in Headers */ = {isa = PBXBuildFile; fileRef = 8184215B13268E15001D5CDC /* ASTStoreProduct.h */; };
 		8184215E13268E16001D5CDC /* ASTStoreProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 8184215C13268E16001D5CDC /* ASTStoreProduct.m */; };
 		8184216B1326AB78001D5CDC /* ASTStoreProduct+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8184216A1326AB78001D5CDC /* ASTStoreProduct+Private.h */; };
 		8184216E1326B56F001D5CDC /* ASTStoreProductPlistReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 8184216C1326B56F001D5CDC /* ASTStoreProductPlistReader.h */; };
 		8184216F1326B56F001D5CDC /* ASTStoreProductPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 8184216D1326B56F001D5CDC /* ASTStoreProductPlistReader.m */; };
-		818A3971135724C800C5DC77 /* NSData+Encryption.h in Headers */ = {isa = PBXBuildFile; fileRef = 818A396F135724C800C5DC77 /* NSData+Encryption.h */; };
-		818A3972135724C800C5DC77 /* NSData+Encryption.m in Sources */ = {isa = PBXBuildFile; fileRef = 818A3970135724C800C5DC77 /* NSData+Encryption.m */; };
+		818A3971135724C800C5DC77 /* NSData+ASTEncryption.h in Headers */ = {isa = PBXBuildFile; fileRef = 818A396F135724C800C5DC77 /* NSData+ASTEncryption.h */; };
+		818A3972135724C800C5DC77 /* NSData+ASTEncryption.m in Sources */ = {isa = PBXBuildFile; fileRef = 818A3970135724C800C5DC77 /* NSData+ASTEncryption.m */; };
 		818A39781357291400C5DC77 /* SSKeychain.h in Headers */ = {isa = PBXBuildFile; fileRef = 818A39761357291400C5DC77 /* SSKeychain.h */; };
 		818A39791357291400C5DC77 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 818A39771357291400C5DC77 /* SSKeychain.m */; };
 		818A397D1357432A00C5DC77 /* ASTKeychainCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 818A397B1357432A00C5DC77 /* ASTKeychainCrypto.h */; };
@@ -77,6 +83,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		812098FB1374686600907BED /* ASTStoreDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreDetailViewController.h; sourceTree = "<group>"; };
+		812098FC1374686600907BED /* ASTStoreDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreDetailViewController.m; sourceTree = "<group>"; };
+		812098FD1374686600907BED /* ASTStoreDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreDetailViewController.xib; sourceTree = "<group>"; };
+		812098FE1374686600907BED /* ASTStoreTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreTableViewCell.xib; sourceTree = "<group>"; };
+		812098FF1374686600907BED /* ASTStoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreViewController.h; sourceTree = "<group>"; };
+		812099001374686600907BED /* ASTStoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreViewController.m; sourceTree = "<group>"; };
+		812099061374687A00907BED /* default-purchase-image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default-purchase-image.png"; sourceTree = "<group>"; };
+		812099071374687A00907BED /* default-purchase-image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default-purchase-image@2x.png"; sourceTree = "<group>"; };
+		8120992613746B1900907BED /* ASTStoreViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreViewController.xib; sourceTree = "<group>"; };
+		8120999E1374893600907BED /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
+		8120999F1374893600907BED /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
+		812099A31374897600907BED /* ASTStoreDetailViewController-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ASTStoreDetailViewController-iPad.xib"; sourceTree = "<group>"; };
+		812099A41374897600907BED /* ASTStoreTableViewCell-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ASTStoreTableViewCell-iPad.xib"; sourceTree = "<group>"; };
+		812099A51374897600907BED /* ASTStoreViewController-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ASTStoreViewController-iPad.xib"; sourceTree = "<group>"; };
+		812099A61374898800907BED /* WebView-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "WebView-iPad.xib"; sourceTree = "<group>"; };
+		812099A71374898800907BED /* WebView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WebView.xib; sourceTree = "<group>"; };
+		812099A8137489B400907BED /* DropShadow-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DropShadow-iPad.png"; sourceTree = "<group>"; };
+		812099A9137489B400907BED /* DropShadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DropShadow.png; sourceTree = "<group>"; };
+		812099AA137489B400907BED /* DropShadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DropShadow@2x.png"; sourceTree = "<group>"; };
+		812099AB137489BE00907BED /* storekit_navbar_button_black_effect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = storekit_navbar_button_black_effect.png; sourceTree = "<group>"; };
+		812099AC137489BE00907BED /* storekit_navbar_button_black_effect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "storekit_navbar_button_black_effect@2x.png"; sourceTree = "<group>"; };
 		812FF1111325607F0070074B /* libASTStoreController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libASTStoreController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		812FF1141325607F0070074B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		812FF1181325607F0070074B /* ASTStoreController-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ASTStoreController-Prefix.pch"; sourceTree = "<group>"; };
@@ -106,15 +133,15 @@
 		8178D5CE132FC6C100A06922 /* ASTStoreProductTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreProductTypes.h; sourceTree = "<group>"; };
 		8178D5D1132FFBF700A06922 /* ASTStoreFamilyData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreFamilyData.h; sourceTree = "<group>"; };
 		8178D5D2132FFBF700A06922 /* ASTStoreFamilyData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreFamilyData.m; sourceTree = "<group>"; };
-		818421491326819C001D5CDC /* ASTPrefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTPrefix.pch; sourceTree = "<group>"; };
+		818421491326819C001D5CDC /* ASTStorePrefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStorePrefix.pch; sourceTree = "<group>"; };
 		8184215B13268E15001D5CDC /* ASTStoreProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASTStoreProduct.h; path = ASTStoreController/ASTStoreProduct.h; sourceTree = "<group>"; };
 		8184215C13268E16001D5CDC /* ASTStoreProduct.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ASTStoreProduct.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		818421601326A140001D5CDC /* sampleProductIdentifiers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = sampleProductIdentifiers.plist; sourceTree = "<group>"; };
 		8184216A1326AB78001D5CDC /* ASTStoreProduct+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ASTStoreProduct+Private.h"; sourceTree = "<group>"; };
 		8184216C1326B56F001D5CDC /* ASTStoreProductPlistReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreProductPlistReader.h; sourceTree = "<group>"; };
 		8184216D1326B56F001D5CDC /* ASTStoreProductPlistReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ASTStoreProductPlistReader.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		818A396F135724C800C5DC77 /* NSData+Encryption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Encryption.h"; sourceTree = "<group>"; };
-		818A3970135724C800C5DC77 /* NSData+Encryption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Encryption.m"; sourceTree = "<group>"; };
+		818A396F135724C800C5DC77 /* NSData+ASTEncryption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ASTEncryption.h"; sourceTree = "<group>"; };
+		818A3970135724C800C5DC77 /* NSData+ASTEncryption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+ASTEncryption.m"; sourceTree = "<group>"; };
 		818A39741357291400C5DC77 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		818A39751357291400C5DC77 /* Readme.markdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Readme.markdown; sourceTree = "<group>"; };
 		818A39761357291400C5DC77 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychain.h; sourceTree = "<group>"; };
@@ -166,10 +193,62 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		812098ED137467FB00907BED /* ASTStoreViewController */ = {
+			isa = PBXGroup;
+			children = (
+				812098FB1374686600907BED /* ASTStoreDetailViewController.h */,
+				812098FC1374686600907BED /* ASTStoreDetailViewController.m */,
+				812099001374686600907BED /* ASTStoreViewController.m */,
+				8120999E1374893600907BED /* WebViewController.h */,
+				8120999F1374893600907BED /* WebViewController.m */,
+			);
+			name = ASTStoreViewController;
+			sourceTree = "<group>";
+		};
+		8120992813746C4200907BED /* ASTStoreViewControllerResources */ = {
+			isa = PBXGroup;
+			children = (
+				812098FF1374686600907BED /* ASTStoreViewController.h */,
+				8120995813746EA800907BED /* XIB */,
+				8120995713746E9F00907BED /* Graphics */,
+			);
+			name = ASTStoreViewControllerResources;
+			sourceTree = "<group>";
+		};
+		8120995713746E9F00907BED /* Graphics */ = {
+			isa = PBXGroup;
+			children = (
+				812099AB137489BE00907BED /* storekit_navbar_button_black_effect.png */,
+				812099AC137489BE00907BED /* storekit_navbar_button_black_effect@2x.png */,
+				812099A8137489B400907BED /* DropShadow-iPad.png */,
+				812099A9137489B400907BED /* DropShadow.png */,
+				812099AA137489B400907BED /* DropShadow@2x.png */,
+				812099061374687A00907BED /* default-purchase-image.png */,
+				812099071374687A00907BED /* default-purchase-image@2x.png */,
+			);
+			name = Graphics;
+			sourceTree = "<group>";
+		};
+		8120995813746EA800907BED /* XIB */ = {
+			isa = PBXGroup;
+			children = (
+				812098FD1374686600907BED /* ASTStoreDetailViewController.xib */,
+				812098FE1374686600907BED /* ASTStoreTableViewCell.xib */,
+				8120992613746B1900907BED /* ASTStoreViewController.xib */,
+				812099A31374897600907BED /* ASTStoreDetailViewController-iPad.xib */,
+				812099A41374897600907BED /* ASTStoreTableViewCell-iPad.xib */,
+				812099A51374897600907BED /* ASTStoreViewController-iPad.xib */,
+				812099A61374898800907BED /* WebView-iPad.xib */,
+				812099A71374898800907BED /* WebView.xib */,
+			);
+			name = XIB;
+			sourceTree = "<group>";
+		};
 		812FF1061325607F0070074B = {
 			isa = PBXGroup;
 			children = (
 				8184214713268177001D5CDC /* ASTStoreControllerHeaders */,
+				812098ED137467FB00907BED /* ASTStoreViewController */,
 				812FF1161325607F0070074B /* ASTStoreController */,
 				8196CB7A1333AE68000C5286 /* Third Party */,
 				812FF1131325607F0070074B /* Frameworks */,
@@ -243,10 +322,11 @@
 		8184214713268177001D5CDC /* ASTStoreControllerHeaders */ = {
 			isa = PBXGroup;
 			children = (
+				8120992813746C4200907BED /* ASTStoreViewControllerResources */,
 				812FF159132563000070074B /* ASTStoreController.h */,
 				8184215B13268E15001D5CDC /* ASTStoreProduct.h */,
 				8178D5CE132FC6C100A06922 /* ASTStoreProductTypes.h */,
-				818421491326819C001D5CDC /* ASTPrefix.pch */,
+				818421491326819C001D5CDC /* ASTStorePrefix.pch */,
 			);
 			name = ASTStoreControllerHeaders;
 			sourceTree = "<group>";
@@ -285,8 +365,8 @@
 		818A396D1357249300C5DC77 /* NSDataEncryption */ = {
 			isa = PBXGroup;
 			children = (
-				818A396F135724C800C5DC77 /* NSData+Encryption.h */,
-				818A3970135724C800C5DC77 /* NSData+Encryption.m */,
+				818A396F135724C800C5DC77 /* NSData+ASTEncryption.h */,
+				818A3970135724C800C5DC77 /* NSData+ASTEncryption.m */,
 			);
 			name = NSDataEncryption;
 			sourceTree = "<group>";
@@ -367,7 +447,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				812FF15B132563000070074B /* ASTStoreController.h in Headers */,
-				8184214A1326819C001D5CDC /* ASTPrefix.pch in Headers */,
+				8184214A1326819C001D5CDC /* ASTStorePrefix.pch in Headers */,
 				8184215D13268E16001D5CDC /* ASTStoreProduct.h in Headers */,
 				8184216B1326AB78001D5CDC /* ASTStoreProduct+Private.h in Headers */,
 				8184216E1326B56F001D5CDC /* ASTStoreProductPlistReader.h in Headers */,
@@ -400,11 +480,14 @@
 				8196CBAF1333C088000C5286 /* ASICacheDelegate.h in Headers */,
 				8196CBBD1333D322000C5286 /* JSONKit.h in Headers */,
 				8193B9571342633C00508914 /* ASTStoreProductInfoKeys.h in Headers */,
-				818A3971135724C800C5DC77 /* NSData+Encryption.h in Headers */,
+				818A3971135724C800C5DC77 /* NSData+ASTEncryption.h in Headers */,
 				818A39781357291400C5DC77 /* SSKeychain.h in Headers */,
 				818A397D1357432A00C5DC77 /* ASTKeychainCrypto.h in Headers */,
 				818A39811357675400C5DC77 /* NSKeyedUnarchiver+Encryption.h in Headers */,
 				818A39861357687500C5DC77 /* NSKeyedArchiver+Encryption.h in Headers */,
+				812099011374686600907BED /* ASTStoreDetailViewController.h in Headers */,
+				812099031374686600907BED /* ASTStoreViewController.h in Headers */,
+				812099A01374893600907BED /* WebViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -480,11 +563,14 @@
 				8196CB9A1333BE33000C5286 /* ASINetworkQueue.m in Sources */,
 				8196CBA31333BE52000C5286 /* Reachability.m in Sources */,
 				8196CBBE1333D322000C5286 /* JSONKit.m in Sources */,
-				818A3972135724C800C5DC77 /* NSData+Encryption.m in Sources */,
+				818A3972135724C800C5DC77 /* NSData+ASTEncryption.m in Sources */,
 				818A39791357291400C5DC77 /* SSKeychain.m in Sources */,
 				818A397E1357432A00C5DC77 /* ASTKeychainCrypto.m in Sources */,
 				818A39821357675400C5DC77 /* NSKeyedUnarchiver+Encryption.m in Sources */,
 				818A39871357687500C5DC77 /* NSKeyedArchiver+Encryption.m in Sources */,
+				812099021374686600907BED /* ASTStoreDetailViewController.m in Sources */,
+				812099041374686600907BED /* ASTStoreViewController.m in Sources */,
+				812099A11374893600907BED /* WebViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -504,7 +590,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INSTALL_PATH = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
-				RUN_CLANG_STATIC_ANALYZER = YES;
+				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 			};

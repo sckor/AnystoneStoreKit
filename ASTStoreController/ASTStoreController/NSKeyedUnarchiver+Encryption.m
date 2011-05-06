@@ -26,7 +26,7 @@
 //  THE SOFTWARE.
 
 #import "NSKeyedUnarchiver+Encryption.h"
-#import "NSData+Encryption.h"
+#import "NSData+ASTEncryption.h"
 
 @implementation NSKeyedUnarchiver (Encryption)
 
@@ -40,7 +40,7 @@
         return nil;
     }
     
-    NSData *decryptedData = [encryptedData decryptWithKey:key];
+    NSData *decryptedData = [encryptedData astDecryptWithKey:key];
     
     if( nil == decryptedData )
     {

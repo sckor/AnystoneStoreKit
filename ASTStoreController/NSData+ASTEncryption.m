@@ -28,13 +28,13 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "NSData+Encryption.h"
+#import "NSData+ASTEncryption.h"
 #import <CommonCrypto/CommonCryptor.h>
 #import "SSKeychain.h"
 
-@implementation NSData (Encryption)
+@implementation NSData (ASTEncryption)
 
-- (NSData*)makeCryptedVersionWithKeyData:(const void*)keyData ofLength:(int)keyLength decrypt:(bool)decrypt
+- (NSData*)astMakeCryptedVersionWithKeyData:(const void*)keyData ofLength:(int)keyLength decrypt:(bool)decrypt
 {
 	// Copy the key data, padding with zeroes if needed
 	char key[kCCKeySizeAES256];
@@ -85,14 +85,14 @@
 	return nil;
 }
 
-- (NSData*)encryptWithKey:(NSData*) key
+- (NSData*)astEncryptWithKey:(NSData*) key
 {
-	return [self makeCryptedVersionWithKeyData:[key bytes] ofLength:[key length] decrypt:NO];
+	return [self astMakeCryptedVersionWithKeyData:[key bytes] ofLength:[key length] decrypt:NO];
 }
 
-- (NSData*)decryptWithKey:(NSData*) key
+- (NSData*)astDecryptWithKey:(NSData*) key
 {
-	return [self makeCryptedVersionWithKeyData:[key bytes] ofLength:[key length] decrypt:YES];
+	return [self astMakeCryptedVersionWithKeyData:[key bytes] ofLength:[key length] decrypt:YES];
 }
 
 

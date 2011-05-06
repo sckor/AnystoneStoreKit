@@ -1,6 +1,7 @@
+// 
+//  WebViewController.m
 //
-//  ASTStoreViewController.h
-//  ASTStore
+//  Copyright (C) Gregory Meach 2009-2010, All rights reserved.
 //
 //  Created by Sean Kormilo on 11-03-07.
 //  http://www.anystonetech.com
@@ -25,39 +26,49 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
+#import "WebViewController.h"
 
-#import <UIKit/UIKit.h>
-#import "ASTStoreController.h"
+@implementation WebViewController
 
-@interface ASTStoreViewController : UIViewController
-    <
-    UITableViewDataSource, 
-    UITableViewDelegate,
-    UITextFieldDelegate,
-    ASTStoreControllerDelegate
-    >
-{
-    UIView *tableContainerView_;
-    UITableView *tableView_;
-    UITableViewCell *storeCell_;
-  
-    UIButton *restorePreviousPurchaseButton_;
-    UILabel *connectingToStoreLabel_;
-    UIActivityIndicatorView *connectingActivityIndicatorView_;
-    
-    UITextField *urlTextField_;
+@synthesize navBar, webView, location, theTitle;
+
+-(IBAction)closeViewAction {
+	[self dismissModalViewControllerAnimated:YES];
 }
 
-- (IBAction)restorePreviousPurchaseButtonPressed:(id)sender;
-- (IBAction)removeAllPurchaseDataButtonPressed:(id)sender;
+-(void)dealloc {
+	[navBar release];
+	[webView release];
+	[location release];
+	[theTitle release];
+	
+	[super dealloc];	
+}
 
-@property (retain) IBOutlet UIView *tableContainerView;
-@property (retain) IBOutlet UITableView *tableView;
-@property (retain) IBOutlet UITableViewCell *storeCell;
+-(void)viewDidUnload {
+	[super viewDidUnload];
+	self.navBar = nil;
+	self.webView = nil;
+	self.location = nil;
+	self.theTitle = nil;
+}
 
-@property (retain) IBOutlet UIButton *restorePreviousPurchaseButton;
-@property (retain) IBOutlet UILabel *connectingToStoreLabel;
-@property (retain) IBOutlet UIActivityIndicatorView *connectingActivityIndicatorView;
-@property (retain) IBOutlet UITextField *urlTextField;
+-(void)viewDidLoad {
+	[super viewDidLoad];
+	[webView loadRequest:[NSURLRequest requestWithURL:location]];
+
+}
+
+// Ensure that the view controller supports rotation and that the split view can therefore show in both portrait and landscape.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	return YES;
+	//	return (interfaceOrientation == UIInterfaceOrientationPortrait ||
+	//			interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
+}
+
+- (void)didReceiveMemoryWarning {
+	// Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+}
 
 @end

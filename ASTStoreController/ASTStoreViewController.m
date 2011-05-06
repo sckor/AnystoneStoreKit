@@ -28,8 +28,8 @@
 
 #import "ASTStoreViewController.h"
 #import "ASTStoreDetailViewController.h"
+#import "WebViewController.h"
 
-#define kASTStoreViewControllerServerURLKey @"serverURL"
 
 @interface ASTStoreViewController()
 
@@ -48,8 +48,10 @@
 @synthesize restorePreviousPurchaseButton = restorePreviousPurchaseButton_;
 @synthesize connectingToStoreLabel = connectingToStoreLabel_;
 @synthesize connectingActivityIndicatorView = connectingActivityIndicatorView_;
-@synthesize urlTextField = urlTextField_;
 @synthesize productIdentifiers = productIdentifiers_;
+@synthesize delegate;
+@synthesize removeAllPurchaseButton = removeAllPurchaseButton_;
+
 
 - (ASTStoreController*)storeController
 {
@@ -66,15 +68,6 @@
     return [[productIdentifiers_ retain] autorelease];
 }
 
-- (NSURL*)serverURL
-{
-    return ( [[NSUserDefaults standardUserDefaults] URLForKey:kASTStoreViewControllerServerURLKey] );
-}
-
-- (void)setServerURL:(NSURL*)serverURL
-{
-    [[NSUserDefaults standardUserDefaults] setURL:serverURL forKey:kASTStoreViewControllerServerURLKey];
-}
 
 #pragma mark User Interface
 
@@ -83,10 +76,7 @@
     [self.storeController restorePreviousPurchases];
 }
 
-- (IBAction)removeAllPurchaseDataButtonPressed:(id)sender 
-{
-    [self.storeController resetAllProducts];
-}
+
 
 - (void)updateStoreStateDisplay
 {
@@ -135,34 +125,6 @@
     }
 }
 
-#pragma mark Text Field Delegate
-- (BOOL)textFieldShouldReturn:(UITextField *)textField 
-{
-    [textField resignFirstResponder];
-    return NO;
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    BOOL didChange = NO;
-    
-    if( [self.urlTextField.text length] == 0 )
-    {
-        self.storeController.serverUrl = nil;
-        didChange = YES;
-    }
-    else if( NO == [self.urlTextField.text isEqualToString:[self.storeController.serverUrl absoluteString]] )
-    {
-        self.storeController.serverUrl = [NSURL URLWithString:self.urlTextField.text];
-        didChange = YES;
-    }
-    
-    if( didChange )
-    {
-        // Persist to NSUserDefaults
-        [self setServerURL:self.storeController.serverUrl];
-    }
-}
 
 #pragma mark - Table View Datasource
 
@@ -286,32 +248,112 @@
     
 }
 
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex 
+{
+    switch ([alertView tag]) {
+        case 0:
+            if (buttonIndex == 1) {                
+                //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://anystonetech.com"]];
+                WebViewController *targetViewController = [[WebViewController alloc] initWithNibName:(isAniPad ? @"WebView-iPad" : @"WebView") bundle:nil];
+                targetViewController.location = [NSURL URLWithString:@"http://anystonetech.com"];
+               [self presentModalViewController:targetViewController animated:YES];
+                targetViewController.theTitle.text = @"Anystone Tech";
+                [targetViewController release];
+            }
+            break;            
+        default:
+            break;
+    }
+}
+
+-(void)layoutLandscape {
+    self.tableContainerView.frame = CGRectMake(160.0, 0.0, 320.0, 290.0);
+    self.restorePreviousPurchaseButton.frame = CGRectMake(7.0, 25.0, 145.0, 50.0);
+    self.connectingToStoreLabel.frame = CGRectMake(7.0, 115.0, 145.0, 21.0);
+    self.connectingActivityIndicatorView.frame = CGRectMake(69.0, 87.0, 20.0, 20.0);
+    self.removeAllPurchaseButton.frame = CGRectMake(7.0, 218.0, 145.0, 50.0);    
+}
+-(void)layoutPortrait {
+    self.tableContainerView.frame = CGRectMake(0.0, 0.0, 320.0, 262.0);
+    self.restorePreviousPurchaseButton.frame = CGRectMake(46.0, 270.0, 228.0, 37.0);
+    self.connectingToStoreLabel.frame = CGRectMake(66.0, 316.0, 189.0, 21.0);
+    self.connectingActivityIndicatorView.frame = CGRectMake(254.0, 317.0, 20.0, 20.0);
+    self.removeAllPurchaseButton.frame = CGRectMake(46.0, 393, 228.0, 37.0);
+}
 
 #pragma mark - View lifecycle
 
+- (void)updateThisView {
+    UIDeviceOrientation deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    if (UIDeviceOrientationIsLandscape(deviceOrientation)) {
+        if (!isAniPad)
+            [self layoutLandscape];
+    }
+	else { 
+        if (!isAniPad)
+            [self layoutPortrait];
+    }    
+}
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	[self performSelector:@selector(updateThisView) withObject:nil afterDelay:0.0];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return YES;
+    //return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
+- (void)dismissView:(id)sender 
+{
+    [self.delegate astStoreViewControllerDidFinish:self];
+}
+
+- (void)infoView:(id)sender 
+{
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Powered By:"
+                                                    message:@"Anystone Technologies\nASTStoreKit"
+                                                   delegate:self cancelButtonTitle:@"Close" 
+                                          otherButtonTitles:@"More...", nil];
+    [alert setTag:0];
+    [alert show];
+    [alert release];
+    
+}
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 
+    UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    infoButton.frame = CGRectMake(0, 0, 51.0, 29.0);
+    [infoButton addTarget:self action:@selector(infoView:) forControlEvents:UIControlEventTouchUpInside];    
+    [infoButton setImage:[UIImage imageNamed:@"storekit_navbar_button_black_effect.png"] forState:UIControlStateNormal];
+    UIBarButtonItem *modalButton = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
+    [self.navigationItem setLeftBarButtonItem:modalButton animated:YES];
+    [modalButton release];
+        
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc]
+                                               initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                               target:self
+                                               action:@selector(dismissView:)] autorelease];
+    
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
+    [self updateThisView];
+    
     self.storeController.delegate = self;
-    self.storeController.serverUrl = [self serverURL];
-    self.urlTextField.text = [self.storeController.serverUrl absoluteString];
         
     [self.storeController requestProductDataFromiTunes:NO];
     [self updateStoreStateDisplay];
     [self.tableView reloadData];
-
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -320,19 +362,27 @@
     self.storeController.delegate = nil;    
 }
 
+// The designated initializer. Override to perform setup that is required before the view is loaded.
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
+        // Custom initialization
+        self.title = @"AST Store";
+		isAniPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+    }
+    return self;
+}
+
 - (void)viewDidUnload
 {
-    [urlTextField_ release];
-    urlTextField_ = nil;
     [super viewDidUnload];
     
     self.tableContainerView = nil;
     self.tableView = nil;
     self.storeCell = nil;
     self.restorePreviousPurchaseButton = nil;
+    self.removeAllPurchaseButton = nil;
     self.connectingToStoreLabel = nil;
     self.connectingActivityIndicatorView = nil;
-
 }
 
 #pragma  mark - Memory Management
@@ -354,6 +404,9 @@
     [restorePreviousPurchaseButton_ release];
     restorePreviousPurchaseButton_ = nil;
     
+    [removeAllPurchaseButton_ release];
+    removeAllPurchaseButton_ = nil;
+
     [connectingToStoreLabel_ release];
     connectingToStoreLabel_ = nil;
     
@@ -361,6 +414,8 @@
     connectingActivityIndicatorView_ = nil;
     
     self.storeController.delegate = nil;
+    
+    delegate = nil;
     
     [urlTextField_ release];
     [super dealloc];
