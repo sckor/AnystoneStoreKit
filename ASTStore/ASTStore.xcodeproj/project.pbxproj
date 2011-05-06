@@ -7,6 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3705B2E7137461B500E10CF5 /* ASTRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3705B2E5137461B500E10CF5 /* ASTRootViewController.m */; };
+		3705B2E8137461B500E10CF5 /* ASTRootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3705B2E6137461B500E10CF5 /* ASTRootViewController.xib */; };
+		3705B2EC137467CA00E10CF5 /* ASTStoreDetailViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3705B2E9137467C800E10CF5 /* ASTStoreDetailViewController-iPad.xib */; };
+		3705B2ED137467CA00E10CF5 /* ASTStoreTableViewCell-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3705B2EA137467C900E10CF5 /* ASTStoreTableViewCell-iPad.xib */; };
+		3705B2EE137467CA00E10CF5 /* ASTStoreViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3705B2EB137467CA00E10CF5 /* ASTStoreViewController-iPad.xib */; };
+		3705B308137469E800E10CF5 /* storekit_navbar_button_black_effect.png in Resources */ = {isa = PBXBuildFile; fileRef = 3705B303137469E800E10CF5 /* storekit_navbar_button_black_effect.png */; };
+		3705B309137469E800E10CF5 /* storekit_navbar_button_black_effect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3705B304137469E800E10CF5 /* storekit_navbar_button_black_effect@2x.png */; };
+		3705B30A137469E800E10CF5 /* DropShadow-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3705B305137469E800E10CF5 /* DropShadow-iPad.png */; };
+		3705B30B137469E800E10CF5 /* DropShadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 3705B306137469E800E10CF5 /* DropShadow.png */; };
+		3705B30C137469E800E10CF5 /* DropShadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3705B307137469E800E10CF5 /* DropShadow@2x.png */; };
+		3705B31113746CED00E10CF5 /* WebView-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3705B30D13746CEA00E10CF5 /* WebView-iPad.xib */; };
+		3705B31213746CED00E10CF5 /* WebView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3705B30E13746CEB00E10CF5 /* WebView.xib */; };
+		3705B31313746CED00E10CF5 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3705B31013746CEC00E10CF5 /* WebViewController.m */; };
+		3705B31613746E2A00E10CF5 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3705B31413746E2A00E10CF5 /* MainWindow-iPad.xib */; };
+		3705B31913746E4300E10CF5 /* ASTStoreViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3705B31713746E4200E10CF5 /* ASTStoreViewController.xib */; };
+		3705B31B1374708A00E10CF5 /* ASTRootViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3705B31A1374708A00E10CF5 /* ASTRootViewController-iPad.xib */; };
 		812FF12E132561F00070074B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 812FF12D132561F00070074B /* UIKit.framework */; };
 		812FF130132561F00070074B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 812FF12F132561F00070074B /* Foundation.framework */; };
 		812FF132132561F00070074B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 812FF131132561F00070074B /* CoreGraphics.framework */; };
@@ -15,7 +31,6 @@
 		812FF13E132561F00070074B /* ASTStoreAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 812FF13D132561F00070074B /* ASTStoreAppDelegate.m */; };
 		812FF141132561F00070074B /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 812FF13F132561F00070074B /* MainWindow.xib */; };
 		812FF144132561F00070074B /* ASTStoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 812FF143132561F00070074B /* ASTStoreViewController.m */; };
-		812FF147132561F00070074B /* ASTStoreViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 812FF145132561F00070074B /* ASTStoreViewController.xib */; };
 		81671CDA1327D28000B12E3D /* sampleProductIdentifiers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 81671CD91327D28000B12E3D /* sampleProductIdentifiers.plist */; };
 		81671CF11328068B00B12E3D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81671CF01328068A00B12E3D /* StoreKit.framework */; };
 		81671D0713280BF900B12E3D /* ASTStoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 81671D0613280BF900B12E3D /* ASTStoreTableViewCell.xib */; };
@@ -50,6 +65,24 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3705B2E4137461B500E10CF5 /* ASTRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTRootViewController.h; sourceTree = "<group>"; };
+		3705B2E5137461B500E10CF5 /* ASTRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTRootViewController.m; sourceTree = "<group>"; };
+		3705B2E6137461B500E10CF5 /* ASTRootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTRootViewController.xib; sourceTree = "<group>"; };
+		3705B2E9137467C800E10CF5 /* ASTStoreDetailViewController-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ASTStoreDetailViewController-iPad.xib"; sourceTree = "<group>"; };
+		3705B2EA137467C900E10CF5 /* ASTStoreTableViewCell-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ASTStoreTableViewCell-iPad.xib"; sourceTree = "<group>"; };
+		3705B2EB137467CA00E10CF5 /* ASTStoreViewController-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ASTStoreViewController-iPad.xib"; sourceTree = "<group>"; };
+		3705B303137469E800E10CF5 /* storekit_navbar_button_black_effect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = storekit_navbar_button_black_effect.png; sourceTree = "<group>"; };
+		3705B304137469E800E10CF5 /* storekit_navbar_button_black_effect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "storekit_navbar_button_black_effect@2x.png"; sourceTree = "<group>"; };
+		3705B305137469E800E10CF5 /* DropShadow-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DropShadow-iPad.png"; sourceTree = "<group>"; };
+		3705B306137469E800E10CF5 /* DropShadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DropShadow.png; sourceTree = "<group>"; };
+		3705B307137469E800E10CF5 /* DropShadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DropShadow@2x.png"; sourceTree = "<group>"; };
+		3705B30D13746CEA00E10CF5 /* WebView-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "WebView-iPad.xib"; sourceTree = "<group>"; };
+		3705B30E13746CEB00E10CF5 /* WebView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WebView.xib; sourceTree = "<group>"; };
+		3705B30F13746CEC00E10CF5 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
+		3705B31013746CEC00E10CF5 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
+		3705B31513746E2A00E10CF5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		3705B31813746E4300E10CF5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ASTStoreViewController.xib; sourceTree = "<group>"; };
+		3705B31A1374708A00E10CF5 /* ASTRootViewController-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ASTRootViewController-iPad.xib"; sourceTree = "<group>"; };
 		812FF129132561F00070074B /* ASTStore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ASTStore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		812FF12D132561F00070074B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		812FF12F132561F00070074B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -63,7 +96,6 @@
 		812FF140132561F00070074B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		812FF142132561F00070074B /* ASTStoreViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTStoreViewController.h; sourceTree = "<group>"; };
 		812FF143132561F00070074B /* ASTStoreViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ASTStoreViewController.m; sourceTree = "<group>"; };
-		812FF146132561F00070074B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ASTStoreViewController.xib; sourceTree = "<group>"; };
 		81671CD91327D28000B12E3D /* sampleProductIdentifiers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = sampleProductIdentifiers.plist; path = ../../ASTStoreController/ASTStoreController/sampleProductIdentifiers.plist; sourceTree = "<group>"; };
 		81671CF01328068A00B12E3D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		81671D0613280BF900B12E3D /* ASTStoreTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreTableViewCell.xib; sourceTree = "<group>"; };
@@ -168,14 +200,26 @@
 			children = (
 				812FF13C132561F00070074B /* ASTStoreAppDelegate.h */,
 				812FF13D132561F00070074B /* ASTStoreAppDelegate.m */,
+				3705B2E4137461B500E10CF5 /* ASTRootViewController.h */,
+				3705B2E5137461B500E10CF5 /* ASTRootViewController.m */,
+				3705B31A1374708A00E10CF5 /* ASTRootViewController-iPad.xib */,
+				3705B2E6137461B500E10CF5 /* ASTRootViewController.xib */,
 				812FF13F132561F00070074B /* MainWindow.xib */,
+				3705B31413746E2A00E10CF5 /* MainWindow-iPad.xib */,
 				812FF142132561F00070074B /* ASTStoreViewController.h */,
 				812FF143132561F00070074B /* ASTStoreViewController.m */,
-				812FF145132561F00070074B /* ASTStoreViewController.xib */,
+				3705B31713746E4200E10CF5 /* ASTStoreViewController.xib */,
+				3705B2EB137467CA00E10CF5 /* ASTStoreViewController-iPad.xib */,
 				81671D0613280BF900B12E3D /* ASTStoreTableViewCell.xib */,
+				3705B2EA137467C900E10CF5 /* ASTStoreTableViewCell-iPad.xib */,
 				8178D5E71331302D00A06922 /* ASTStoreDetailViewController.h */,
 				8178D5E81331302D00A06922 /* ASTStoreDetailViewController.m */,
 				8178D5E91331302E00A06922 /* ASTStoreDetailViewController.xib */,
+				3705B2E9137467C800E10CF5 /* ASTStoreDetailViewController-iPad.xib */,
+				3705B30D13746CEA00E10CF5 /* WebView-iPad.xib */,
+				3705B30E13746CEB00E10CF5 /* WebView.xib */,
+				3705B30F13746CEC00E10CF5 /* WebViewController.h */,
+				3705B31013746CEC00E10CF5 /* WebViewController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -183,6 +227,11 @@
 		81671D0513280BB800B12E3D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3705B303137469E800E10CF5 /* storekit_navbar_button_black_effect.png */,
+				3705B304137469E800E10CF5 /* storekit_navbar_button_black_effect@2x.png */,
+				3705B305137469E800E10CF5 /* DropShadow-iPad.png */,
+				3705B306137469E800E10CF5 /* DropShadow.png */,
+				3705B307137469E800E10CF5 /* DropShadow@2x.png */,
 				81671D081328186C00B12E3D /* default-purchase-image@2x.png */,
 				81671D091328186C00B12E3D /* default-purchase-image.png */,
 				81671CD91327D28000B12E3D /* sampleProductIdentifiers.plist */,
@@ -289,13 +338,26 @@
 			files = (
 				812FF138132561F00070074B /* InfoPlist.strings in Resources */,
 				812FF141132561F00070074B /* MainWindow.xib in Resources */,
-				812FF147132561F00070074B /* ASTStoreViewController.xib in Resources */,
 				81671CDA1327D28000B12E3D /* sampleProductIdentifiers.plist in Resources */,
 				81671D0713280BF900B12E3D /* ASTStoreTableViewCell.xib in Resources */,
 				81671D0A1328186C00B12E3D /* default-purchase-image@2x.png in Resources */,
 				81671D0B1328186C00B12E3D /* default-purchase-image.png in Resources */,
 				81EE59F7132A61C800C722E4 /* ilSimKitProducts.plist in Resources */,
 				8178D5EB1331302E00A06922 /* ASTStoreDetailViewController.xib in Resources */,
+				3705B2E8137461B500E10CF5 /* ASTRootViewController.xib in Resources */,
+				3705B2EC137467CA00E10CF5 /* ASTStoreDetailViewController-iPad.xib in Resources */,
+				3705B2ED137467CA00E10CF5 /* ASTStoreTableViewCell-iPad.xib in Resources */,
+				3705B2EE137467CA00E10CF5 /* ASTStoreViewController-iPad.xib in Resources */,
+				3705B308137469E800E10CF5 /* storekit_navbar_button_black_effect.png in Resources */,
+				3705B309137469E800E10CF5 /* storekit_navbar_button_black_effect@2x.png in Resources */,
+				3705B30A137469E800E10CF5 /* DropShadow-iPad.png in Resources */,
+				3705B30B137469E800E10CF5 /* DropShadow.png in Resources */,
+				3705B30C137469E800E10CF5 /* DropShadow@2x.png in Resources */,
+				3705B31113746CED00E10CF5 /* WebView-iPad.xib in Resources */,
+				3705B31213746CED00E10CF5 /* WebView.xib in Resources */,
+				3705B31613746E2A00E10CF5 /* MainWindow-iPad.xib in Resources */,
+				3705B31913746E4300E10CF5 /* ASTStoreViewController.xib in Resources */,
+				3705B31B1374708A00E10CF5 /* ASTRootViewController-iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,6 +372,8 @@
 				812FF13E132561F00070074B /* ASTStoreAppDelegate.m in Sources */,
 				812FF144132561F00070074B /* ASTStoreViewController.m in Sources */,
 				8178D5EA1331302E00A06922 /* ASTStoreDetailViewController.m in Sources */,
+				3705B2E7137461B500E10CF5 /* ASTRootViewController.m in Sources */,
+				3705B31313746CED00E10CF5 /* WebViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,6 +388,22 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		3705B31413746E2A00E10CF5 /* MainWindow-iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3705B31513746E2A00E10CF5 /* en */,
+			);
+			name = "MainWindow-iPad.xib";
+			sourceTree = "<group>";
+		};
+		3705B31713746E4200E10CF5 /* ASTStoreViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3705B31813746E4300E10CF5 /* en */,
+			);
+			name = ASTStoreViewController.xib;
+			sourceTree = "<group>";
+		};
 		812FF136132561F00070074B /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -338,14 +418,6 @@
 				812FF140132561F00070074B /* en */,
 			);
 			name = MainWindow.xib;
-			sourceTree = "<group>";
-		};
-		812FF145132561F00070074B /* ASTStoreViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				812FF146132561F00070074B /* en */,
-			);
-			name = ASTStoreViewController.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -404,11 +476,13 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ASTStore/ASTStore-Prefix.pch";
 				INFOPLIST_FILE = "ASTStore/ASTStore-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -421,11 +495,13 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ASTStore/ASTStore-Prefix.pch";
 				INFOPLIST_FILE = "ASTStore/ASTStore-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 			};

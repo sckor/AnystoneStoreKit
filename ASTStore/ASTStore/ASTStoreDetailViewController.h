@@ -40,6 +40,8 @@
     UILabel *onHand_;
     UIActivityIndicatorView *connectingActivityIndicatorView_;
     UILabel *statusLabel_;
+    
+	BOOL isAniPad;
 }
 
 - (IBAction)purchaseButtonPressed:(id)sender;

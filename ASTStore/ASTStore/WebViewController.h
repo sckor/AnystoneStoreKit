@@ -1,6 +1,7 @@
+// 
+//  WebViewController.h
 //
-//  ASTStoreAppDelegate.h
-//  ASTStore
+//  Copyright (C) Gregory Meach 2009-2010, All rights reserved.
 //
 //  Created by Sean Kormilo on 11-03-07.
 //  http://www.anystonetech.com
@@ -25,18 +26,20 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-
-
 #import <UIKit/UIKit.h>
 
-@class ASTRootViewController;
-
-@interface ASTStoreAppDelegate : NSObject <UIApplicationDelegate> 
-{
+@interface WebViewController : UIViewController {
+	IBOutlet UIWebView			*webView;
+	IBOutlet UINavigationBar	*navBar;
+	NSURL *location;
+	IBOutlet UILabel *theTitle;
 
 }
+@property(retain) NSURL *location;
+@property (nonatomic, retain) IBOutlet UILabel *theTitle;
+@property (nonatomic, retain) IBOutlet UIWebView *webView;
+@property (nonatomic, retain) IBOutlet UINavigationBar *navBar;
 
-@property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet ASTRootViewController *viewController;
+-(IBAction)closeViewAction;
 
 @end

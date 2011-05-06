@@ -29,6 +29,9 @@
 #import <UIKit/UIKit.h>
 #import "ASTStoreController.h"
 
+@protocol ASTStoreViewControllerDelegate;
+
+
 @interface ASTStoreViewController : UIViewController
     <
     UITableViewDataSource, 
@@ -45,8 +48,14 @@
     UILabel *connectingToStoreLabel_;
     UIActivityIndicatorView *connectingActivityIndicatorView_;
     
+    id<ASTStoreViewControllerDelegate> delegate;
+    BOOL isAniPad;
+    UIButton *removeAllPurchaseButton_;
+
     UITextField *urlTextField_;
 }
+
+@property (nonatomic, assign) id<ASTStoreViewControllerDelegate> delegate;
 
 - (IBAction)restorePreviousPurchaseButtonPressed:(id)sender;
 - (IBAction)removeAllPurchaseDataButtonPressed:(id)sender;
@@ -56,8 +65,14 @@
 @property (retain) IBOutlet UITableViewCell *storeCell;
 
 @property (retain) IBOutlet UIButton *restorePreviousPurchaseButton;
+@property (retain) IBOutlet UIButton *removeAllPurchaseButton;
 @property (retain) IBOutlet UILabel *connectingToStoreLabel;
 @property (retain) IBOutlet UIActivityIndicatorView *connectingActivityIndicatorView;
 @property (retain) IBOutlet UITextField *urlTextField;
 
 @end
+
+@protocol ASTStoreViewControllerDelegate
+- (void)astStoreViewControllerDidFinish:(ASTStoreViewController *)controller;
+@end
+

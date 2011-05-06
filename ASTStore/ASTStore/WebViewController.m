@@ -1,6 +1,7 @@
+// 
+//  WebViewController.m
 //
-//  ASTStoreAppDelegate.h
-//  ASTStore
+//  Copyright (C) Gregory Meach 2009-2010, All rights reserved.
 //
 //  Created by Sean Kormilo on 11-03-07.
 //  http://www.anystonetech.com
@@ -25,18 +26,49 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
+#import "WebViewController.h"
 
+@implementation WebViewController
 
-#import <UIKit/UIKit.h>
+@synthesize navBar, webView, location, theTitle;
 
-@class ASTRootViewController;
+-(IBAction)closeViewAction {
+	[self dismissModalViewControllerAnimated:YES];
+}
 
-@interface ASTStoreAppDelegate : NSObject <UIApplicationDelegate> 
-{
+-(void)dealloc {
+	[navBar release];
+	[webView release];
+	[location release];
+	[theTitle release];
+	
+	[super dealloc];	
+}
+
+-(void)viewDidUnload {
+	[super viewDidUnload];
+	self.navBar = nil;
+	self.webView = nil;
+	self.location = nil;
+	self.theTitle = nil;
+}
+
+-(void)viewDidLoad {
+	[super viewDidLoad];
+	[webView loadRequest:[NSURLRequest requestWithURL:location]];
 
 }
 
-@property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet ASTRootViewController *viewController;
+// Ensure that the view controller supports rotation and that the split view can therefore show in both portrait and landscape.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	return YES;
+	//	return (interfaceOrientation == UIInterfaceOrientationPortrait ||
+	//			interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
+}
+
+- (void)didReceiveMemoryWarning {
+	// Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+}
 
 @end
