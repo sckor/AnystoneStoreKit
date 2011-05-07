@@ -50,7 +50,6 @@
 @synthesize connectingActivityIndicatorView = connectingActivityIndicatorView_;
 @synthesize productIdentifiers = productIdentifiers_;
 @synthesize delegate;
-@synthesize removeAllPurchaseButton = removeAllPurchaseButton_;
 
 
 - (ASTStoreController*)storeController
@@ -270,14 +269,12 @@
     self.restorePreviousPurchaseButton.frame = CGRectMake(7.0, 25.0, 145.0, 50.0);
     self.connectingToStoreLabel.frame = CGRectMake(7.0, 115.0, 145.0, 21.0);
     self.connectingActivityIndicatorView.frame = CGRectMake(69.0, 87.0, 20.0, 20.0);
-    self.removeAllPurchaseButton.frame = CGRectMake(7.0, 218.0, 145.0, 50.0);    
 }
 -(void)layoutPortrait {
     self.tableContainerView.frame = CGRectMake(0.0, 0.0, 320.0, 262.0);
     self.restorePreviousPurchaseButton.frame = CGRectMake(46.0, 270.0, 228.0, 37.0);
     self.connectingToStoreLabel.frame = CGRectMake(66.0, 316.0, 189.0, 21.0);
     self.connectingActivityIndicatorView.frame = CGRectMake(254.0, 317.0, 20.0, 20.0);
-    self.removeAllPurchaseButton.frame = CGRectMake(46.0, 393, 228.0, 37.0);
 }
 
 #pragma mark - View lifecycle
@@ -379,7 +376,6 @@
     self.tableView = nil;
     self.storeCell = nil;
     self.restorePreviousPurchaseButton = nil;
-    self.removeAllPurchaseButton = nil;
     self.connectingToStoreLabel = nil;
     self.connectingActivityIndicatorView = nil;
 }
@@ -402,9 +398,6 @@
 
     [restorePreviousPurchaseButton_ release];
     restorePreviousPurchaseButton_ = nil;
-    
-    [removeAllPurchaseButton_ release];
-    removeAllPurchaseButton_ = nil;
 
     [connectingToStoreLabel_ release];
     connectingToStoreLabel_ = nil;
@@ -416,7 +409,6 @@
     
     delegate = nil;
     
-    [urlTextField_ release];
     [super dealloc];
 }
 
