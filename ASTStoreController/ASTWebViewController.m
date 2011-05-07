@@ -1,12 +1,10 @@
 // 
 //  WebViewController.m
 //
-//  Copyright (C) Gregory Meach 2009-2010, All rights reserved.
-//
-//  Created by Sean Kormilo on 11-03-07.
-//  http://www.anystonetech.com
+//  Created by Greg Meach on 5/6/11.
+//  http://www.meachware.com
 
-//  Copyright (c) 2011 Anystone Technologies, Inc.
+//  Copyright (c) 2011 Meachware
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +24,9 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "WebViewController.h"
+#import "ASTWebViewController.h"
 
-@implementation WebViewController
+@implementation ASTWebViewController
 
 @synthesize navBar, webView, location, theTitle;
 

@@ -49,9 +49,6 @@
     
     id<ASTStoreViewControllerDelegate> delegate;
     BOOL isAniPad;
-    UIButton *removeAllPurchaseButton_;
-
-    UITextField *urlTextField_;
 }
 
 @property (nonatomic, assign) id<ASTStoreViewControllerDelegate> delegate;
@@ -63,7 +60,6 @@
 @property (retain) IBOutlet UITableViewCell *storeCell;
 
 @property (retain) IBOutlet UIButton *restorePreviousPurchaseButton;
-@property (retain) IBOutlet UIButton *removeAllPurchaseButton;
 @property (retain) IBOutlet UILabel *connectingToStoreLabel;
 @property (retain) IBOutlet UIActivityIndicatorView *connectingActivityIndicatorView;
 
