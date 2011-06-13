@@ -1,5 +1,5 @@
 //
-// Prefix header for all source files of the 'ASTStore' target in the 'ASTStore' project
+// Prefix header for all source files of the 'ASTStoreKit' target in the 'ASTStoreKit' project
 //
 
 #import <Availability.h>
@@ -11,5 +11,5 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
-    #import "ASTStorePrefix.pch"
+#import "ASTStorePrefix.pch"
 #endif

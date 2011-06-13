@@ -1,8 +1,8 @@
 //
 //  main.m
-//  ASTStore
+//  ASTStoreKit
 //
-//  Created by Sean Kormilo on 11-03-07.
+//  Created by Sean Kormilo on 11-06-13.
 //  Copyright 2011 Anystone Technologies, Inc. All rights reserved.
 //
 

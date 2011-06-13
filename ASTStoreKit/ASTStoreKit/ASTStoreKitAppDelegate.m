@@ -1,40 +1,22 @@
 //
-//  ASTStoreAppDelegate.m
-//  ASTStore
+//  ASTStoreKitAppDelegate.m
+//  ASTStoreKit
 //
-//  Created by Sean Kormilo on 11-03-07.
-//  http://www.anystonetech.com
+//  Created by Sean Kormilo on 11-06-13.
+//  Copyright 2011 Anystone Technologies, Inc. All rights reserved.
+//
 
-//  Copyright (c) 2011 Anystone Technologies, Inc.
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
+#import "ASTStoreKitAppDelegate.h"
+#import "ASTStoreKitViewController.h"
 
-
-#import "ASTStoreAppDelegate.h"
-#import "ASTStoreViewController.h"
 #import "ASTStoreController.h"
 
-@implementation ASTStoreAppDelegate
+@implementation ASTStoreKitAppDelegate
 
 
-@synthesize tabBarController;
-@synthesize window=window_;
+@synthesize tabBarController = _tabBarController;
+@synthesize window=_window;
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -49,7 +31,7 @@
     {
         DLog(@"Could not read from sampleProductIdentifiers - oh no!");
     }
-    
+     
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
     return YES;
@@ -96,8 +78,8 @@
 
 - (void)dealloc
 {
-    [window_ release];
-    [tabBarController release];
+    [_window release];
+    [_tabBarController release];
     [super dealloc];
 }
 

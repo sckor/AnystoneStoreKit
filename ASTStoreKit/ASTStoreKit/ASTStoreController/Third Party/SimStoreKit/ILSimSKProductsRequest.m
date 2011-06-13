@@ -76,6 +76,12 @@
 + (ILSimSKProduct*) simulatedProductForIdentifier:(NSString*) ident;
 {
 	NSString* productsFile = [[[NSProcessInfo processInfo] environment] objectForKey:kILSimSKProductsPlistEnvironmentVariable];
+    
+    if( nil == productsFile )
+    {
+        productsFile = @"ilSimKitProducts.plist";
+    }
+    
     NSString* productFileInBundle = [[NSBundle mainBundle] pathForResource:productsFile ofType:@""];
     
 	NSDictionary* d = productFileInBundle ? [NSDictionary dictionaryWithContentsOfFile:productFileInBundle] : nil;
