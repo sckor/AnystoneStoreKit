@@ -52,6 +52,53 @@ typedef enum
 
 @interface ASTStoreController : NSObject {}
 
+// Invoke to instantiate or obtain access to the ASTStoreKit controller
+// If you have provided an ASTStoreKitConfig.plist file it will automatically read
+// and will configure your instance based on the settings provided in the ASTStoreKitConfig.
+//
+// The following items can be customized. If they keys or plist file is not present then default values
+// will used.
+// PList Format
+// NSDictionary
+//     productPlistFile : String - provides the name of a plist file containing a list of the products to manage (see below). Must have the .plist file extension removed as it will be appended automatically
+//              default : nil -  no file will be read and no products will be added
+//     
+//     retryStoreConnectionInterval : Number - the amount of seconds to retry access to the iTunes store if unavailable
+//              default : 15 seconds
+//
+//     serverURL : String - URL for the StoreServer. Typically would be an app engine URL eg: "http://xxx.appspot.com"
+//              default : nil - no server will be configured
+//
+//     serverConnectionTimeout : Number - the amount of seconds to wait for server to respond before failing
+//              default : 15 seconds
+//
+//     vendorUuid : String - A UUID provided by the server for validating your access to the server functionality
+//              default : nil - no UUID will be set
+//
+//     verifyReceipts : Boolean - Enables using the server to validate iTunes receipts for authenticity
+//              default: NO
+//
+//     serverPromoCodesEnabled : Boolean - Enables checks with the server to see whether a particular purchase
+//              should be granted for free based on the device being registered as a promo enabled device
+//              default : NO
+//
+//     serverConsumablesEnabled : Boolean - Enables storage of consumable counts on the server (useful for potentially
+//              transferring and maintaining consumable counts across devices)
+//              default : NO
+//
+//     serviceURLPaths : NSDictionary of keys which allow configuration of the paths to use for accessing server functionality
+//              receiptValidation : String - path to send receipt validation service requests
+//                        default : service/receipt/validate
+//
+//              promoCodeValidation : String - path to send requests to validate that device has been enabled for promo code
+//                        default : service/purchase/validate
+//
+//              productQuery : String - path to send product query requests
+//                        default : service/product/query
+//
+//              productList : String - path to send product list requests
+//                        default : service/product/list
+
 + (id)sharedStoreController;
 
 #pragma mark Set List of Products To Manage
@@ -209,6 +256,10 @@ typedef enum
 // If this is not set, then the system will only make use of the UDID
 // which will mean that consumables and promo codes cannot span across multiple devices
 @property (copy) NSString *customerIdentifier;
+
+// Dictionary of paths to use for the various services provided by the server
+// See sharedStoreController docs above for the keys to set
+@property (copy) NSDictionary *serviceURLPaths;
 
 #pragma mark Server Promo Code Support
 

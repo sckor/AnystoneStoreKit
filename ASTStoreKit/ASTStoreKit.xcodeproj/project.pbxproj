@@ -77,6 +77,9 @@
 		8173BEAC13A6AA0D001DC531 /* ASTRootViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BEA813A6AA0D001DC531 /* ASTRootViewController-iPad.xib */; };
 		8173BEAD13A6AA0D001DC531 /* ASTRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8173BEAA13A6AA0D001DC531 /* ASTRootViewController.m */; };
 		8173BEAE13A6AA0D001DC531 /* ASTRootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BEAB13A6AA0D001DC531 /* ASTRootViewController.xib */; };
+		81DB9EBA13A799DD003DA9A3 /* ASTStoreKitConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 81DB9EB913A799DD003DA9A3 /* ASTStoreKitConfig.plist */; };
+		81DB9EBE13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 81DB9EBD13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m */; };
+		81DB9EC113A7A0AB003DA9A3 /* ASTStoreConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 81DB9EC013A7A0AB003DA9A3 /* ASTStoreConfig.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -199,6 +202,13 @@
 		8173BEA913A6AA0D001DC531 /* ASTRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTRootViewController.h; sourceTree = "<group>"; };
 		8173BEAA13A6AA0D001DC531 /* ASTRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTRootViewController.m; sourceTree = "<group>"; };
 		8173BEAB13A6AA0D001DC531 /* ASTRootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTRootViewController.xib; sourceTree = "<group>"; };
+		81DB9EB913A799DD003DA9A3 /* ASTStoreKitConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ASTStoreKitConfig.plist; sourceTree = "<group>"; };
+		81DB9EBC13A7A041003DA9A3 /* ASTStoreConfigPlistReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreConfigPlistReader.h; sourceTree = "<group>"; };
+		81DB9EBD13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreConfigPlistReader.m; sourceTree = "<group>"; };
+		81DB9EBF13A7A0AB003DA9A3 /* ASTStoreConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreConfig.h; sourceTree = "<group>"; };
+		81DB9EC013A7A0AB003DA9A3 /* ASTStoreConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreConfig.m; sourceTree = "<group>"; };
+		81DB9EC213A7A218003DA9A3 /* ASTStoreConfig+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ASTStoreConfig+Private.h"; sourceTree = "<group>"; };
+		81DB9EC513A7A8E9003DA9A3 /* ASTStoreConfigKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreConfigKeys.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -392,6 +402,7 @@
 			children = (
 				8173BE2113A6947F001DC531 /* sampleProductIdentifiers.plist */,
 				8173BE2213A6947F001DC531 /* ilSimKitProducts.plist */,
+				81DB9EB913A799DD003DA9A3 /* ASTStoreKitConfig.plist */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -415,6 +426,12 @@
 				8173BE3413A69595001DC531 /* ASTStoreProductTypes.h */,
 				8173BE3513A69595001DC531 /* ASTStoreServer.h */,
 				8173BE3613A69595001DC531 /* ASTStoreServer.m */,
+				81DB9EC513A7A8E9003DA9A3 /* ASTStoreConfigKeys.h */,
+				81DB9EBF13A7A0AB003DA9A3 /* ASTStoreConfig.h */,
+				81DB9EC013A7A0AB003DA9A3 /* ASTStoreConfig.m */,
+				81DB9EC213A7A218003DA9A3 /* ASTStoreConfig+Private.h */,
+				81DB9EBC13A7A041003DA9A3 /* ASTStoreConfigPlistReader.h */,
+				81DB9EBD13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -592,6 +609,7 @@
 				8173BEA713A6A95B001DC531 /* ASTStoreDebugViewController.xib in Resources */,
 				8173BEAC13A6AA0D001DC531 /* ASTRootViewController-iPad.xib in Resources */,
 				8173BEAE13A6AA0D001DC531 /* ASTRootViewController.xib in Resources */,
+				81DB9EBA13A799DD003DA9A3 /* ASTStoreKitConfig.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -636,6 +654,8 @@
 				8173BE9313A69809001DC531 /* ILSimSKTiers.m in Sources */,
 				8173BEA613A6A95B001DC531 /* ASTStoreDebugViewController.m in Sources */,
 				8173BEAD13A6AA0D001DC531 /* ASTRootViewController.m in Sources */,
+				81DB9EBE13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m in Sources */,
+				81DB9EC113A7A0AB003DA9A3 /* ASTStoreConfig.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -752,6 +772,7 @@
 				8173BDD613A69076001DC531 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

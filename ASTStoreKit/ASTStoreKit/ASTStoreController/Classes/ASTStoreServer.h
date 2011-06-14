@@ -45,6 +45,8 @@ typedef enum
 @property (copy) NSURL *serverUrl;
 @property (copy) NSString *vendorUuid;
 @property  NSTimeInterval serverConnectionTimeout;
+@property (copy) NSDictionary *serviceURLPaths;
+
 
 #pragma mark Verify Related Methods
 - (ASTStoreServerResult)verifyTransaction:(SKPaymentTransaction*)transaction; 

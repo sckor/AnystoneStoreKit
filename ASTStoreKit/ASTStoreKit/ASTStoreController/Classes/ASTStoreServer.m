@@ -29,11 +29,21 @@
 #import "ASIFormDataRequest.h"
 #import "JSONKit.h"
 #import "ASTStoreProductInfoKeys.h"
+#import "ASTStoreConfigKeys.h"
+
+#define kDefaultServiceURLReceiptValidation @"service/receipt/validate"
+#define kDefaultServiceURLPromoCodeValidation @"service/purchase/validate"
+#define kDefaultServiceURLProductQuery @"service/product/query"
+#define kDefaultServiceURLProductList @"service/product/list"
 
 @interface ASTStoreServer ()
 
 @property (readonly) NSString *bundleId;
 @property (readonly) NSString *udid;
+@property (nonatomic, copy) NSString *serviceURLPathReceiptValidation;
+@property (nonatomic, copy) NSString *serviceURLPathPromoCodeValidation;
+@property (nonatomic, copy) NSString *serviceURLPathProductQuery;
+@property (nonatomic, copy) NSString *serviceURLPathProductList;
 
 @end
 
@@ -47,6 +57,11 @@
 @synthesize bundleId = bundleId_;
 @synthesize udid = udid_;
 @synthesize vendorUuid = vendorUuid_;
+@synthesize serviceURLPathReceiptValidation = serviceURLPathReceiptValidation_;
+@synthesize serviceURLPathPromoCodeValidation = serviceURLPathPromoCodeValidation_;
+@synthesize serviceURLPathProductQuery = serviceURLPathProductQuery_;
+@synthesize serviceURLPathProductList = serviceURLPathProductList_;
+@synthesize serviceURLPaths = serviceURLPaths_;
 
 #pragma mark private methods
 
@@ -96,12 +111,109 @@
     return udid_;
 }
 
+- (NSString*)serviceURLPathProductList
+{
+    if( nil != serviceURLPathProductList_ )
+    {
+        ASTReturnRA( serviceURLPathProductList_ );
+    }
+    
+    NSString *servicePath = kDefaultServiceURLProductList;
+    
+    if( nil != self.serviceURLPaths )
+    {
+        NSString *tmpPath = [self.serviceURLPaths objectForKey:kASTStoreConfigServiceURLProductListKey];
+        if( nil != tmpPath )
+        {
+            // A value was set in the dictionary so use that instead
+            servicePath = tmpPath;
+        }
+    }
+
+    self.serviceURLPathProductList = servicePath;
+    
+    ASTReturnRA( serviceURLPathProductList_ );
+}
+
+- (NSString*)serviceURLPathProductQuery
+{
+    if( nil != serviceURLPathProductQuery_ )
+    {
+        ASTReturnRA( serviceURLPathProductQuery_ );
+    }
+    
+    NSString *servicePath = kDefaultServiceURLProductQuery;
+    
+    if( nil != self.serviceURLPaths )
+    {
+        NSString *tmpPath = [self.serviceURLPaths objectForKey:kASTStoreConfigServiceURLProductQueryKey];
+        if( nil != tmpPath )
+        {
+            // A value was set in the dictionary so use that instead
+            servicePath = tmpPath;
+        }
+    }
+    
+    self.serviceURLPathProductQuery = servicePath;
+    
+    ASTReturnRA( serviceURLPathProductQuery_ );    
+}
+
+- (NSString*)serviceURLPathPromoCodeValidation
+{
+    if( nil != serviceURLPathPromoCodeValidation_ )
+    {
+        ASTReturnRA( serviceURLPathPromoCodeValidation_ );
+    }
+    
+    NSString *servicePath = kDefaultServiceURLPromoCodeValidation;
+    
+    if( nil != self.serviceURLPaths )
+    {
+        NSString *tmpPath = [self.serviceURLPaths objectForKey:kASTStoreConfigServiceURLPromoCodeValidationKey];
+        if( nil != tmpPath )
+        {
+            // A value was set in the dictionary so use that instead
+            servicePath = tmpPath;
+        }
+    }
+    
+    self.serviceURLPathPromoCodeValidation = servicePath;
+    
+    ASTReturnRA( serviceURLPathPromoCodeValidation_ );    
+}
+
+- (NSString*)serviceURLPathReceiptValidation
+{
+    if( nil != serviceURLPathReceiptValidation_ )
+    {
+        ASTReturnRA( serviceURLPathReceiptValidation_ );
+    }
+    
+    // Default to the default by default - ha ha!
+    NSString *servicePath = kDefaultServiceURLReceiptValidation;
+    
+    // See if a dictionary has been set for the service URL paths
+    if( nil != self.serviceURLPaths )
+    {
+        NSString *tmpPath = [self.serviceURLPaths objectForKey:kASTStoreConfigServiceURLReceiptValidationKey];
+        if( nil != tmpPath )
+        {
+            // A value was set in the dictionary so use that instead
+            servicePath = tmpPath;
+        }
+    }
+
+    self.serviceURLPathReceiptValidation = servicePath;
+    
+    ASTReturnRA( serviceURLPathReceiptValidation_ );    
+}
 
 #pragma mark Receipt Verification
 
 - (ASIFormDataRequest*)formDataRequestFromReceipt:(NSData*)receiptData forProductId:(NSString*)productId
 {
-    NSURL *serviceURL = [self.serverUrl URLByAppendingPathComponent:@"service/receipt/validate"];
+    NSURL *serviceURL = [self.serverUrl URLByAppendingPathComponent:self.serviceURLPathReceiptValidation];
     ASIFormDataRequest *serviceRequest = [ASIFormDataRequest requestWithURL:serviceURL];
     
     [ASIFormDataRequest setDefaultTimeOutSeconds:self.serverConnectionTimeout];
@@ -193,7 +305,7 @@
 #pragma mark In App Promo Related Methods
 - (ASIFormDataRequest*)formDataRequestPromoFromProductIdentifier:(NSString*)productId andCustomerIdentifier:(NSString*)customerIdentifier
 {
-    NSURL *serviceURL = [self.serverUrl URLByAppendingPathComponent:@"service/purchase/validate"];
+    NSURL *serviceURL = [self.serverUrl URLByAppendingPathComponent:self.serviceURLPathPromoCodeValidation];
     ASIFormDataRequest *serviceRequest = [ASIFormDataRequest requestWithURL:serviceURL];
     
     [ASIFormDataRequest setDefaultTimeOutSeconds:self.serverConnectionTimeout];
@@ -286,7 +398,7 @@
 #pragma mark Basic Product Data Methods
 - (ASIFormDataRequest*)formDataRequestProductFromProductIdentifier:(NSString*)productId
 {
-    NSURL *serviceURL = [self.serverUrl URLByAppendingPathComponent:@"service/product/query"];
+    NSURL *serviceURL = [self.serverUrl URLByAppendingPathComponent:self.serviceURLPathProductQuery];
     ASIFormDataRequest *serviceRequest = [ASIFormDataRequest requestWithURL:serviceURL];
     
     [ASIFormDataRequest setDefaultTimeOutSeconds:self.serverConnectionTimeout];
@@ -366,7 +478,7 @@
 
 - (ASIFormDataRequest*)formDataRequestProducts
 {
-    NSURL *serviceURL = [self.serverUrl URLByAppendingPathComponent:@"service/product/list"];
+    NSURL *serviceURL = [self.serverUrl URLByAppendingPathComponent:self.serviceURLPathProductList];
     ASIFormDataRequest *serviceRequest = [ASIFormDataRequest requestWithURL:serviceURL];
     
     [ASIFormDataRequest setDefaultTimeOutSeconds:self.serverConnectionTimeout];
@@ -459,6 +571,11 @@
     serverConnectionTimeout_ = kASTStoreServerDefaultNetworkTimeout;
     bundleId_ = nil;
     vendorUuid_ = nil;
+    serviceURLPathProductList_ = nil;
+    serviceURLPathProductQuery_ = nil;
+    serviceURLPathPromoCodeValidation_ = nil;
+    serviceURLPathReceiptValidation_ = nil;
+    serviceURLPaths_ = nil;
     
     DLog(@"Instantiated ASTStoreServer");
     return self;
@@ -474,6 +591,12 @@
         
     [udid_ release];
     udid_ = nil;
+    
+    [serviceURLPathReceiptValidation_ release], serviceURLPathReceiptValidation_ = nil;
+    [serviceURLPathPromoCodeValidation_ release], serviceURLPathPromoCodeValidation_ = nil;
+    [serviceURLPathProductQuery_ release], serviceURLPathProductQuery_ = nil;
+    [serviceURLPathProductList_ release], serviceURLPathProductList_ = nil;
+    [serviceURLPaths_ release], serviceURLPaths_ = nil;
     
     [super dealloc];
 }

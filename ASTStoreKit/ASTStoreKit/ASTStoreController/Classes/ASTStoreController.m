@@ -31,6 +31,8 @@
 #import "ASTStoreProductPlistReader.h"
 #import "ASTStoreFamilyData.h"
 #import "ASTStoreServer.h"
+#import "ASTStoreConfigPlistReader.h"
+#import "ASTStoreConfigKeys.h"
 
 #define kASTStoreControllerDefaultRetryStoreConnectionInterval 15.0
 #define kASTStoreServerDefaultVerifyReceipts YES
@@ -64,6 +66,7 @@
 @synthesize customerIdentifier = customerIdentifier_;
 @synthesize serverConsumablesEnabled = serverConsumablesEnabled_;
 @synthesize serverPromoCodesEnabled = serverPromoCodesEnabled_;
+@synthesize serviceURLPaths = serviceURLPaths_;
 
 #pragma mark Delegate Selector Stubs
 
@@ -251,6 +254,16 @@
 - (void)setServerConnectionTimeout:(NSTimeInterval)serverConnectionTimeout
 {
     self.storeServer.serverConnectionTimeout = serverConnectionTimeout;
+}
+
+- (void)setServiceURLPaths:(NSDictionary *)serviceURLPaths
+{
+    self.storeServer.serviceURLPaths = serviceURLPaths;
+}
+
+- (NSDictionary*)serviceURLPaths
+{
+    return self.storeServer.serviceURLPaths;
 }
 
 #pragma mark Product Setup
@@ -953,6 +966,40 @@
     return 0;
 }
 
+#pragma mark Read Configuration 
+
+- (void)readConfiguration
+{
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    
+    NSString *plistPath = [mainBundle pathForResource:kASTStoreConfigPlist ofType:@"plist"];
+
+    if( nil == plistPath )
+    {
+        return;
+    }
+    
+    ASTStoreConfig *config = [ASTStoreConfigPlistReader readStoreConfigFromPlistFile:plistPath];
+    
+    if( nil == config )
+    {
+        return;
+    }
+    
+    self.retryStoreConnectionInterval = config.retryStoreConnectionInterval;
+    self.serverUrl = config.serverURL;
+    self.serverConnectionTimeout = config.serverConnectionTimeout;
+    self.vendorUuid = config.vendorUuid;
+    self.verifyReceipts = config.verifyReceipts;
+    self.serverPromoCodesEnabled = config.serverPromoCodesEnabled;
+    self.serverConsumablesEnabled = config.serverConsumablesEnabled;
+    self.serviceURLPaths = config.serviceURLPaths;
+    
+    if( nil != config.productPlistFile )
+    {
+        [self setProductIdentifiersFromBundlePlist:config.productPlistFile];
+    }
+}
 
 #pragma mark Initialization and Cleanup
 
@@ -983,6 +1030,9 @@
     customerIdentifier_ = nil;
     serverConsumablesEnabled_ = NO;
     serverPromoCodesEnabled_ = NO;
+    serviceURLPaths_ = nil;
+    
+    [self readConfiguration];
     
     // Register as an observer right away
     [self.skPaymentQueue addTransactionObserver:self];

@@ -7,7 +7,6 @@
 //
 
 #import "ASTStoreKitAppDelegate.h"
-#import "ASTStoreKitViewController.h"
 
 #import "ASTStoreController.h"
 
@@ -26,10 +25,14 @@
     // Setup the list of products to manage (in this case using a local plist file)
     // Do not request the product information here though - want to wait until the customer
     // Goes into the store, since there may not be any need contact iTunes
-    BOOL result = [sc setProductIdentifiersFromBundlePlist:@"sampleProductIdentifiers"];
-    if( NO == result )
+    NSArray *productIdentifiers = [sc productIdentifiers];
+    if( nil == productIdentifiers )
     {
-        DLog(@"Could not read from sampleProductIdentifiers - oh no!");
+        DLog(@"Did not read sampleProductIdentifiers based on ASTStoreKitConfig file - oh no!");
+    }
+    else
+    {
+        DLog(@"Configured for the following ids:%@", productIdentifiers);
     }
      
     self.window.rootViewController = self.tabBarController;

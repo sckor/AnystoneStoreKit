@@ -54,3 +54,6 @@
 // Used for optimization around if statements
 #define likely(x)       __builtin_expect((x),1)
 #define unlikely(x)     __builtin_expect((x),0)
+
+#define ASTReturnRA(object) return( [[object retain] autorelease] )
+#define ASTAllocIA(aClass) [[[aClass alloc] init] autorelease]
