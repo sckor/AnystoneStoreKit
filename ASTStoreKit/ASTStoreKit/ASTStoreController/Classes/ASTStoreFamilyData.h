@@ -48,4 +48,7 @@
 @property (readonly) BOOL isPurchased;
 - (NSUInteger)consumeQuantity:(NSUInteger)amountToConsume;
 
+// Base64 encoded receipt data
+@property (nonatomic,copy) NSString *receipt;
+
 @end

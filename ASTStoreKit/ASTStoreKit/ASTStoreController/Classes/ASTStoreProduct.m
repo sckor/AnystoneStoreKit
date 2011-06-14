@@ -89,13 +89,9 @@
             break;
             
         case ASTStoreProductIdentifierTypeAutoRenewable:
-#ifdef AUTORENEW_SUPPORTED
             return ( [ASTStoreProduct autoRenewableStoreProductWithIdentifier:aProductIdentifier
                                                              familyIdentifier:aFamilyIdentifier
                                                                familyQuantity:aFamilyQuantity] );
-#else
-            DLog(@"Auto Renewable Not Supported Yet");
-#endif
         default:
             break;
     }

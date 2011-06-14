@@ -34,7 +34,6 @@
 #define k_FAMILY_IDENTIFIER 						@"familyIdentifier"
 #define k_FAMILY_QUANITY                            @"familyQuanity"
 
-
 @interface ASTStoreProductData ()
 
 - (void)save;
@@ -54,9 +53,10 @@
 @synthesize type = type_;
 @synthesize familyIdentifier = familyIdentifier_;
 @synthesize familyQuanity = familyQuanity_;
-@synthesize availableQuantity = availableQuantity_;
 @synthesize productDataPath = productDataPath_;
 @synthesize familyData = familyData_;
+@dynamic availableQuantity;
+@dynamic receipt;
 
 #pragma mark Private Class Methods
 + (NSString*)directoryForProductDataWithIdentifier:(NSString*)aProductIdentifier
@@ -192,13 +192,9 @@
             break;
             
         case ASTStoreProductIdentifierTypeAutoRenewable:
-#ifdef AUTORENEW_SUPPORTED
             return ( [ASTStoreProductData autoRenewableStoreProductWithIdentifier:aProductIdentifier
                                                              familyIdentifier:aFamilyIdentifier
                                                                familyQuantity:aFamilyQuantity] );
-#else
-            DLog(@"Renewable type not supported yet");
-#endif
         default:
             break;
     }
@@ -220,11 +216,7 @@
     
     if( aType == ASTStoreProductIdentifierTypeAutoRenewable )
     {
-#ifdef AUTORENEW_SUPPORTED
         return YES;
-#else
-        DLog(@"Renewable type not supported yet");
-#endif
     }
     
     return NO;
@@ -273,6 +265,7 @@
     
     return ( familyData_ );
 }
+
 - (void)setFamilyQuanity:(NSUInteger)familyQuanity
 {
     familyQuanity_ = familyQuanity;
@@ -299,6 +292,16 @@
     return [self.familyData consumeQuantity:amountToConsume];
 }
 
+- (void)setReceipt:(NSString *)receipt
+{
+    self.familyData.receipt = receipt;
+}
+
+- (NSString*)receipt
+{
+    return self.familyData.receipt;
+}
+
 //---------------------------------------------------------- 
 //  Keyed Archiving
 //
@@ -311,7 +314,7 @@
     [encoder encodeInteger:self.familyQuanity forKey:k_FAMILY_QUANITY];
 }
 
-- (id) initWithCoder: (NSCoder *)decoder 
+- (id) initWithCoder:(NSCoder *)decoder 
 {
     self = [super init];
     if (self)
@@ -332,7 +335,7 @@
     [theCopy setType:self.type];
     [theCopy setFamilyIdentifier:[[self.familyIdentifier copy] autorelease]];
     [theCopy setFamilyQuanity:self.familyQuanity];
-    
+
     return theCopy;
 }
 
@@ -481,7 +484,7 @@
     
     [familyData_ release];
     familyData_ = nil;
-    
+        
     [super dealloc];
 }
 

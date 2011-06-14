@@ -87,4 +87,7 @@
 
 - (NSUInteger)consumeQuantity:(NSUInteger)amountToConsume;
 
+// Base64 encoded receipt data
+@property (copy) NSString *receipt;
+
 @end

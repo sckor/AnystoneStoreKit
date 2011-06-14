@@ -33,6 +33,7 @@
 #define k_FAMILY_IDENTIFIER 						@"familyIdentifier"
 #define k_PURCHASED_QUANTITY 						@"purchasedQuantity"
 #define k_TYPE                                      @"type"
+#define k_RECEIPT 						@"receipt"
 
 
 @interface ASTStoreFamilyData()
@@ -50,6 +51,7 @@
 @synthesize familyIdentifier = familyIdentifier_;
 @synthesize familyDataPath = familyDataPath_;
 @synthesize type = type_;
+@synthesize receipt = receipt_;
 
 #pragma mark private class methods
 + (NSMutableDictionary*)familyDataDictionary
@@ -326,6 +328,27 @@
     [self save];
 }
 
+- (void)setReceipt:(NSString *)receipt
+{
+    if( receipt_ == receipt )
+    {
+        return;
+    }
+    
+    if( nil != receipt_ )
+    {
+        [receipt_ release];
+        receipt_ = nil;
+    }
+    
+    if( nil != receipt )
+    {
+        receipt_ = [receipt copy];        
+    }
+    
+    [self save];
+}
+
 - (NSMutableDictionary*)familyDataDictionary
 {
     return [ASTStoreFamilyData familyDataDictionary];
@@ -360,6 +383,7 @@
     [encoder encodeObject:self.familyIdentifier forKey:k_FAMILY_IDENTIFIER];
     [encoder encodeInteger:self.availableQuantity forKey:k_PURCHASED_QUANTITY];
     [encoder encodeInteger:self.type forKey:k_TYPE];
+    [encoder encodeObject:self.receipt forKey:k_RECEIPT];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder 
@@ -371,6 +395,7 @@
         familyIdentifier_ = [[decoder decodeObjectForKey:k_FAMILY_IDENTIFIER] copy];
         availableQuantity_ = [decoder decodeIntegerForKey:k_PURCHASED_QUANTITY];
         type_ = [decoder decodeIntegerForKey:k_TYPE];
+        receipt_ = [[decoder decodeObjectForKey:k_RECEIPT] copy];
     }
     return self;
 }
@@ -382,7 +407,8 @@
     [theCopy setFamilyIdentifier: [[self.familyIdentifier copy] autorelease]];
     [theCopy setAvailableQuantity: self.availableQuantity];
     [theCopy setType:self.type];
-    
+    [theCopy setReceipt: [[self.receipt copy] autorelease]];
+
     return theCopy;
 }
 
@@ -418,6 +444,8 @@
     
     [familyDataPath_ release];
     familyDataPath_ = nil;
+    
+    [receipt_ release], receipt_ = nil;
     
     [super dealloc];
 }

@@ -60,9 +60,14 @@ typedef enum
 // will used.
 // PList Format
 // NSDictionary
-//     productPlistFile : String - provides the name of a plist file containing a list of the products to manage (see below). Must have the .plist file extension removed as it will be appended automatically
+//     productPlistFile : String - provides the name of a plist file containing a list of the products to manage (see below). 
+//              Must have the .plist file extension removed as it will be appended automatically
 //              default : nil -  no file will be read and no products will be added
-//     
+//
+//     sharedSecret : String - the shared secret as specified by Apple for use in validation of auto-renewable subscriptions
+//              default : nil
+//              HIGHLY RECOMMEND USING A SERVER RATHER THAN INCLUDING THE SHARED SECRET IN APP
+//
 //     retryStoreConnectionInterval : Number - the amount of seconds to retry access to the iTunes store if unavailable
 //              default : 15 seconds
 //
@@ -163,6 +168,10 @@ typedef enum
 // with the family associated with the product will be removed too).
 - (void)resetProductIdentifier:(NSString*)productIdentifier;
 - (void)resetAllProducts;
+
+// Configures the shared secret required for validating auto renewable subscriptions
+// HIGHLY RECOMMEND USING A SERVER RATHER THAN INCLUDING THE SHARED SECRET IN APP
+@property (copy) NSString *sharedSecret;
 
 #pragma mark Query lists of products being managed
 

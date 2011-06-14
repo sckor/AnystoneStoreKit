@@ -33,6 +33,7 @@
 #import "ASTStoreServer.h"
 #import "ASTStoreConfigPlistReader.h"
 #import "ASTStoreConfigKeys.h"
+#import "ASIHTTPRequest.h"
 
 #define kASTStoreControllerDefaultRetryStoreConnectionInterval 15.0
 #define kASTStoreServerDefaultVerifyReceipts YES
@@ -67,6 +68,7 @@
 @synthesize serverConsumablesEnabled = serverConsumablesEnabled_;
 @synthesize serverPromoCodesEnabled = serverPromoCodesEnabled_;
 @synthesize serviceURLPaths = serviceURLPaths_;
+@synthesize sharedSecret = sharedSecret_;
 
 #pragma mark Delegate Selector Stubs
 
@@ -264,6 +266,16 @@
 - (NSDictionary*)serviceURLPaths
 {
     return self.storeServer.serviceURLPaths;
+}
+
+- (void)setSharedSecret:(NSString *)sharedSecret
+{
+    self.storeServer.sharedSecret = sharedSecret;
+}
+
+- (NSString*)sharedSecret
+{
+    return self.storeServer.sharedSecret;
 }
 
 #pragma mark Product Setup
@@ -562,7 +574,7 @@
 }
 
 #pragma mark Transaction Handling
-- (void)updatePurchaseFromProductIdentifier:(NSString*)productIdentifier
+- (void)updatePurchaseFromProductIdentifier:(NSString*)productIdentifier receiptData:(NSData*)receiptData
 {
     // Attempt to get the product object for this - if that fails
     // Then attempt to the product data object for transaction - 
@@ -585,23 +597,34 @@
         return;
     }
     
-    if( productData.type == ASTStoreProductIdentifierTypeConsumable )
+    switch (productData.type) 
     {
-        // Increment the available quantity for the family
-        NSUInteger quantity = productData.availableQuantity;
-        quantity += productData.familyQuanity;
-        
-        productData.availableQuantity = quantity;
+        case ASTStoreProductIdentifierTypeConsumable:
+        {
+            // Increment the available quantity for the family
+            NSUInteger quantity = productData.availableQuantity;
+            quantity += productData.familyQuanity;
+            
+            productData.availableQuantity = quantity;
+            break;
+        }
+            
+        case ASTStoreProductIdentifierTypeNonconsumable:
+        {
+            productData.availableQuantity = 1;
+            break;
+        }
+            
+        case ASTStoreProductIdentifierTypeAutoRenewable:
+        {
+            productData.receipt = [ASIHTTPRequest base64forData:receiptData];
+            break;
+        }
+            
+        default:
+            DLog(@"Unsupported product type: %d", productData.type);
+            break;
     }
-    else if ( productData.type == ASTStoreProductIdentifierTypeNonconsumable )
-    {
-        productData.availableQuantity = 1;
-    }
-    else
-    {
-        DLog(@"Unsupported product type: %d", productData.type);
-    }
-
 }
 
 - (void)completionHandler:(SKPaymentTransaction *)transaction withVerificationResult:(ASTStoreServerResult)result
@@ -623,7 +646,7 @@
     }
 
     
-    [self updatePurchaseFromProductIdentifier:productIdentifier];
+    [self updatePurchaseFromProductIdentifier:productIdentifier receiptData:transaction.transactionReceipt];
             
     if( self.restoringPurchases )
     {
@@ -749,7 +772,7 @@
     else
     {
         // Promo code accepted - activate product...
-        [self updatePurchaseFromProductIdentifier:productIdentifier];
+        [self updatePurchaseFromProductIdentifier:productIdentifier receiptData:nil];
         
         UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Thank You" 
                                                          message:@"Your promo code was successfully redeemed." 
@@ -907,18 +930,40 @@
 - (BOOL)isProductPurchased:(NSString*)productIdentifier
 {
     ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
+    NSString *familyIdentifier = productIdentifier;
     
     if( nil != theProduct )
     {
-        return ( theProduct.isPurchased );
+        familyIdentifier = theProduct.familyIdentifier;
     }
     
     // In the event a family id was provided instead of a product id, attempt to directly access family id
-    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:productIdentifier];
+    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:familyIdentifier];
     
     if( nil != familyData )
     {
-        return ( familyData.isPurchased );
+        if( familyData.type != ASTStoreProductIdentifierTypeAutoRenewable )
+        {
+            return ( familyData.isPurchased );
+        }
+        
+        // For autorenewable, must verify with server if we have a receipt
+        if( nil != familyData.receipt )
+        {
+            // TODO - cache result of checks so that this does not query server everytime as it is a sync operation
+            NSString *latestReceipt = nil;
+            ASTStoreServerResult result = [self.storeServer verifyReceipt:familyData.receipt latestReceiptBase64Data:&latestReceipt];
+            
+            if( nil != latestReceipt )
+            {
+                familyData.receipt = latestReceipt;
+            }
+            
+            if( result != ASTStoreServerResultFail )
+            {
+                return YES;
+            }
+        }
     }
     
     return NO;
@@ -994,6 +1039,7 @@
     self.serverPromoCodesEnabled = config.serverPromoCodesEnabled;
     self.serverConsumablesEnabled = config.serverConsumablesEnabled;
     self.serviceURLPaths = config.serviceURLPaths;
+    self.sharedSecret = config.sharedSecret;
     
     if( nil != config.productPlistFile )
     {
@@ -1031,6 +1077,7 @@
     serverConsumablesEnabled_ = NO;
     serverPromoCodesEnabled_ = NO;
     serviceURLPaths_ = nil;
+    sharedSecret_ = nil;
     
     [self readConfiguration];
     

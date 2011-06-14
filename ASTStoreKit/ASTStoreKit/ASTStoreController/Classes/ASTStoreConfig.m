@@ -20,6 +20,7 @@
 @synthesize serverPromoCodesEnabled = serverPromoCodesEnabled_;
 @synthesize serverConsumablesEnabled = serverConsumablesEnabled_;
 @synthesize serviceURLPaths = serviceURLPaths_;
+@synthesize sharedSecret = sharedSecret_;
 
 - (id)init 
 {
@@ -39,6 +40,7 @@
     serverPromoCodesEnabled_ = NO;
     serverConsumablesEnabled_ = NO;
     serviceURLPaths_ = nil;
+    sharedSecret_ = nil;
     
     return self;
 }
@@ -50,6 +52,7 @@
     [serverURL_ release], serverURL_ = nil;
     [vendorUuid_ release], vendorUuid_ = nil;
     [serviceURLPaths_ release], serviceURLPaths_ = nil;
+    [sharedSecret_ release], sharedSecret_ = nil;
     
     [super dealloc];
 }

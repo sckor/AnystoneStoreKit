@@ -62,6 +62,7 @@
 @synthesize serviceURLPathProductQuery = serviceURLPathProductQuery_;
 @synthesize serviceURLPathProductList = serviceURLPathProductList_;
 @synthesize serviceURLPaths = serviceURLPaths_;
+@synthesize sharedSecret = sharedSecret_;
 
 #pragma mark private methods
 
@@ -210,6 +211,117 @@
 }
 
 #pragma mark Receipt Verification
+- (ASTStoreServerResult)verifyReceipt:(NSString*)receiptBase64Data latestReceiptBase64Data:(NSString**)latestReceiptBase64Data
+{
+    NSString *receiptServer = nil;
+    NSString *receiptServicePath = nil;
+    
+    // If there is no server URL then a sharedSecret must be supplied here
+    // If there is a server URL then log a warning if a shared secret is passed in, since we should
+    // rely on the server for managing the shared secret
+    if(( nil == self.serverUrl ) && ( nil != self.sharedSecret ))
+    {
+#ifdef DEBUG
+        receiptServer = @"https://sandbox.itunes.apple.com";
+#else
+        receiptServer = @"https://buy.itunes.apple.com";        
+#endif
+        
+        receiptServicePath = @"verifyReceipt";
+    }
+    else if(( nil != self.serverUrl ) && ( nil != self.sharedSecret ))
+    {
+        DLog(@"WARNING: it is recommended that shared secrets not be embedded in the application and should be on server instead");
+        receiptServer = [self.serverUrl absoluteString];
+        receiptServicePath = self.serviceURLPathReceiptValidation;
+    }
+    else if(( nil == self.serverUrl ) && ( nil == self.sharedSecret ))
+    {
+        DLog(@"CANNOT VERIFY RECEIPT: need one of a server URL or a shared secret");
+        return ASTStoreServerResultInconclusive;
+    }
+    
+    NSURL *serviceURL = [[NSURL URLWithString:receiptServer] URLByAppendingPathComponent:receiptServicePath];
+    
+    ASIHTTPRequest *serviceRequest = [ASIHTTPRequest requestWithURL:serviceURL];
+    [ASIHTTPRequest setDefaultTimeOutSeconds:self.serverConnectionTimeout];
+    
+    NSMutableDictionary *receiptDictionary = [NSDictionary dictionaryWithObjectsAndKeys:receiptBase64Data, @"receipt-data", nil];
+    
+    if( nil != self.sharedSecret )
+    {
+        [receiptDictionary setObject:self.sharedSecret forKey:@"password"];
+    }
+    
+    NSData *receiptAsJSONData = [receiptDictionary JSONData];
+    
+    [serviceRequest setPostBody:[receiptAsJSONData mutableCopy]];
+    
+    [serviceRequest startSynchronous];
+    
+    NSError *error = [serviceRequest error];
+    
+    if( error )
+    {
+        // This would generally be a network error, so assume the verification passed
+        // since we would not want to reject purchase if our server is down
+        DLog(@"error: %@", error);
+        return ( ASTStoreServerResultInconclusive );
+    }
+    
+    
+    // Need to decode response.... JSON format...
+    JSONDecoder *decoder = [JSONDecoder decoder];
+    id responseObject = [decoder objectWithData:[serviceRequest responseData]];
+    
+    if( ! [responseObject isKindOfClass:[NSDictionary class]] )
+    {
+        // This should have been a dictionary; do nothing and assume it passed
+        DLog(@"Unexpected class on decode from JSONKit: %@", NSStringFromClass([responseObject class]));
+        return ( ASTStoreServerResultInconclusive );
+    }
+    
+    NSDictionary *responseDict = responseObject;
+    
+    NSNumber *status = [responseDict objectForKey:kASTStoreProductInfoStatusKey];
+    
+    if( nil == status )
+    {
+        return ( ASTStoreServerResultInconclusive );
+    }
+    
+    if( nil != latestReceiptBase64Data )
+    {
+        *latestReceiptBase64Data = [responseDict objectForKey:@"latest_receipt"];
+    }
+    
+    if( [status integerValue] == 0 )
+    {
+        // Passed
+        return ( ASTStoreServerResultPass );
+    }
+    
+    // Failed
+    DLog(@"response:%@", responseDict);
+    return ( ASTStoreServerResultFail );
+}
+
+- (void)asyncVerifyReceipt:(NSString*)receiptBase64Data withCompletionBlock:(ASTVerifyReceiptBlock)completionBlock
+{
+    dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    
+    dispatch_async(globalQueue, ^{
+        NSString *latestReceipt = nil;
+        
+        ASTStoreServerResult result = [self verifyReceipt:receiptBase64Data latestReceiptBase64Data:&latestReceipt];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionBlock(receiptBase64Data, latestReceipt, result);
+        });
+    });
+
+}
+
 
 - (ASIFormDataRequest*)formDataRequestFromReceipt:(NSData*)receiptData forProductId:(NSString*)productId
 {
@@ -288,7 +400,7 @@
 
 
 - (void)asyncVerifyTransaction:(SKPaymentTransaction*)transaction
-           withCompletionBlock:(ASTVerifyReceiptBlock)completionBlock
+           withCompletionBlock:(ASTVerifyTransactionBlock)completionBlock
 {
     dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     
@@ -576,6 +688,7 @@
     serviceURLPathPromoCodeValidation_ = nil;
     serviceURLPathReceiptValidation_ = nil;
     serviceURLPaths_ = nil;
+    sharedSecret_ = nil;
     
     DLog(@"Instantiated ASTStoreServer");
     return self;
@@ -597,6 +710,7 @@
     [serviceURLPathProductQuery_ release], serviceURLPathProductQuery_ = nil;
     [serviceURLPathProductList_ release], serviceURLPathProductList_ = nil;
     [serviceURLPaths_ release], serviceURLPaths_ = nil;
+    [sharedSecret_ release], sharedSecret_ = nil;
     
     [super dealloc];
 }
