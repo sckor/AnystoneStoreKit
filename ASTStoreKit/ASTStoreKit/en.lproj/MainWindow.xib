@@ -53,9 +53,9 @@
 				</object>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				<bool key="IBUIHorizontal">NO</bool>
-				<object class="IBUIViewController" key="IBUISelectedViewController" id="392856375">
-					<object class="IBUITabBarItem" key="IBUITabBarItem" id="853962621">
-						<string key="IBUITitle">Store</string>
+				<object class="IBUIViewController" key="IBUISelectedViewController" id="625688609">
+					<object class="IBUITabBarItem" key="IBUITabBarItem" id="271171748">
+						<string key="IBUITitle">Debug</string>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					</object>
 					<reference key="IBUIParentViewController" ref="1002181814"/>
@@ -68,10 +68,10 @@
 				</object>
 				<object class="NSMutableArray" key="IBUIViewControllers">
 					<bool key="EncodedWithXMLCoder">YES</bool>
-					<reference ref="392856375"/>
-					<object class="IBUIViewController" id="625688609">
-						<object class="IBUITabBarItem" key="IBUITabBarItem" id="271171748">
-							<string key="IBUITitle">Debug</string>
+					<reference ref="625688609"/>
+					<object class="IBUIViewController" id="392856375">
+						<object class="IBUITabBarItem" key="IBUITabBarItem" id="853962621">
+							<string key="IBUITitle">Store</string>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						</object>
 						<reference key="IBUIParentViewController" ref="1002181814"/>
@@ -88,7 +88,6 @@
 					<int key="NSvFlags">266</int>
 					<string key="NSFrame">{{0, 431}, {320, 49}}</string>
 					<reference key="NSSuperview"/>
-					<reference key="NSNextKeyView"/>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">3</int>
 						<bytes key="NSWhite">MCAwAA</bytes>
@@ -175,9 +174,9 @@
 						<reference key="object" ref="1002181814"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="625688609"/>
 							<reference ref="392856375"/>
 							<reference ref="440144261"/>
+							<reference ref="625688609"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>

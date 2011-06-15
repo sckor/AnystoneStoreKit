@@ -75,12 +75,44 @@
 		<string>Deprecated Keys</string>
 		<key>productIdentifier</key>
 		<string>com.anystonetech.storecontroller.nonconsumable.deprecated</string>
-		<key>type</key>
-		<string>Nonconsumable</string>
-		<key>title</key>
-		<string>Use Deprecated PList Keys</string>
 		<key>shouldDisplay</key>
 		<string>YES</string>
+		<key>title</key>
+		<string>Use Deprecated PList Keys</string>
+		<key>type</key>
+		<string>Nonconsumable</string>
+	</dict>
+	<dict>
+		<key>description</key>
+		<string>Auto Renewable 7 Days</string>
+		<key>familyIdentifier</key>
+		<string>com.anystonetech.ASTExampleStore</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.ASTExampleStore.7days2</string>
+		<key>familyQuantity</key>
+		<string>7Days</string>
+		<key>isHidden</key>
+		<string>NO</string>
+		<key>title</key>
+		<string>7 Day Subscription</string>
+		<key>productType</key>
+		<string>AutoRenewable</string>
+	</dict>
+	<dict>
+		<key>description</key>
+		<string>Auto Renewable 1 Month</string>
+		<key>familyIdentifier</key>
+		<string>com.anystonetech.ASTExampleStore</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.ASTExampleStore.1month</string>
+		<key>familyQuantity</key>
+		<string>1Month</string>
+		<key>isHidden</key>
+		<string>NO</string>
+		<key>title</key>
+		<string>1 Month Subscription</string>
+		<key>productType</key>
+		<string>AutoRenewable</string>
 	</dict>
 </array>
 </plist>

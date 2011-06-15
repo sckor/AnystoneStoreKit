@@ -318,7 +318,7 @@
                                    familyQuantity:(ASTStoreProductAutoRenewableType)aFamilyQuantity
 {
     return ( [self initWithProductIdentifier:aProductIdentifier 
-                                       type:ASTStoreProductIdentifierTypeConsumable 
+                                       type:ASTStoreProductIdentifierTypeAutoRenewable 
                            familyIdentifier:aFamilyIdentifier
                              familyQuantity:aFamilyQuantity] );
 }

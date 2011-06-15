@@ -480,6 +480,25 @@
     return ( [self.storeProductDictionary objectForKey:productIdentifier] );
 }
 
+- (ASTStoreProductData*)storeProductDataForIdentifier:(NSString*)productIdentifier
+{
+    // Attempt to get the product object for this - if that fails
+    // Then attempt to the product data object for transaction - 
+    ASTStoreProductData *productData = nil;    
+    ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
+    
+    if( nil != theProduct )
+    {
+        productData = theProduct.productData;
+    }
+    else
+    {
+        productData = [ASTStoreProductData storeProductDataFromProductIdentifier:productIdentifier];
+    }
+
+    return productData;
+}
+
 #pragma mark SKProductRequest and SKRequest Delegate Methods
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
@@ -489,7 +508,7 @@
     for( SKProduct *aProduct in response.products )
     {
         // Associate the SKProduct with the appropriate ASTStoreProduct
-        DLog(@"Associating valid data for %@", aProduct.productIdentifier);
+        DLog(@"Associating valid data for %@ : %@", aProduct.productIdentifier, aProduct);
         ASTStoreProduct *storeProduct = [self.storeProductDictionary objectForKey:aProduct.productIdentifier];
         storeProduct.skProduct = aProduct;
         storeProduct.isValid = YES;
@@ -578,17 +597,7 @@
 {
     // Attempt to get the product object for this - if that fails
     // Then attempt to the product data object for transaction - 
-    ASTStoreProductData *productData = nil;    
-    ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
-    
-    if( nil != theProduct )
-    {
-        productData = theProduct.productData;
-    }
-    else
-    {
-        productData = [ASTStoreProductData storeProductDataFromProductIdentifier:productIdentifier];
-    }
+    ASTStoreProductData *productData = [self storeProductDataForIdentifier:productIdentifier];    
     
     if( nil == productData )
     {
@@ -617,7 +626,11 @@
             
         case ASTStoreProductIdentifierTypeAutoRenewable:
         {
-            productData.receipt = [ASIHTTPRequest base64forData:receiptData];
+            if( nil != receiptData )
+            {
+                productData.receipt = [ASIHTTPRequest base64forData:receiptData];
+            }
+            
             break;
         }
             
@@ -645,7 +658,6 @@
         // TODO: Should keep it around and try verifying it later as an audit type function
     }
 
-    
     [self updatePurchaseFromProductIdentifier:productIdentifier receiptData:transaction.transactionReceipt];
             
     if( self.restoringPurchases )

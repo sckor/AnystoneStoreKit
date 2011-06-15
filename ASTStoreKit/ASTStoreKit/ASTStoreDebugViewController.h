@@ -33,8 +33,10 @@
     UITextField *urlTextField;
     UIButton *removeAllPurchaseDataButton;
     UISwitch *serverEnabledSwitch;
+    UITextField *sharedSecretTextField;
 }
 
+@property (nonatomic, retain) IBOutlet UITextField *sharedSecretTextField;
 @property (nonatomic, retain) IBOutlet UISwitch *serverEnabledSwitch;
 @property (nonatomic, retain) IBOutlet UITextField *urlTextField;
 @property (nonatomic, retain) IBOutlet UIButton *removeAllPurchaseDataButton;

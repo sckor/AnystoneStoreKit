@@ -29,6 +29,7 @@
 #import "ASTStoreController.h"
 
 #define kASTStoreViewControllerServerURLKey @"serverURL"
+#define kASTStoreViewControllerSharedSecretKey @"sharedSecret"
 #define kASTStoreViewControllerServerEnabledKey @"serverEnabled"
 
 @interface ASTStoreDebugViewController ()
@@ -38,6 +39,7 @@
 @end
 
 @implementation ASTStoreDebugViewController
+@synthesize sharedSecretTextField;
 @synthesize serverEnabledSwitch;
 @synthesize urlTextField;
 @synthesize removeAllPurchaseDataButton;
@@ -67,6 +69,16 @@
 - (void)setServerEnabled:(BOOL)serverEnabled
 {
     [[NSUserDefaults standardUserDefaults] setBool:serverEnabled forKey:kASTStoreViewControllerServerEnabledKey];
+}
+
+- (NSString*)sharedSecret
+{
+    return ( [[NSUserDefaults standardUserDefaults] stringForKey:kASTStoreViewControllerSharedSecretKey] );
+}
+
+- (void)setSharedSecret:(NSString*)sharedSecret
+{
+    [[NSUserDefaults standardUserDefaults] setObject:sharedSecret forKey:kASTStoreViewControllerSharedSecretKey];
 }
 
 #pragma mark Actions
@@ -103,23 +115,48 @@
 {
     BOOL didChange = NO;
     
-    if( [self.urlTextField.text length] == 0 )
+    if( [textField isEqual:self.urlTextField] )
     {
-        self.storeController.serverUrl = nil;
-        didChange = YES;
+        if( [self.urlTextField.text length] == 0 )
+        {
+            self.storeController.serverUrl = nil;
+            didChange = YES;
+        }
+        else if( NO == [self.urlTextField.text isEqualToString:[self.storeController.serverUrl absoluteString]] )
+        {
+            self.storeController.serverUrl = [NSURL URLWithString:self.urlTextField.text];
+            didChange = YES;
+        }
+        
+        if( didChange )
+        {
+            // Persist to NSUserDefaults
+            DLog(@"Setting URL to:%@", self.storeController.serverUrl);
+            [self setServerURL:self.storeController.serverUrl];
+        }
     }
-    else if( NO == [self.urlTextField.text isEqualToString:[self.storeController.serverUrl absoluteString]] )
+    else if( [textField isEqual:self.sharedSecretTextField] )
     {
-        self.storeController.serverUrl = [NSURL URLWithString:self.urlTextField.text];
-        didChange = YES;
+        if( [self.sharedSecretTextField.text length] == 0 )
+        {
+            self.storeController.sharedSecret = nil;
+            didChange = YES;
+        }
+        else if( NO == [self.sharedSecretTextField.text isEqualToString:self.sharedSecret] )
+        {
+            self.storeController.sharedSecret = self.sharedSecretTextField.text;
+            didChange = YES;
+        }
+
+        if( didChange )
+        {
+            // Persist to NSUserDefaults
+            DLog(@"Setting secret to:%@", self.storeController.sharedSecret);
+            [self setSharedSecret:self.storeController.sharedSecret];
+        }
     }
     
-    if( didChange )
-    {
-        // Persist to NSUserDefaults
-        DLog(@"Setting URL to:%@", self.storeController.serverUrl);
-        [self setServerURL:self.storeController.serverUrl];
-    }
+    
 }
 
 
@@ -128,6 +165,7 @@
     [urlTextField release];
     [removeAllPurchaseDataButton release];
     [serverEnabledSwitch release];
+    [sharedSecretTextField release];
     [super dealloc];
 }
 
@@ -160,6 +198,9 @@
     }
     
     self.urlTextField.text = [[self serverURL] absoluteString];
+    
+    self.storeController.sharedSecret = [self sharedSecret];
+    self.sharedSecretTextField.text = self.storeController.sharedSecret;
 }
 
 - (void)viewDidUnload
@@ -167,6 +208,7 @@
     [self setUrlTextField:nil];
     [self setRemoveAllPurchaseDataButton:nil];
     [self setServerEnabledSwitch:nil];
+    [self setSharedSecretTextField:nil];
     [super viewDidUnload];
 }
 

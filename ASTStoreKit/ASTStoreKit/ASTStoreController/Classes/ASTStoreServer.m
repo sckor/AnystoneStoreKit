@@ -242,17 +242,19 @@
     }
     
     NSURL *serviceURL = [[NSURL URLWithString:receiptServer] URLByAppendingPathComponent:receiptServicePath];
+    DLog(@"serviceURL:%@", serviceURL);
+    
     
     ASIHTTPRequest *serviceRequest = [ASIHTTPRequest requestWithURL:serviceURL];
     [ASIHTTPRequest setDefaultTimeOutSeconds:self.serverConnectionTimeout];
     
-    NSMutableDictionary *receiptDictionary = [NSDictionary dictionaryWithObjectsAndKeys:receiptBase64Data, @"receipt-data", nil];
+    NSMutableDictionary *receiptDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:receiptBase64Data, @"receipt-data", nil];
     
     if( nil != self.sharedSecret )
     {
         [receiptDictionary setObject:self.sharedSecret forKey:@"password"];
     }
-    
+        
     NSData *receiptAsJSONData = [receiptDictionary JSONData];
     
     [serviceRequest setPostBody:[receiptAsJSONData mutableCopy]];
@@ -295,6 +297,8 @@
         *latestReceiptBase64Data = [responseDict objectForKey:@"latest_receipt"];
     }
     
+    DLog(@"response:%@", responseDict);
+
     if( [status integerValue] == 0 )
     {
         // Passed
@@ -302,7 +306,6 @@
     }
     
     // Failed
-    DLog(@"response:%@", responseDict);
     return ( ASTStoreServerResultFail );
 }
 
