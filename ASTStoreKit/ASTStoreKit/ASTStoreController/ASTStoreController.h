@@ -307,6 +307,10 @@ typedef enum
 // Restore will invoke astStoreControllerProductIdentifierPurchased: for any restored purchases
 - (void)astStoreControllerProductIdentifierPurchased:(NSString*)productIdentifier;
 
+// Should implement this if you are using auto-renewable subscriptions.
+// This method will be invoked upon expiry of the subscription
+- (void)astStoreControllerFamilyIdentifierExpired:(NSString*)familyIdentifier;
+
 #pragma mark Purchase Related Delegate Methods
 // Invoked for actual purchase failures - may want to display a message to the user
 - (void)astStoreControllerProductIdentifierFailedPurchase:(NSString*)productIdentifier withError:(NSError*)error;

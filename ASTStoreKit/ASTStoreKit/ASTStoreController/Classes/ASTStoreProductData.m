@@ -57,6 +57,7 @@
 @synthesize familyData = familyData_;
 @dynamic availableQuantity;
 @dynamic receipt;
+@dynamic expiresDate;
 
 #pragma mark Private Class Methods
 + (NSString*)directoryForProductDataWithIdentifier:(NSString*)aProductIdentifier
@@ -300,6 +301,16 @@
 - (NSString*)receipt
 {
     return self.familyData.receipt;
+}
+
+- (void)setExpiresDate:(NSDate *)expiresDate
+{
+    self.familyData.expiresDate = expiresDate;
+}
+
+- (NSDate*)expiresDate
+{
+    return self.familyData.expiresDate;
 }
 
 //---------------------------------------------------------- 

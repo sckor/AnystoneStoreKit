@@ -211,7 +211,9 @@
 }
 
 #pragma mark Receipt Verification
-- (ASTStoreServerResult)verifyReceipt:(NSString*)receiptBase64Data latestReceiptBase64Data:(NSString**)latestReceiptBase64Data
+- (ASTStoreServerResult)verifyReceipt:(NSString*)receiptBase64Data 
+                           expiresDate:(NSDate**)expiresDate 
+              latestReceiptBase64Data:(NSString**)latestReceiptBase64Data
 {
     NSString *receiptServer = nil;
     NSString *receiptServicePath = nil;
@@ -231,14 +233,14 @@
     }
     else if(( nil != self.serverUrl ) && ( nil != self.sharedSecret ))
     {
-        DLog(@"WARNING: it is recommended that shared secrets not be embedded in the application and should be on server instead");
+        DLog(@"WARNING: It is recommended that shared secrets not be embedded in the application");
         receiptServer = [self.serverUrl absoluteString];
         receiptServicePath = self.serviceURLPathReceiptValidation;
     }
     else if(( nil == self.serverUrl ) && ( nil == self.sharedSecret ))
     {
         DLog(@"CANNOT VERIFY RECEIPT: need one of a server URL or a shared secret");
-        return ASTStoreServerResultInconclusive;
+        return ASTStoreServerResultFail;
     }
     
     NSURL *serviceURL = [[NSURL URLWithString:receiptServer] URLByAppendingPathComponent:receiptServicePath];
@@ -271,16 +273,22 @@
         return ( ASTStoreServerResultInconclusive );
     }
     
-    
     // Need to decode response.... JSON format...
+    
+    NSData *responseData = [serviceRequest responseData];
+    if( nil == responseData )
+    {
+        DLog(@"Did not receive any data for response");
+        return ( ASTStoreServerResultInconclusive );
+    }
+    
     JSONDecoder *decoder = [JSONDecoder decoder];
-    id responseObject = [decoder objectWithData:[serviceRequest responseData]];
+    id responseObject = [decoder objectWithData:responseData];
     
     if( ! [responseObject isKindOfClass:[NSDictionary class]] )
     {
-        // This should have been a dictionary; do nothing and assume it passed
         DLog(@"Unexpected class on decode from JSONKit: %@", NSStringFromClass([responseObject class]));
-        return ( ASTStoreServerResultInconclusive );
+        return ( ASTStoreServerResultFail );
     }
     
     NSDictionary *responseDict = responseObject;
@@ -289,23 +297,104 @@
     
     if( nil == status )
     {
-        return ( ASTStoreServerResultInconclusive );
+        return ( ASTStoreServerResultFail );
     }
     
-    if( nil != latestReceiptBase64Data )
+    NSInteger statusAsInt = [status integerValue];
+    
+    switch (statusAsInt) 
     {
-        *latestReceiptBase64Data = [responseDict objectForKey:@"latest_receipt"];
+        case 0: // valid subscription
+        {
+            *latestReceiptBase64Data = [responseDict objectForKey:@"latest_receipt"];
+            NSDictionary *latestReceiptInfoDict = [responseDict objectForKey:@"latest_receipt_info"];
+            
+            if( nil == latestReceiptInfoDict )
+            {
+                DLog(@"Could not find receipt info from JSON response");
+                return ( ASTStoreServerResultInconclusive );
+            }
+            
+            NSString *expiresString = [latestReceiptInfoDict objectForKey:@"expires_date"];
+            if( nil == expiresString )
+            {
+                DLog(@"Could not find expiry date info from JSON response");
+                return ( ASTStoreServerResultInconclusive );                
+            }
+            
+            NSTimeInterval expiryAsInterval = [expiresString doubleValue];
+            expiryAsInterval /= 1000; // convert from milliseconds to seconds
+            
+            NSDate *expiryAsDate = [NSDate dateWithTimeIntervalSince1970:expiryAsInterval];
+            
+            DLog(@"Subscription Active date:%@", expiryAsDate);
+            *expiresDate = expiryAsDate;
+            
+            return ASTStoreServerResultPass;
+            break;
+        }
+            
+        case 21006:
+        {
+            DLog(@"This receipt is valid but the subscription has expired.");
+            
+            NSDictionary *latestReceiptInfoDict = [responseDict objectForKey:@"latest_expired_receipt_info"];
+            
+            if( nil == latestReceiptInfoDict )
+            {
+                DLog(@"Could not find receipt info from JSON response");
+                // In this case return fail since we know the subscription has expired
+                // So there is no point in giving the benefit of the doubt
+                return ( ASTStoreServerResultFail );
+            }
+            
+            NSString *expiresString = [latestReceiptInfoDict objectForKey:@"expires_date"];
+            NSDate *expiryAsDate = nil;
+            if( nil != expiresString )
+            {
+                NSTimeInterval expiryAsInterval = [expiresString doubleValue];
+                expiryAsInterval /= 1000; // convert from milliseconds to seconds
+                
+                expiryAsDate = [NSDate dateWithTimeIntervalSince1970:expiryAsInterval];
+            }
+            
+            DLog(@"Subscription Expired Date:%@", expiryAsDate);
+            
+            *expiresDate = expiryAsDate;
+
+            return ASTStoreServerResultPass;
+            break;
+        }
+            
+        case 21005:
+            DLog(@"The receipt server is not currently available.");
+            return ASTStoreServerResultInconclusive;
+            break;
+            
+        case 21000: 
+            DLog(@"The App Store could not read the JSON object you provided.");
+            break;
+            
+        case 21002:
+            DLog(@"The data in the receipt-data property was malformed.");
+            break;
+            
+        case 21003:
+            DLog(@"The receipt could not be authenticated.");
+            break;
+            
+        case 21004:
+            DLog(@"The shared secret you provided does not match the shared secret on file for your account.");
+            break;
+            
+        default:
+            DLog(@"Unexpected status:%d", statusAsInt);
+            break;
     }
+
     
     DLog(@"response:%@", responseDict);
 
-    if( [status integerValue] == 0 )
-    {
-        // Passed
-        return ( ASTStoreServerResultPass );
-    }
-    
-    // Failed
     return ( ASTStoreServerResultFail );
 }
 
@@ -315,11 +404,14 @@
     
     dispatch_async(globalQueue, ^{
         NSString *latestReceipt = nil;
+        NSDate *expiresDate = nil;
         
-        ASTStoreServerResult result = [self verifyReceipt:receiptBase64Data latestReceiptBase64Data:&latestReceipt];
+        ASTStoreServerResult result = [self verifyReceipt:receiptBase64Data 
+                                               expiresDate:&expiresDate 
+                                  latestReceiptBase64Data:&latestReceipt];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            completionBlock(receiptBase64Data, latestReceipt, result);
+            completionBlock(receiptBase64Data, expiresDate, latestReceipt, result);
         });
     });
 

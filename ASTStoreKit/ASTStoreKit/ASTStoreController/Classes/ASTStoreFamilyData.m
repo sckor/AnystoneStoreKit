@@ -34,6 +34,7 @@
 #define k_PURCHASED_QUANTITY 						@"purchasedQuantity"
 #define k_TYPE                                      @"type"
 #define k_RECEIPT 						@"receipt"
+#define k_EXPIRES_DATE 						@"expiresDate"
 
 
 @interface ASTStoreFamilyData()
@@ -52,6 +53,7 @@
 @synthesize familyDataPath = familyDataPath_;
 @synthesize type = type_;
 @synthesize receipt = receipt_;
+@synthesize expiresDate = expiresDate_;
 
 #pragma mark private class methods
 + (NSMutableDictionary*)familyDataDictionary
@@ -266,6 +268,25 @@
 #pragma mark Synthesizer Override
 - (BOOL)isPurchased
 {
+    if( self.type == ASTStoreProductIdentifierTypeAutoRenewable )
+    {
+        if( nil == self.expiresDate )
+        {
+            return NO;
+        }
+        
+        NSDate *now = [NSDate date];
+        
+        DLog(@"now:%@ expires:%@", now, self.expiresDate );
+        
+        if( NSOrderedAscending == [self.expiresDate compare:now] )
+        {
+            return NO;
+        }
+        
+        return YES;
+    }
+    
     NSUInteger quantity = self.availableQuantity;
     
     if(( quantity > 0 ) && ( self.type != ASTStoreProductIdentifierTypeConsumable ))
@@ -330,24 +351,28 @@
 
 - (void)setReceipt:(NSString *)receipt
 {
-    if( receipt_ == receipt )
-    {
-        return;
-    }
-    
-    if( nil != receipt_ )
+    if( receipt_ != receipt )
     {
         [receipt_ release];
-        receipt_ = nil;
-    }
-    
-    if( nil != receipt )
-    {
-        receipt_ = [receipt copy];        
-    }
-    
-    [self save];
+        receipt_ = [receipt copy];
+        
+        [self save];
+    }    
 }
+
+
+- (void)setExpiresDate:(NSDate *)anExpiresDate
+{
+    if (expiresDate_ != anExpiresDate)
+    {
+        [anExpiresDate retain];
+        [expiresDate_ release];
+        expiresDate_ = anExpiresDate;
+        
+        [self save];
+    }
+}
+
 
 - (NSMutableDictionary*)familyDataDictionary
 {
@@ -384,6 +409,8 @@
     [encoder encodeInteger:self.availableQuantity forKey:k_PURCHASED_QUANTITY];
     [encoder encodeInteger:self.type forKey:k_TYPE];
     [encoder encodeObject:self.receipt forKey:k_RECEIPT];
+    [encoder encodeObject: self.expiresDate forKey: k_EXPIRES_DATE];
+
 }
 
 - (id)initWithCoder:(NSCoder *)decoder 
@@ -396,7 +423,9 @@
         availableQuantity_ = [decoder decodeIntegerForKey:k_PURCHASED_QUANTITY];
         type_ = [decoder decodeIntegerForKey:k_TYPE];
         receipt_ = [[decoder decodeObjectForKey:k_RECEIPT] copy];
+        expiresDate_ = [[decoder decodeObjectForKey: k_EXPIRES_DATE] retain];
     }
+    
     return self;
 }
 
@@ -407,7 +436,8 @@
     [theCopy setFamilyIdentifier: [[self.familyIdentifier copy] autorelease]];
     [theCopy setAvailableQuantity: self.availableQuantity];
     [theCopy setType:self.type];
-    [theCopy setReceipt: [[self.receipt copy] autorelease]];
+    [theCopy setReceipt:[[self.receipt copy] autorelease]];
+    [theCopy setExpiresDate:[[self.expiresDate copy] autorelease]];
 
     return theCopy;
 }
@@ -446,6 +476,7 @@
     familyDataPath_ = nil;
     
     [receipt_ release], receipt_ = nil;
+    [expiresDate_ release], expiresDate_ = nil;
     
     [super dealloc];
 }

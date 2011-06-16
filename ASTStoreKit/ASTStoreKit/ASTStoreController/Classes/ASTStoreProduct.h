@@ -58,6 +58,7 @@
                                familyQuantity:(ASTStoreProductAutoRenewableType)aFamilyQuantity;
 
 @property (readonly) BOOL isPurchased;
+@property (nonatomic,readonly,retain) NSDate *expiresDate;
 @property (readonly) NSUInteger availableQuantity;
 - (NSUInteger)consumeQuantity:(NSUInteger)amountToConsume;
 

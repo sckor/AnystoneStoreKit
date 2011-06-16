@@ -50,9 +50,14 @@ typedef enum
 
 #pragma mark Verify Related Methods
 
-- (ASTStoreServerResult)verifyReceipt:(NSString*)receiptBase64Data latestReceiptBase64Data:(NSString**)latestReceiptBase64Data;
+- (ASTStoreServerResult)verifyReceipt:(NSString*)receiptBase64Data 
+                           expiresDate:(NSDate**)expiresDate 
+              latestReceiptBase64Data:(NSString**)latestReceiptBase64Data;
 
-typedef void (^ASTVerifyReceiptBlock)(NSString* receiptBase64Data, NSString *latestReceiptBase64Data, ASTStoreServerResult result);
+typedef void (^ASTVerifyReceiptBlock)(NSString* receiptBase64Data, 
+                                      NSDate *expiresDate, 
+                                      NSString *latestReceiptBase64Data, 
+                                      ASTStoreServerResult result);
 
 - (void)asyncVerifyReceipt:(NSString*)receiptBase64Data withCompletionBlock:(ASTVerifyReceiptBlock)completionBlock;
 

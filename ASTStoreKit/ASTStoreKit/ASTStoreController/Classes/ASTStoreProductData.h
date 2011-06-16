@@ -90,4 +90,6 @@
 // Base64 encoded receipt data
 @property (copy) NSString *receipt;
 
+@property (nonatomic,retain) NSDate *expiresDate;
+
 @end

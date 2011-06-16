@@ -39,6 +39,7 @@
 @synthesize description = description_;
 @synthesize productData = productData_;
 @synthesize isFree = isFree_;
+@dynamic expiresDate;
 
 #pragma mark Class Methods
 
@@ -182,6 +183,11 @@
 - (void)setPurchasedQuantity:(NSUInteger)totalQuantityAvailable
 {
     self.productData.availableQuantity = totalQuantityAvailable;
+}
+
+- (NSDate*)expiresDate
+{
+    return ( self.productData.expiresDate );
 }
 
 #pragma mark SKProduct related properties
