@@ -27,7 +27,6 @@
 
 #import "ASTStoreProductData.h"
 #import "ASTStoreProductTypes.h"
-#import "ASTStoreFamilyData.h"
 
 #define k_PRODUCT_IDENTIFIER 						@"productIdentifier"
 #define k_TYPE                                      @"type"
@@ -38,7 +37,6 @@
 
 - (void)save;
 @property (nonatomic, copy) NSString *productDataPath;
-@property (readonly, retain) ASTStoreFamilyData *familyData;
 
 @property (nonatomic,copy) NSString *productIdentifier;
 @property ASTStoreProductIdentifierType type;
@@ -334,6 +332,9 @@
         self.type = [decoder decodeIntegerForKey:k_TYPE];
         self.familyIdentifier = [decoder decodeObjectForKey:k_FAMILY_IDENTIFIER];
         self.familyQuanity = [decoder decodeIntegerForKey:k_FAMILY_QUANITY];
+        
+        familyData_ = [ASTStoreFamilyData familyDataWithIdentifier:familyIdentifier_ productType:type_];
+        [familyData_ retain];
     }
     return self;
 }
@@ -377,6 +378,9 @@
     
     familyQuanity_= aFamilyQuantity;
     
+    familyData_ = [ASTStoreFamilyData familyDataWithIdentifier:familyIdentifier_ productType:type_];
+    [familyData_ retain];
+
     [self save];
     
     return self;

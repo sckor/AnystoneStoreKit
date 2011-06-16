@@ -27,6 +27,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ASTStoreProductTypes.h"
+#import "ASTStoreFamilyData.h"
 
 @interface ASTStoreProductData : NSObject <NSCoding, NSCopying> {}
 
@@ -86,6 +87,8 @@
 @property (readonly) BOOL isPurchased;
 
 - (NSUInteger)consumeQuantity:(NSUInteger)amountToConsume;
+
+@property (readonly, retain) ASTStoreFamilyData *familyData;
 
 // Base64 encoded receipt data
 @property (copy) NSString *receipt;

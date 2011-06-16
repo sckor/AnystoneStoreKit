@@ -225,16 +225,24 @@ typedef enum
 
 // Nonconsumable - YES means purchased, NO means not
 // Consumable - Always returns NO, since it can be purchased again; check quantity
+// AutoRenewable - YES means active subscription, NO means subscription expired
 - (BOOL)isProductPurchased:(NSString*)productIdentifier;
 
 // Nonconsumable - Should always report 1 if purchased, 0 if not
 // Consumable - Number of items available in the family associated with the product id
+// AutoRenewable - Does not apply - will return 0
 - (NSUInteger)availableQuantityForProduct:(NSString*)productIdentifier;
+
+// Nonconsumable - N/A - returns nil
+// Consumable - N/A - returns nil
+// AutoRenewable - Returns expiry date (may be expired) or nil (which means sub not active or has expired)
+- (NSDate*)expiryDateForProduct:(NSString*)productIdentifier;
 
 #pragma mark Consuming Purchases
 // Consumable - returns number of items consumed; if amountToConsume is > available then
 //              it will consume up to the amount available and return the amount actually consumed
 // Nonconsumable - does nothing, returns 0
+// AutoRenewable - does nothing, returns 0
 - (NSUInteger)consumeProduct:(NSString*)productIdentifier quantity:(NSUInteger)amountToConsume;
 
 
@@ -309,7 +317,7 @@ typedef enum
 
 // Should implement this if you are using auto-renewable subscriptions.
 // This method will be invoked upon expiry of the subscription
-- (void)astStoreControllerFamilyIdentifierExpired:(NSString*)familyIdentifier;
+- (void)astStoreControllerProductIdentifierExpired:(NSString*)productIdentifier;
 
 #pragma mark Purchase Related Delegate Methods
 // Invoked for actual purchase failures - may want to display a message to the user

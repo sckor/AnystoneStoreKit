@@ -40,6 +40,7 @@
 
 #define kASTStoreConfigServiceURLPaths @"serviceURLPaths"
 #define kASTStoreConfigServiceURLReceiptValidationKey @"receiptValidation"
+#define kASTStoreConfigServiceURLSubscriptionValidationKey @"subscriptionValidation"
 #define kASTStoreConfigServiceURLPromoCodeValidationKey @"promoCodeValidation"
 #define kASTStoreConfigServiceURLProductQueryKey @"productQuery"
 #define kASTStoreConfigServiceURLProductListKey @"productList"

@@ -28,6 +28,14 @@
 #import <Foundation/Foundation.h>
 #import "ASTStoreProductTypes.h"
 
+@class ASTStoreFamilyData;
+
+@protocol ASTStoreFamilyDataExpiryProtocol <NSObject>
+
+- (void)astFamilyDataVerifySubscriptionForFamilyData:(ASTStoreFamilyData*)familyData;
+
+@end
+
 
 @interface ASTStoreFamilyData : NSObject <NSCoding, NSCopying> {}
 
@@ -39,6 +47,8 @@
 
 + (void)removeFamilyDataForIdentifier:(NSString*)aFamilyIdentifier;
 - (id)initWithFamilyIdentifier:(NSString*)aFamilyIdentifier;
+
++ (void)setFamilyDataDelegate:(id<ASTStoreFamilyDataExpiryProtocol>)delegate;
 
 @property (nonatomic) NSUInteger availableQuantity;
 @property (readonly,copy) NSString *familyIdentifier;
@@ -53,4 +63,5 @@
 
 // Expiry Date for a subscription - if nil then subscription is not active
 @property (nonatomic,retain) NSDate *expiresDate;
+
 @end

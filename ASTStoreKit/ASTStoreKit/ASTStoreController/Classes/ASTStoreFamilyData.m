@@ -36,6 +36,7 @@
 #define k_RECEIPT 						@"receipt"
 #define k_EXPIRES_DATE 						@"expiresDate"
 
+static id<ASTStoreFamilyDataExpiryProtocol> astFamilyDataDelegate = nil;
 
 @interface ASTStoreFamilyData()
 
@@ -43,6 +44,7 @@
 
 @property (nonatomic, copy) NSString *familyDataPath;
 @property (copy) NSString *familyIdentifier;
+@property (nonatomic,retain) NSTimer *expiryDateTimer;
 
 @end
 
@@ -54,6 +56,7 @@
 @synthesize type = type_;
 @synthesize receipt = receipt_;
 @synthesize expiresDate = expiresDate_;
+@synthesize expiryDateTimer = expiryDateTimer_;
 
 #pragma mark private class methods
 + (NSMutableDictionary*)familyDataDictionary
@@ -64,6 +67,11 @@
     dispatch_once(&pred, ^{ familyDataDictionary_ = [[NSMutableDictionary alloc] init]; });
     
     return ( familyDataDictionary_ );
+}
+
++ (void)setFamilyDataDelegate:(id<ASTStoreFamilyDataExpiryProtocol>)delegate
+{
+    astFamilyDataDelegate = delegate;
 }
 
 
@@ -265,6 +273,21 @@
 
 }
 
+#pragma mark Private Methods
+
+- (void)invokeDelegateAstFamilyDataVerifySubscriptionForFamilyData:(ASTStoreFamilyData*)familyData
+{
+    if (astFamilyDataDelegate && [astFamilyDataDelegate respondsToSelector:@selector(astFamilyDataVerifySubscriptionForFamilyData:)])
+    {
+        [astFamilyDataDelegate astFamilyDataVerifySubscriptionForFamilyData:familyData];
+    }
+}
+
+- (void)familyDataVerifySubscriptionTimerInvoked:(NSTimer*)timer
+{
+    [self invokeDelegateAstFamilyDataVerifySubscriptionForFamilyData:self];
+}
+
 #pragma mark Synthesizer Override
 - (BOOL)isPurchased
 {
@@ -276,10 +299,18 @@
         }
         
         NSDate *now = [NSDate date];
+        NSDate *expDate = self.expiresDate;
         
-        DLog(@"now:%@ expires:%@", now, self.expiresDate );
+        if( self.expiryDateTimer )
+        {
+            // Take into account grace period - this gives a chance for a timer to
+            // run and pull latest status to catch any auto renewals that may have happened
+            expDate = [self.expiryDateTimer fireDate];
+        }
         
-        if( NSOrderedAscending == [self.expiresDate compare:now] )
+        DLog(@"now:%@ expires:%@ grace:%@", now, self.expiresDate, expDate );
+        
+        if( NSOrderedDescending == [now compare:expDate] )
         {
             return NO;
         }
@@ -369,14 +400,49 @@
         [expiresDate_ release];
         expiresDate_ = anExpiresDate;
         
+        if( nil != expiresDate_ )
+        {
+            NSDate *now = [NSDate date];
+
+            if( NSOrderedAscending == [now compare:expiresDate_] )
+            {
+                // expiresDate is in the future - create a timer to
+                // fire off when that time passes + a bit of a 
+                // grace period
+                NSTimeInterval expireInterval = 
+                [expiresDate_ timeIntervalSinceReferenceDate] - [now timeIntervalSinceReferenceDate];
+                
+                expireInterval += ASTStoreRenewalGracePeriodInSeconds;
+                
+                self.expiryDateTimer = [NSTimer scheduledTimerWithTimeInterval:expireInterval 
+                                                                        target:self 
+                                                                      selector:@selector(familyDataVerifySubscriptionTimerInvoked:)
+                                                                      userInfo:nil 
+                                                                       repeats:NO];
+                DLog(@"set expiry timer for: %f", expireInterval);
+            }
+
+        }
+        
         [self save];
     }
 }
 
-
 - (NSMutableDictionary*)familyDataDictionary
 {
     return [ASTStoreFamilyData familyDataDictionary];
+}
+
+- (void)setExpiryDateTimer:(NSTimer *)expiryDateTimer
+{
+    if( nil != expiryDateTimer_ )
+    {
+        [expiryDateTimer_ invalidate];
+        [expiryDateTimer_ release];
+        expiryDateTimer_ = nil;
+    }
+    
+    expiryDateTimer_ = [expiryDateTimer retain];
 }
 
 #pragma mark Private Methods
@@ -423,7 +489,9 @@
         availableQuantity_ = [decoder decodeIntegerForKey:k_PURCHASED_QUANTITY];
         type_ = [decoder decodeIntegerForKey:k_TYPE];
         receipt_ = [[decoder decodeObjectForKey:k_RECEIPT] copy];
-        expiresDate_ = [[decoder decodeObjectForKey: k_EXPIRES_DATE] retain];
+        
+        // use the accessor so it will set any timers as necessary
+        self.expiresDate = [decoder decodeObjectForKey: k_EXPIRES_DATE];
     }
     
     return self;
@@ -478,6 +546,13 @@
     [receipt_ release], receipt_ = nil;
     [expiresDate_ release], expiresDate_ = nil;
     
+    if( nil != expiryDateTimer_ )
+    {
+        [expiryDateTimer_ invalidate];
+        [expiryDateTimer_ release];
+        expiryDateTimer_ = nil;
+    }
+        
     [super dealloc];
 }
 

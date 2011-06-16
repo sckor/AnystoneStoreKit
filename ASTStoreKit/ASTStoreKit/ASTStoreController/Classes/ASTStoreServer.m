@@ -35,6 +35,7 @@
 #define kDefaultServiceURLPromoCodeValidation @"service/purchase/validate"
 #define kDefaultServiceURLProductQuery @"service/product/query"
 #define kDefaultServiceURLProductList @"service/product/list"
+#define kDefaultServiceURLSubscriptionValidation @"service/subscription/validate"
 
 @interface ASTStoreServer ()
 
@@ -44,6 +45,7 @@
 @property (nonatomic, copy) NSString *serviceURLPathPromoCodeValidation;
 @property (nonatomic, copy) NSString *serviceURLPathProductQuery;
 @property (nonatomic, copy) NSString *serviceURLPathProductList;
+@property (nonatomic, copy) NSString *serviceURLPathSubscriptionValidation;
 
 @end
 
@@ -62,6 +64,7 @@
 @synthesize serviceURLPathProductQuery = serviceURLPathProductQuery_;
 @synthesize serviceURLPathProductList = serviceURLPathProductList_;
 @synthesize serviceURLPaths = serviceURLPaths_;
+@synthesize serviceURLPathSubscriptionValidation = serviceURLPathSubscriptionValidation_;
 @synthesize sharedSecret = sharedSecret_;
 
 #pragma mark private methods
@@ -210,8 +213,34 @@
     ASTReturnRA( serviceURLPathReceiptValidation_ );    
 }
 
+- (NSString*)serviceURLPathSubscriptionValidation
+{
+    if( nil != serviceURLPathSubscriptionValidation_ )
+    {
+        ASTReturnRA( serviceURLPathSubscriptionValidation_ );
+    }
+    
+    // Default to the default by default - ha ha!
+    NSString *servicePath = kDefaultServiceURLSubscriptionValidation;
+    
+    // See if a dictionary has been set for the service URL paths
+    if( nil != self.serviceURLPaths )
+    {
+        NSString *tmpPath = [self.serviceURLPaths objectForKey:kASTStoreConfigServiceURLSubscriptionValidationKey];
+        if( nil != tmpPath )
+        {
+            // A value was set in the dictionary so use that instead
+            servicePath = tmpPath;
+        }
+    }
+    
+    self.serviceURLPathSubscriptionValidation = servicePath;
+    
+    ASTReturnRA( serviceURLPathSubscriptionValidation_ );    
+}
+
 #pragma mark Receipt Verification
-- (ASTStoreServerResult)verifyReceipt:(NSString*)receiptBase64Data 
+- (ASTStoreServerResult)verifySubscriptionReceipt:(NSString*)receiptBase64Data 
                            expiresDate:(NSDate**)expiresDate 
               latestReceiptBase64Data:(NSString**)latestReceiptBase64Data
 {
@@ -235,7 +264,7 @@
     {
         DLog(@"WARNING: It is recommended that shared secrets not be embedded in the application");
         receiptServer = [self.serverUrl absoluteString];
-        receiptServicePath = self.serviceURLPathReceiptValidation;
+        receiptServicePath = self.serviceURLPathSubscriptionValidation;
     }
     else if(( nil == self.serverUrl ) && ( nil == self.sharedSecret ))
     {
@@ -398,7 +427,7 @@
     return ( ASTStoreServerResultFail );
 }
 
-- (void)asyncVerifyReceipt:(NSString*)receiptBase64Data withCompletionBlock:(ASTVerifyReceiptBlock)completionBlock
+- (void)asyncVerifySubscriptionReceipt:(NSString*)receiptBase64Data withCompletionBlock:(ASTVerifySubscriptionBlock)completionBlock
 {
     dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     
@@ -406,7 +435,7 @@
         NSString *latestReceipt = nil;
         NSDate *expiresDate = nil;
         
-        ASTStoreServerResult result = [self verifyReceipt:receiptBase64Data 
+        ASTStoreServerResult result = [self verifySubscriptionReceipt:receiptBase64Data 
                                                expiresDate:&expiresDate 
                                   latestReceiptBase64Data:&latestReceipt];
         

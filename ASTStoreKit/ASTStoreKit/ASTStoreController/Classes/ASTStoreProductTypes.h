@@ -34,9 +34,11 @@ typedef enum
 } ASTStoreProductIdentifierType;
 
 
-#ifdef DEBUG
+#ifndef DEBUG
 
-#define ASTStoreProductSecondsInDay (60 * 60 * 24 )
+// Production server values
+#define ASTStoreProductSecondsInDay ( 60 * 60 * 24 )
+#define ASTStoreRenewalGracePeriodInSeconds (60 * 5) // 5 minutes
 
 typedef enum
 {
@@ -52,9 +54,10 @@ typedef enum
 
 #else
 
+// Debug/Sandbox values
 #define ASTStoreProductSecondsInMinute 60
+#define ASTStoreRenewalGracePeriodInSeconds 10
 
-// Setup values for use with Sandbox
 typedef enum
 {
     ASTStoreProductAutoRenewableTypeInvalid = 0,

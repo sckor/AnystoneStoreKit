@@ -247,6 +247,12 @@
     
 }
 
+- (void)astStoreControllerProductIdentifierExpired:(NSString*)productIdentifier
+{
+    DLog(@"product identifier expired:%@", productIdentifier);
+    [self.tableView reloadData];
+}
+
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex 
 {
     switch ([alertView tag]) {
