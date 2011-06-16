@@ -50,6 +50,8 @@
     
     storeConfig.productPlistFile = [plistDictionary objectForKey:kASTStoreConfigProductPlistFileKey];
     
+    storeConfig.sharedSecret = [plistDictionary objectForKey:kASTStoreConfigSharedSecretKey];
+    
     aNumber = [plistDictionary objectForKey:kASTStoreConfigRetryStoreConnectionIntervalKey];
     if( nil == aNumber )
     {

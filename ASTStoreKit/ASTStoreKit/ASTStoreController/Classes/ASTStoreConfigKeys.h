@@ -33,11 +33,14 @@
 #define kASTStoreConfigServerConnectionTimeoutKey @"serverConnectionTimeout"
 #define kASTStoreConfigVendorUUIDKey @"vendorUuid"
 #define kASTStoreConfigVerifyReceiptsKey @"verifyReceipts"
+#define kASTStoreConfigSharedSecretKey @"sharedSecret"
 #define kASTStoreConfigServerPromoCodesEnabledKey @"serverPromoCodesEnabled"
 #define kASTStoreConfigServerConsumablesEnabledKey @"serverConsumablesEnabled"
 
+
 #define kASTStoreConfigServiceURLPaths @"serviceURLPaths"
 #define kASTStoreConfigServiceURLReceiptValidationKey @"receiptValidation"
+#define kASTStoreConfigServiceURLSubscriptionValidationKey @"subscriptionValidation"
 #define kASTStoreConfigServiceURLPromoCodeValidationKey @"promoCodeValidation"
 #define kASTStoreConfigServiceURLProductQueryKey @"productQuery"
 #define kASTStoreConfigServiceURLProductListKey @"productList"

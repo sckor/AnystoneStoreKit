@@ -33,15 +33,41 @@ typedef enum
     ASTStoreProductIdentifierTypeAutoRenewable
 } ASTStoreProductIdentifierType;
 
+
+#ifndef DEBUG
+
+// Production server values
+#define ASTStoreProductSecondsInDay ( 60 * 60 * 24 )
+#define ASTStoreRenewalGracePeriodInSeconds (60 * 5) // 5 minutes
+
 typedef enum
 {
-    ASTStoreProductAutoRenewableTypeInvalid,
-    ASTStoreProductAutoRenewableType7Days,
-    ASTStoreProductAutoRenewableType1Month,
-    ASTStoreProductAutoRenewableType2Months,
-    ASTStoreProductAutoRenewableType3Months,
-    ASTStoreProductAutoRenewableType6Months,
-    ASTStoreProductAutoRenewableType1Year,
+    ASTStoreProductAutoRenewableTypeInvalid = 0,
+    ASTStoreProductAutoRenewableType7Days = 7 * ASTStoreProductSecondsInDay,
+    ASTStoreProductAutoRenewableType1Month = 30 * ASTStoreProductSecondsInDay,
+    ASTStoreProductAutoRenewableType2Months = 61 * ASTStoreProductSecondsInDay,
+    ASTStoreProductAutoRenewableType3Months = 91 * ASTStoreProductSecondsInDay,
+    ASTStoreProductAutoRenewableType6Months = 182 * ASTStoreProductSecondsInDay,
+    ASTStoreProductAutoRenewableType1Year = 365 * ASTStoreProductSecondsInDay,
     ASTStoreProductAutoRenewableTypeMaximum
 } ASTStoreProductAutoRenewableType;
 
+#else
+
+// Debug/Sandbox values
+#define ASTStoreProductSecondsInMinute 60
+#define ASTStoreRenewalGracePeriodInSeconds 10
+
+typedef enum
+{
+    ASTStoreProductAutoRenewableTypeInvalid = 0,
+    ASTStoreProductAutoRenewableType7Days = 3 * ASTStoreProductSecondsInMinute,
+    ASTStoreProductAutoRenewableType1Month = 5 * ASTStoreProductSecondsInMinute,
+    ASTStoreProductAutoRenewableType2Months = 10 * ASTStoreProductSecondsInMinute,
+    ASTStoreProductAutoRenewableType3Months = 15 * ASTStoreProductSecondsInMinute,
+    ASTStoreProductAutoRenewableType6Months = 30 * ASTStoreProductSecondsInMinute,
+    ASTStoreProductAutoRenewableType1Year = 60 * ASTStoreProductSecondsInMinute,
+    ASTStoreProductAutoRenewableTypeMaximum
+} ASTStoreProductAutoRenewableType;
+
+#endif

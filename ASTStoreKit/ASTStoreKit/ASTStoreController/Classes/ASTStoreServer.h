@@ -46,17 +46,30 @@ typedef enum
 @property (copy) NSString *vendorUuid;
 @property  NSTimeInterval serverConnectionTimeout;
 @property (copy) NSDictionary *serviceURLPaths;
-
+@property (copy) NSString *sharedSecret;
 
 #pragma mark Verify Related Methods
+
+- (ASTStoreServerResult)verifySubscriptionReceipt:(NSString*)receiptBase64Data 
+                           expiresDate:(NSDate**)expiresDate 
+              latestReceiptBase64Data:(NSString**)latestReceiptBase64Data;
+
+typedef void (^ASTVerifySubscriptionBlock)(NSString* receiptBase64Data, 
+                                      NSDate *expiresDate, 
+                                      NSString *latestReceiptBase64Data, 
+                                      ASTStoreServerResult result);
+
+- (void)asyncVerifySubscriptionReceipt:(NSString*)receiptBase64Data withCompletionBlock:(ASTVerifySubscriptionBlock)completionBlock;
+
+
 - (ASTStoreServerResult)verifyTransaction:(SKPaymentTransaction*)transaction; 
 
 
-typedef void (^ASTVerifyReceiptBlock)(SKPaymentTransaction* transaction,
+typedef void (^ASTVerifyTransactionBlock)(SKPaymentTransaction* transaction,
                                       ASTStoreServerResult result);
 
 - (void)asyncVerifyTransaction:(SKPaymentTransaction*)transaction
-           withCompletionBlock:(ASTVerifyReceiptBlock)completionBlock;
+           withCompletionBlock:(ASTVerifyTransactionBlock)completionBlock;
 
 #pragma mark In App Promo Related Methods
 

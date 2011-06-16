@@ -27,19 +27,16 @@
 
 #import "ASTStoreProductData.h"
 #import "ASTStoreProductTypes.h"
-#import "ASTStoreFamilyData.h"
 
 #define k_PRODUCT_IDENTIFIER 						@"productIdentifier"
 #define k_TYPE                                      @"type"
 #define k_FAMILY_IDENTIFIER 						@"familyIdentifier"
 #define k_FAMILY_QUANITY                            @"familyQuanity"
 
-
 @interface ASTStoreProductData ()
 
 - (void)save;
 @property (nonatomic, copy) NSString *productDataPath;
-@property (readonly, retain) ASTStoreFamilyData *familyData;
 
 @property (nonatomic,copy) NSString *productIdentifier;
 @property ASTStoreProductIdentifierType type;
@@ -54,9 +51,11 @@
 @synthesize type = type_;
 @synthesize familyIdentifier = familyIdentifier_;
 @synthesize familyQuanity = familyQuanity_;
-@synthesize availableQuantity = availableQuantity_;
 @synthesize productDataPath = productDataPath_;
 @synthesize familyData = familyData_;
+@dynamic availableQuantity;
+@dynamic receipt;
+@dynamic expiresDate;
 
 #pragma mark Private Class Methods
 + (NSString*)directoryForProductDataWithIdentifier:(NSString*)aProductIdentifier
@@ -192,13 +191,9 @@
             break;
             
         case ASTStoreProductIdentifierTypeAutoRenewable:
-#ifdef AUTORENEW_SUPPORTED
             return ( [ASTStoreProductData autoRenewableStoreProductWithIdentifier:aProductIdentifier
                                                              familyIdentifier:aFamilyIdentifier
                                                                familyQuantity:aFamilyQuantity] );
-#else
-            DLog(@"Renewable type not supported yet");
-#endif
         default:
             break;
     }
@@ -220,11 +215,7 @@
     
     if( aType == ASTStoreProductIdentifierTypeAutoRenewable )
     {
-#ifdef AUTORENEW_SUPPORTED
         return YES;
-#else
-        DLog(@"Renewable type not supported yet");
-#endif
     }
     
     return NO;
@@ -273,6 +264,7 @@
     
     return ( familyData_ );
 }
+
 - (void)setFamilyQuanity:(NSUInteger)familyQuanity
 {
     familyQuanity_ = familyQuanity;
@@ -299,6 +291,26 @@
     return [self.familyData consumeQuantity:amountToConsume];
 }
 
+- (void)setReceipt:(NSString *)receipt
+{
+    self.familyData.receipt = receipt;
+}
+
+- (NSString*)receipt
+{
+    return self.familyData.receipt;
+}
+
+- (void)setExpiresDate:(NSDate *)expiresDate
+{
+    self.familyData.expiresDate = expiresDate;
+}
+
+- (NSDate*)expiresDate
+{
+    return self.familyData.expiresDate;
+}
+
 //---------------------------------------------------------- 
 //  Keyed Archiving
 //
@@ -311,7 +323,7 @@
     [encoder encodeInteger:self.familyQuanity forKey:k_FAMILY_QUANITY];
 }
 
-- (id) initWithCoder: (NSCoder *)decoder 
+- (id) initWithCoder:(NSCoder *)decoder 
 {
     self = [super init];
     if (self)
@@ -320,6 +332,9 @@
         self.type = [decoder decodeIntegerForKey:k_TYPE];
         self.familyIdentifier = [decoder decodeObjectForKey:k_FAMILY_IDENTIFIER];
         self.familyQuanity = [decoder decodeIntegerForKey:k_FAMILY_QUANITY];
+        
+        familyData_ = [ASTStoreFamilyData familyDataWithIdentifier:familyIdentifier_ productType:type_];
+        [familyData_ retain];
     }
     return self;
 }
@@ -332,7 +347,7 @@
     [theCopy setType:self.type];
     [theCopy setFamilyIdentifier:[[self.familyIdentifier copy] autorelease]];
     [theCopy setFamilyQuanity:self.familyQuanity];
-    
+
     return theCopy;
 }
 
@@ -363,6 +378,9 @@
     
     familyQuanity_= aFamilyQuantity;
     
+    familyData_ = [ASTStoreFamilyData familyDataWithIdentifier:familyIdentifier_ productType:type_];
+    [familyData_ retain];
+
     [self save];
     
     return self;
@@ -423,7 +441,7 @@
     }
     
     return ( [self initWithProductIdentifier:aProductIdentifier 
-                                        type:ASTStoreProductIdentifierTypeConsumable 
+                                        type:ASTStoreProductIdentifierTypeAutoRenewable 
                             familyIdentifier:aFamilyIdentifier
                               familyQuantity:aFamilyQuantity] );
 }
@@ -481,7 +499,7 @@
     
     [familyData_ release];
     familyData_ = nil;
-    
+        
     [super dealloc];
 }
 

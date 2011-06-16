@@ -33,11 +33,12 @@
 #import "ASTStoreServer.h"
 #import "ASTStoreConfigPlistReader.h"
 #import "ASTStoreConfigKeys.h"
+#import "ASIHTTPRequest.h"
 
 #define kASTStoreControllerDefaultRetryStoreConnectionInterval 15.0
 #define kASTStoreServerDefaultVerifyReceipts YES
 
-@interface ASTStoreController() <SKProductsRequestDelegate, SKPaymentTransactionObserver>
+@interface ASTStoreController() <SKProductsRequestDelegate, SKPaymentTransactionObserver, ASTStoreFamilyDataExpiryProtocol>
 
 @property (readonly) NSMutableDictionary *storeProductDictionary;
 @property (nonatomic) ASTStoreControllerProductDataState productDataState;
@@ -67,6 +68,7 @@
 @synthesize serverConsumablesEnabled = serverConsumablesEnabled_;
 @synthesize serverPromoCodesEnabled = serverPromoCodesEnabled_;
 @synthesize serviceURLPaths = serviceURLPaths_;
+@synthesize sharedSecret = sharedSecret_;
 
 #pragma mark Delegate Selector Stubs
 
@@ -92,6 +94,14 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(astStoreControllerProductIdentifierPurchased:)])
     {
         [self.delegate astStoreControllerProductIdentifierPurchased:productIdentifier];
+    }
+}
+
+- (void)invokeDelegateStoreControllerProductIdentifierExpired:(NSString*)productIdentifier
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(astStoreControllerProductIdentifierExpired:)])
+    {
+        [self.delegate astStoreControllerProductIdentifierExpired:productIdentifier];
     }
 }
 
@@ -264,6 +274,16 @@
 - (NSDictionary*)serviceURLPaths
 {
     return self.storeServer.serviceURLPaths;
+}
+
+- (void)setSharedSecret:(NSString *)sharedSecret
+{
+    self.storeServer.sharedSecret = sharedSecret;
+}
+
+- (NSString*)sharedSecret
+{
+    return self.storeServer.sharedSecret;
 }
 
 #pragma mark Product Setup
@@ -468,6 +488,25 @@
     return ( [self.storeProductDictionary objectForKey:productIdentifier] );
 }
 
+- (ASTStoreProductData*)storeProductDataForIdentifier:(NSString*)productIdentifier
+{
+    // Attempt to get the product object for this - if that fails
+    // Then attempt to the product data object for transaction - 
+    ASTStoreProductData *productData = nil;    
+    ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
+    
+    if( nil != theProduct )
+    {
+        productData = theProduct.productData;
+    }
+    else
+    {
+        productData = [ASTStoreProductData storeProductDataFromProductIdentifier:productIdentifier];
+    }
+
+    return productData;
+}
+
 #pragma mark SKProductRequest and SKRequest Delegate Methods
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
@@ -477,7 +516,7 @@
     for( SKProduct *aProduct in response.products )
     {
         // Associate the SKProduct with the appropriate ASTStoreProduct
-        DLog(@"Associating valid data for %@", aProduct.productIdentifier);
+        DLog(@"Associating valid data for %@ : %@", aProduct.productIdentifier, aProduct);
         ASTStoreProduct *storeProduct = [self.storeProductDictionary objectForKey:aProduct.productIdentifier];
         storeProduct.skProduct = aProduct;
         storeProduct.isValid = YES;
@@ -562,21 +601,43 @@
 }
 
 #pragma mark Transaction Handling
+- (void)updatePurchaseFromProductData:(ASTStoreProductData*)productData
+{
+    switch (productData.type) 
+    {
+        case ASTStoreProductIdentifierTypeConsumable:
+        {
+            // Increment the available quantity for the family
+            NSUInteger quantity = productData.availableQuantity;
+            quantity += productData.familyQuanity;
+            
+            productData.availableQuantity = quantity;
+            break;
+        }
+            
+        case ASTStoreProductIdentifierTypeNonconsumable:
+        {
+            productData.availableQuantity = 1;
+            break;
+        }
+          
+        case ASTStoreProductIdentifierTypeAutoRenewable:
+        {
+            NSDate *now = [NSDate date];
+            NSTimeInterval secondsToAdd = productData.familyQuanity;
+            productData.expiresDate = [now dateByAddingTimeInterval:secondsToAdd];
+            break;
+        }
+            
+        default:
+            DLog(@"Unsupported product type: %d", productData.type);
+            break;
+    }
+}
+
 - (void)updatePurchaseFromProductIdentifier:(NSString*)productIdentifier
 {
-    // Attempt to get the product object for this - if that fails
-    // Then attempt to the product data object for transaction - 
-    ASTStoreProductData *productData = nil;    
-    ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
-    
-    if( nil != theProduct )
-    {
-        productData = theProduct.productData;
-    }
-    else
-    {
-        productData = [ASTStoreProductData storeProductDataFromProductIdentifier:productIdentifier];
-    }
+    ASTStoreProductData *productData = [self storeProductDataForIdentifier:productIdentifier];    
     
     if( nil == productData )
     {
@@ -585,46 +646,23 @@
         return;
     }
     
-    if( productData.type == ASTStoreProductIdentifierTypeConsumable )
-    {
-        // Increment the available quantity for the family
-        NSUInteger quantity = productData.availableQuantity;
-        quantity += productData.familyQuanity;
-        
-        productData.availableQuantity = quantity;
-    }
-    else if ( productData.type == ASTStoreProductIdentifierTypeNonconsumable )
-    {
-        productData.availableQuantity = 1;
-    }
-    else
-    {
-        DLog(@"Unsupported product type: %d", productData.type);
-    }
-
+    [self updatePurchaseFromProductData:productData];
 }
 
-- (void)completionHandler:(SKPaymentTransaction *)transaction withVerificationResult:(ASTStoreServerResult)result
-{
-    NSString *productIdentifier = [ASTStoreServer productIdentifierForTransaction:transaction];
-    
-    if( ASTStoreServerResultFail == result )
+- (void)completionHandlerForProductData:(ASTStoreProductData*)productData 
+                            transaction:(SKPaymentTransaction *)transaction 
+                 withVerificationResult:(ASTStoreServerResult)result
+{   
+    if(( ASTStoreServerResultPass == result ) || ( ASTStoreServerResultInconclusive == result ))
     {
-        // receipt verification failed
-        self.purchaseState = ASTStoreControllerPurchaseStateNone;
-        
-        [self invokeDelegateStoreControllerProductIdentifierFailedPurchase:productIdentifier withError:nil];
-        [self.skPaymentQueue finishTransaction:transaction];
-        return;
+        [self updatePurchaseFromProductData:productData];
+        [self invokeDelegateStoreControllerProductIdentifierPurchased:productData.productIdentifier];
     }
-    else if( ASTStoreServerResultInconclusive == result )
+    else if( ASTStoreServerResultFail == result )
     {
-        // TODO: Should keep it around and try verifying it later as an audit type function
+        [self invokeDelegateStoreControllerProductIdentifierFailedPurchase:productData.productIdentifier withError:nil];
     }
-
     
-    [self updatePurchaseFromProductIdentifier:productIdentifier];
-            
     if( self.restoringPurchases )
     {
         // If restoring, there may be multiple transactions so set back to processing
@@ -636,17 +674,126 @@
         self.purchaseState = ASTStoreControllerPurchaseStateNone;
     }
     
-    [self invokeDelegateStoreControllerProductIdentifierPurchased:productIdentifier];
-    
     // Remove the transaction from the payment queue
     [self.skPaymentQueue finishTransaction:transaction];
+}
+
+- (void)invokeSubscriptionProductDelegates:(ASTStoreProductData*)productData previousState:(BOOL)previousPurchaseState
+{
+    BOOL productIsPurchased = [productData isPurchased];
+    
+    if(( YES == productIsPurchased)  && ( previousPurchaseState == NO ))
+    {
+        [self invokeDelegateStoreControllerProductIdentifierPurchased:productData.productIdentifier];
+    }
+    else if(( NO == productIsPurchased ) && ( previousPurchaseState == YES ))
+    {
+        [self invokeDelegateStoreControllerProductIdentifierExpired:productData.productIdentifier];
+    }
+}
+
+- (void)completionHandlerForSubscriptionProductData:(ASTStoreProductData*)productData
+                                        expiresDate:(NSDate*)expiresDate
+                            latestReceiptBase64Data:(NSString*)latestReceiptBase64Data
+                            transaction:(SKPaymentTransaction *)transaction 
+                 withVerificationResult:(ASTStoreServerResult)result
+{    
+    BOOL previousPurchaseState = [productData isPurchased];
+        
+    if( nil == transaction )
+    {
+        // Came in from the expiry timer handler, since there is no transaction provided.
+        // Thus we can assume that the previous state was purchased, otherwise no timer
+        // would have been set. Since chances are the [productData isPurchased] would be
+        // NO in this case, must reset it so that any expiry delegates are invoked
+        previousPurchaseState = YES;
+    }
+    
+    if( ASTStoreServerResultPass == result )
+    {
+        // Pass could mean subscription is valid or it could be expired - will need to check the date
+        productData.expiresDate = expiresDate;
+        
+        if( nil != latestReceiptBase64Data )
+        {
+            productData.receipt = latestReceiptBase64Data;            
+        }
+        else
+        {
+            productData.receipt = [ASIHTTPRequest base64forData:transaction.transactionReceipt];
+        }
+        
+        [self invokeSubscriptionProductDelegates:productData previousState:previousPurchaseState];
+    }
+    else if ( ASTStoreServerResultInconclusive == result )
+    {
+        // Basically a network error
+        // Treat this like a promo code by setting the expiry based on now + 
+        // length of the subscription
+        [self updatePurchaseFromProductData:productData];
+        [self invokeSubscriptionProductDelegates:productData previousState:previousPurchaseState];
+    }
+    else if( ASTStoreServerResultFail == result )
+    {
+        [self invokeDelegateStoreControllerProductIdentifierFailedPurchase:productData.productIdentifier withError:nil];
+    }
+    
+    if( nil != transaction )
+    {
+        if( self.restoringPurchases )
+        {
+            // If restoring, there may be multiple transactions so set back to processing
+            // Will change state back to none as part of the restore complete callback
+            self.purchaseState = ASTStoreControllerPurchaseStateProcessingPayment;
+        }
+        else
+        {
+            self.purchaseState = ASTStoreControllerPurchaseStateNone;
+        }
+        
+        // Remove the transaction from the payment queue
+        [self.skPaymentQueue finishTransaction:transaction];
+    }
+    
 }
 
 - (void)completeTransaction:(SKPaymentTransaction *)transaction 
 {     
     DLog(@"serverURL:%@ verify:%d", self.serverUrl, self.verifyReceipts);
+    
+    NSString *productIdentifier = [ASTStoreServer productIdentifierForTransaction:transaction];
+    ASTStoreProductData *productData = [self storeProductDataForIdentifier:productIdentifier];    
 
-    if(( self.serverUrl != nil ) && ( self.verifyReceipts ))
+    if( nil == productData )
+    {
+        // Have no information how to process this payment - abort
+        ALog(@"Failed to obtain product data for:%@", productIdentifier);
+        return;
+    }
+    
+    // Need to check the product type - if autorenewable then must verify to
+    // determine when it expires by grabbing the receipt data from the app store
+    
+    if( productData.type == ASTStoreProductIdentifierTypeAutoRenewable )
+    {
+        self.purchaseState = ASTStoreControllerPurchaseStateVerifyingReceipt;
+        
+        NSString *base64Receipt = [ASIHTTPRequest base64forData:transaction.transactionReceipt];
+        
+        [self.storeServer asyncVerifySubscriptionReceipt:base64Receipt 
+                         withCompletionBlock:^(NSString *receiptBase64Data, 
+                                               NSDate *expiresDate, 
+                                               NSString *latestReceiptBase64Data, 
+                                               ASTStoreServerResult result) 
+        {
+            [self completionHandlerForSubscriptionProductData:productData 
+                                                  expiresDate:expiresDate 
+                                      latestReceiptBase64Data:latestReceiptBase64Data 
+                                                  transaction:transaction 
+                                       withVerificationResult:result];
+        }];
+    }
+    else if(( self.serverUrl != nil ) && ( self.verifyReceipts ))
     {
         self.purchaseState = ASTStoreControllerPurchaseStateVerifyingReceipt;
         
@@ -654,13 +801,13 @@
                              withCompletionBlock:^(SKPaymentTransaction *transaction, 
                                                    ASTStoreServerResult result) 
          {
-             [self completionHandler:transaction withVerificationResult:result];
+             [self completionHandlerForProductData:productData transaction:transaction withVerificationResult:result];
          }];
     }
     else
     {
         // No server verification to do - assume pass and invoke handler directly
-        [self completionHandler:transaction withVerificationResult:ASTStoreServerResultPass];
+        [self completionHandlerForProductData:productData transaction:transaction withVerificationResult:ASTStoreServerResultPass];
     }
 }
 
@@ -686,6 +833,36 @@
     DLog(@"restoring: %@", transaction.payment.productIdentifier);
     
     [self completeTransaction:transaction];
+}
+
+#pragma mark ASTStoreFamilyDataProtocol delegate methods
+- (void)astFamilyDataVerifySubscriptionForFamilyData:(ASTStoreFamilyData*)familyData
+{
+    [self.storeServer asyncVerifySubscriptionReceipt:familyData.receipt 
+                                 withCompletionBlock:^(NSString *receiptBase64Data, 
+                                                       NSDate *expiresDate, 
+                                                       NSString *latestReceiptBase64Data, 
+                                                       ASTStoreServerResult result) 
+     {
+         // Find any products with the family id and invoke the handler
+         NSArray *renewableProductIds = [self productIdentifiersForProductType:ASTStoreProductIdentifierTypeAutoRenewable 
+                                                         sortedUsingComparator:nil];
+         
+         for( NSString *aProductId in renewableProductIds )
+         {
+             ASTStoreProductData *productData = [self storeProductDataForIdentifier:aProductId];
+             if( [productData.familyIdentifier isEqualToString:familyData.familyIdentifier] )
+             {
+                 [self completionHandlerForSubscriptionProductData:productData
+                                                       expiresDate:expiresDate 
+                                           latestReceiptBase64Data:latestReceiptBase64Data 
+                                                       transaction:nil 
+                                            withVerificationResult:result];
+             }
+         }
+     }];
+
+    DLog(@"invoked");
 }
 
 #pragma mark SKPaymentTransactionObserver Methods
@@ -907,18 +1084,20 @@
 - (BOOL)isProductPurchased:(NSString*)productIdentifier
 {
     ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
+    NSString *familyIdentifier = productIdentifier;
     
     if( nil != theProduct )
     {
-        return ( theProduct.isPurchased );
+        familyIdentifier = theProduct.familyIdentifier;
     }
     
     // In the event a family id was provided instead of a product id, attempt to directly access family id
-    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:productIdentifier];
+    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:familyIdentifier];
     
     if( nil != familyData )
     {
-        return ( familyData.isPurchased );
+        BOOL isPurchased = familyData.isPurchased;
+        return ( isPurchased );
     }
     
     return NO;
@@ -945,6 +1124,27 @@
 
     return 0;
 }
+
+- (NSDate*)expiryDateForProduct:(NSString*)productIdentifier
+{
+    ASTStoreProduct *theProduct = [self storeProductForIdentifier:productIdentifier];
+    
+    if( nil != theProduct )
+    {
+        return ( theProduct.expiresDate );
+    }
+    
+    // In the event a family id was provided instead of a product id, attempt to directly access family id
+    ASTStoreFamilyData *familyData = [ASTStoreFamilyData familyDataWithIdentifier:productIdentifier];
+    
+    if( nil != familyData )
+    {
+        return( familyData.expiresDate );
+    }
+
+    return nil;
+}
+
 
 - (NSUInteger)consumeProduct:(NSString*)productIdentifier quantity:(NSUInteger)amountToConsume
 {
@@ -994,6 +1194,7 @@
     self.serverPromoCodesEnabled = config.serverPromoCodesEnabled;
     self.serverConsumablesEnabled = config.serverConsumablesEnabled;
     self.serviceURLPaths = config.serviceURLPaths;
+    self.sharedSecret = config.sharedSecret;
     
     if( nil != config.productPlistFile )
     {
@@ -1031,6 +1232,9 @@
     serverConsumablesEnabled_ = NO;
     serverPromoCodesEnabled_ = NO;
     serviceURLPaths_ = nil;
+    sharedSecret_ = nil;
+    
+    [ASTStoreFamilyData setFamilyDataDelegate:self];
     
     [self readConfiguration];
     

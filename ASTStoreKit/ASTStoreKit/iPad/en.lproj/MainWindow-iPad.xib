@@ -55,9 +55,9 @@
 				</object>
 				<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 				<bool key="IBUIHorizontal">NO</bool>
-				<object class="IBUIViewController" key="IBUISelectedViewController" id="48960301">
-					<object class="IBUITabBarItem" key="IBUITabBarItem" id="266368969">
-						<string key="IBUITitle">Store</string>
+				<object class="IBUIViewController" key="IBUISelectedViewController" id="372872565">
+					<object class="IBUITabBarItem" key="IBUITabBarItem" id="853555246">
+						<string key="IBUITitle">Debug</string>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 					</object>
 					<reference key="IBUIParentViewController" ref="686165204"/>
@@ -70,10 +70,10 @@
 				</object>
 				<object class="NSMutableArray" key="IBUIViewControllers">
 					<bool key="EncodedWithXMLCoder">YES</bool>
-					<reference ref="48960301"/>
-					<object class="IBUIViewController" id="372872565">
-						<object class="IBUITabBarItem" key="IBUITabBarItem" id="853555246">
-							<string key="IBUITitle">Debug</string>
+					<reference ref="372872565"/>
+					<object class="IBUIViewController" id="48960301">
+						<object class="IBUITabBarItem" key="IBUITabBarItem" id="266368969">
+							<string key="IBUITitle">Store</string>
 							<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						</object>
 						<reference key="IBUIParentViewController" ref="686165204"/>
@@ -90,7 +90,6 @@
 					<int key="NSvFlags">266</int>
 					<string key="NSFrame">{{0, 975}, {768, 49}}</string>
 					<reference key="NSSuperview"/>
-					<reference key="NSNextKeyView"/>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">3</int>
 						<bytes key="NSWhite">MCAwAA</bytes>

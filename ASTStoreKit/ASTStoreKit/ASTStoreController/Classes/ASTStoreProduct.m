@@ -39,6 +39,7 @@
 @synthesize description = description_;
 @synthesize productData = productData_;
 @synthesize isFree = isFree_;
+@dynamic expiresDate;
 
 #pragma mark Class Methods
 
@@ -89,13 +90,9 @@
             break;
             
         case ASTStoreProductIdentifierTypeAutoRenewable:
-#ifdef AUTORENEW_SUPPORTED
             return ( [ASTStoreProduct autoRenewableStoreProductWithIdentifier:aProductIdentifier
                                                              familyIdentifier:aFamilyIdentifier
                                                                familyQuantity:aFamilyQuantity] );
-#else
-            DLog(@"Auto Renewable Not Supported Yet");
-#endif
         default:
             break;
     }
@@ -186,6 +183,11 @@
 - (void)setPurchasedQuantity:(NSUInteger)totalQuantityAvailable
 {
     self.productData.availableQuantity = totalQuantityAvailable;
+}
+
+- (NSDate*)expiresDate
+{
+    return ( self.productData.expiresDate );
 }
 
 #pragma mark SKProduct related properties
@@ -322,7 +324,7 @@
                                    familyQuantity:(ASTStoreProductAutoRenewableType)aFamilyQuantity
 {
     return ( [self initWithProductIdentifier:aProductIdentifier 
-                                       type:ASTStoreProductIdentifierTypeConsumable 
+                                       type:ASTStoreProductIdentifierTypeAutoRenewable 
                            familyIdentifier:aFamilyIdentifier
                              familyQuantity:aFamilyQuantity] );
 }

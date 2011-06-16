@@ -35,6 +35,7 @@
 #define kDefaultServiceURLPromoCodeValidation @"service/purchase/validate"
 #define kDefaultServiceURLProductQuery @"service/product/query"
 #define kDefaultServiceURLProductList @"service/product/list"
+#define kDefaultServiceURLSubscriptionValidation @"service/subscription/validate"
 
 @interface ASTStoreServer ()
 
@@ -44,6 +45,7 @@
 @property (nonatomic, copy) NSString *serviceURLPathPromoCodeValidation;
 @property (nonatomic, copy) NSString *serviceURLPathProductQuery;
 @property (nonatomic, copy) NSString *serviceURLPathProductList;
+@property (nonatomic, copy) NSString *serviceURLPathSubscriptionValidation;
 
 @end
 
@@ -62,6 +64,8 @@
 @synthesize serviceURLPathProductQuery = serviceURLPathProductQuery_;
 @synthesize serviceURLPathProductList = serviceURLPathProductList_;
 @synthesize serviceURLPaths = serviceURLPaths_;
+@synthesize serviceURLPathSubscriptionValidation = serviceURLPathSubscriptionValidation_;
+@synthesize sharedSecret = sharedSecret_;
 
 #pragma mark private methods
 
@@ -209,7 +213,239 @@
     ASTReturnRA( serviceURLPathReceiptValidation_ );    
 }
 
+- (NSString*)serviceURLPathSubscriptionValidation
+{
+    if( nil != serviceURLPathSubscriptionValidation_ )
+    {
+        ASTReturnRA( serviceURLPathSubscriptionValidation_ );
+    }
+    
+    // Default to the default by default - ha ha!
+    NSString *servicePath = kDefaultServiceURLSubscriptionValidation;
+    
+    // See if a dictionary has been set for the service URL paths
+    if( nil != self.serviceURLPaths )
+    {
+        NSString *tmpPath = [self.serviceURLPaths objectForKey:kASTStoreConfigServiceURLSubscriptionValidationKey];
+        if( nil != tmpPath )
+        {
+            // A value was set in the dictionary so use that instead
+            servicePath = tmpPath;
+        }
+    }
+    
+    self.serviceURLPathSubscriptionValidation = servicePath;
+    
+    ASTReturnRA( serviceURLPathSubscriptionValidation_ );    
+}
+
 #pragma mark Receipt Verification
+- (ASTStoreServerResult)verifySubscriptionReceipt:(NSString*)receiptBase64Data 
+                           expiresDate:(NSDate**)expiresDate 
+              latestReceiptBase64Data:(NSString**)latestReceiptBase64Data
+{
+    NSString *receiptServer = nil;
+    NSString *receiptServicePath = nil;
+    
+    // If there is no server URL then a sharedSecret must be supplied here
+    // If there is a server URL then log a warning if a shared secret is passed in, since we should
+    // rely on the server for managing the shared secret
+    if(( nil == self.serverUrl ) && ( nil != self.sharedSecret ))
+    {
+#ifdef DEBUG
+        receiptServer = @"https://sandbox.itunes.apple.com";
+#else
+        receiptServer = @"https://buy.itunes.apple.com";        
+#endif
+        
+        receiptServicePath = @"verifyReceipt";
+    }
+    else if(( nil != self.serverUrl ) && ( nil != self.sharedSecret ))
+    {
+        DLog(@"WARNING: It is recommended that shared secrets not be embedded in the application");
+        receiptServer = [self.serverUrl absoluteString];
+        receiptServicePath = self.serviceURLPathSubscriptionValidation;
+    }
+    else if(( nil == self.serverUrl ) && ( nil == self.sharedSecret ))
+    {
+        DLog(@"CANNOT VERIFY RECEIPT: need one of a server URL or a shared secret");
+        return ASTStoreServerResultFail;
+    }
+    
+    NSURL *serviceURL = [[NSURL URLWithString:receiptServer] URLByAppendingPathComponent:receiptServicePath];
+    DLog(@"serviceURL:%@", serviceURL);
+    
+    
+    ASIHTTPRequest *serviceRequest = [ASIHTTPRequest requestWithURL:serviceURL];
+    [ASIHTTPRequest setDefaultTimeOutSeconds:self.serverConnectionTimeout];
+    
+    NSMutableDictionary *receiptDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:receiptBase64Data, @"receipt-data", nil];
+    
+    if( nil != self.sharedSecret )
+    {
+        [receiptDictionary setObject:self.sharedSecret forKey:@"password"];
+    }
+        
+    NSData *receiptAsJSONData = [receiptDictionary JSONData];
+    
+    [serviceRequest setPostBody:[receiptAsJSONData mutableCopy]];
+    
+    [serviceRequest startSynchronous];
+    
+    NSError *error = [serviceRequest error];
+    
+    if( error )
+    {
+        // This would generally be a network error, so assume the verification passed
+        // since we would not want to reject purchase if our server is down
+        DLog(@"error: %@", error);
+        return ( ASTStoreServerResultInconclusive );
+    }
+    
+    // Need to decode response.... JSON format...
+    
+    NSData *responseData = [serviceRequest responseData];
+    if( nil == responseData )
+    {
+        DLog(@"Did not receive any data for response");
+        return ( ASTStoreServerResultInconclusive );
+    }
+    
+    JSONDecoder *decoder = [JSONDecoder decoder];
+    id responseObject = [decoder objectWithData:responseData];
+    
+    if( ! [responseObject isKindOfClass:[NSDictionary class]] )
+    {
+        DLog(@"Unexpected class on decode from JSONKit: %@", NSStringFromClass([responseObject class]));
+        return ( ASTStoreServerResultFail );
+    }
+    
+    NSDictionary *responseDict = responseObject;
+    
+    NSNumber *status = [responseDict objectForKey:kASTStoreProductInfoStatusKey];
+    
+    if( nil == status )
+    {
+        return ( ASTStoreServerResultFail );
+    }
+    
+    NSInteger statusAsInt = [status integerValue];
+    
+    switch (statusAsInt) 
+    {
+        case 0: // valid subscription
+        {
+            *latestReceiptBase64Data = [responseDict objectForKey:@"latest_receipt"];
+            NSDictionary *latestReceiptInfoDict = [responseDict objectForKey:@"latest_receipt_info"];
+            
+            if( nil == latestReceiptInfoDict )
+            {
+                DLog(@"Could not find receipt info from JSON response");
+                return ( ASTStoreServerResultInconclusive );
+            }
+            
+            NSString *expiresString = [latestReceiptInfoDict objectForKey:@"expires_date"];
+            if( nil == expiresString )
+            {
+                DLog(@"Could not find expiry date info from JSON response");
+                return ( ASTStoreServerResultInconclusive );                
+            }
+            
+            NSTimeInterval expiryAsInterval = [expiresString doubleValue];
+            expiryAsInterval /= 1000; // convert from milliseconds to seconds
+            
+            NSDate *expiryAsDate = [NSDate dateWithTimeIntervalSince1970:expiryAsInterval];
+            
+            DLog(@"Subscription Active date:%@", expiryAsDate);
+            *expiresDate = expiryAsDate;
+            
+            return ASTStoreServerResultPass;
+            break;
+        }
+            
+        case 21006:
+        {
+            DLog(@"This receipt is valid but the subscription has expired.");
+            
+            NSDictionary *latestReceiptInfoDict = [responseDict objectForKey:@"latest_expired_receipt_info"];
+            
+            if( nil == latestReceiptInfoDict )
+            {
+                DLog(@"Could not find receipt info from JSON response");
+                // In this case return fail since we know the subscription has expired
+                // So there is no point in giving the benefit of the doubt
+                return ( ASTStoreServerResultFail );
+            }
+            
+            NSString *expiresString = [latestReceiptInfoDict objectForKey:@"expires_date"];
+            NSDate *expiryAsDate = nil;
+            if( nil != expiresString )
+            {
+                NSTimeInterval expiryAsInterval = [expiresString doubleValue];
+                expiryAsInterval /= 1000; // convert from milliseconds to seconds
+                
+                expiryAsDate = [NSDate dateWithTimeIntervalSince1970:expiryAsInterval];
+            }
+            
+            DLog(@"Subscription Expired Date:%@", expiryAsDate);
+            
+            *expiresDate = expiryAsDate;
+
+            return ASTStoreServerResultPass;
+            break;
+        }
+            
+        case 21005:
+            DLog(@"The receipt server is not currently available.");
+            return ASTStoreServerResultInconclusive;
+            break;
+            
+        case 21000: 
+            DLog(@"The App Store could not read the JSON object you provided.");
+            break;
+            
+        case 21002:
+            DLog(@"The data in the receipt-data property was malformed.");
+            break;
+            
+        case 21003:
+            DLog(@"The receipt could not be authenticated.");
+            break;
+            
+        case 21004:
+            DLog(@"The shared secret you provided does not match the shared secret on file for your account.");
+            break;
+            
+        default:
+            DLog(@"Unexpected status:%d", statusAsInt);
+            break;
+    }
+
+    
+    DLog(@"response:%@", responseDict);
+
+    return ( ASTStoreServerResultFail );
+}
+
+- (void)asyncVerifySubscriptionReceipt:(NSString*)receiptBase64Data withCompletionBlock:(ASTVerifySubscriptionBlock)completionBlock
+{
+    dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    
+    dispatch_async(globalQueue, ^{
+        NSString *latestReceipt = nil;
+        NSDate *expiresDate = nil;
+        
+        ASTStoreServerResult result = [self verifySubscriptionReceipt:receiptBase64Data 
+                                               expiresDate:&expiresDate 
+                                  latestReceiptBase64Data:&latestReceipt];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionBlock(receiptBase64Data, expiresDate, latestReceipt, result);
+        });
+    });
+
+}
+
 
 - (ASIFormDataRequest*)formDataRequestFromReceipt:(NSData*)receiptData forProductId:(NSString*)productId
 {
@@ -288,7 +524,7 @@
 
 
 - (void)asyncVerifyTransaction:(SKPaymentTransaction*)transaction
-           withCompletionBlock:(ASTVerifyReceiptBlock)completionBlock
+           withCompletionBlock:(ASTVerifyTransactionBlock)completionBlock
 {
     dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     
@@ -576,6 +812,7 @@
     serviceURLPathPromoCodeValidation_ = nil;
     serviceURLPathReceiptValidation_ = nil;
     serviceURLPaths_ = nil;
+    sharedSecret_ = nil;
     
     DLog(@"Instantiated ASTStoreServer");
     return self;
@@ -597,6 +834,7 @@
     [serviceURLPathProductQuery_ release], serviceURLPathProductQuery_ = nil;
     [serviceURLPathProductList_ release], serviceURLPathProductList_ = nil;
     [serviceURLPaths_ release], serviceURLPaths_ = nil;
+    [sharedSecret_ release], sharedSecret_ = nil;
     
     [super dealloc];
 }

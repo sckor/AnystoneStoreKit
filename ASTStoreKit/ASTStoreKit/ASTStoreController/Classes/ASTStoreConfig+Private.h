@@ -39,5 +39,6 @@
 @property BOOL serverPromoCodesEnabled;
 @property BOOL serverConsumablesEnabled;
 @property (copy) NSDictionary *serviceURLPaths;
+@property (copy) NSString *sharedSecret;
 
 @end
