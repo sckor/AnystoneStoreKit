@@ -1,19 +1,29 @@
-Version 0.4
+Version 0.5-preview1 (development)
 -----------
 
 The Anystone Store Kit is ready to be used for all store kit operations that you might want to do locally on your device.
 
 It currently has the following functionality:
  - Does not require changing source code to configure products
- - Supports consumable and nonconsumables
+ - Supports consumable, nonconsumables, and autorenewables
  - Supports consumable families to enable multiple product ids to manipulate the same resource
- - Delegate methods for all of the major 
+ - Delegate methods for all of the major changes you might want to be notified about
  - Ability to wipe local data clean (for debug and for dealing with possible corruption)
- - Testing in simulator using the embedded SimStoreKit
+ - Testing in simulator using the embedded SimStoreKit (not including AutoRenewables)
  - Encrypted family data storage for purchase quantities
 
 For some more information, have a look at:
 http://www.anystonetech.com/blog/2011/03/24/introducing-the-anystone-store-kit/
+
+Changes in Version 0.5
+----------------------
+ - Refactored to remove shared library and allow for easier integration into projects
+ - Merge changes over from Meechware
+ - Create a debug view controller for manipulating settings separately from the store proper
+ - Add ability to sort products for display in the store
+ - Full support for Auto Renewable Subscriptions
+ - Allows for customization of URL paths via a new configuration plist file
+ - Provides for automatic initialization based on configuration plist file
 
 Changes in Version 0.4
 ----------------------
