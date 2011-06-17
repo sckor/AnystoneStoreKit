@@ -23,7 +23,6 @@
 		8173BE0213A69300001DC531 /* ASTStoreViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BDFC13A69300001DC531 /* ASTStoreViewController.xib */; };
 		8173BE0313A69300001DC531 /* ASTStoreViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BDFD13A69300001DC531 /* ASTStoreViewController-iPad.xib */; };
 		8173BE0413A69300001DC531 /* ASTStoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BDFE13A69300001DC531 /* ASTStoreTableViewCell.xib */; };
-		8173BE0513A69300001DC531 /* ASTStoreTableViewCell-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BDFF13A69300001DC531 /* ASTStoreTableViewCell-iPad.xib */; };
 		8173BE0F13A69329001DC531 /* storekit_navbar_button_black_effect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8173BE0613A69329001DC531 /* storekit_navbar_button_black_effect@2x.png */; };
 		8173BE1013A69329001DC531 /* storekit_navbar_button_black_effect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8173BE0713A69329001DC531 /* storekit_navbar_button_black_effect.png */; };
 		8173BE1113A69329001DC531 /* DropShadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8173BE0813A69329001DC531 /* DropShadow@2x.png */; };
@@ -104,7 +103,6 @@
 		8173BDFC13A69300001DC531 /* ASTStoreViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreViewController.xib; sourceTree = "<group>"; };
 		8173BDFD13A69300001DC531 /* ASTStoreViewController-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ASTStoreViewController-iPad.xib"; sourceTree = "<group>"; };
 		8173BDFE13A69300001DC531 /* ASTStoreTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreTableViewCell.xib; sourceTree = "<group>"; };
-		8173BDFF13A69300001DC531 /* ASTStoreTableViewCell-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ASTStoreTableViewCell-iPad.xib"; sourceTree = "<group>"; };
 		8173BE0613A69329001DC531 /* storekit_navbar_button_black_effect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "storekit_navbar_button_black_effect@2x.png"; sourceTree = "<group>"; };
 		8173BE0713A69329001DC531 /* storekit_navbar_button_black_effect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = storekit_navbar_button_black_effect.png; sourceTree = "<group>"; };
 		8173BE0813A69329001DC531 /* DropShadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DropShadow@2x.png"; sourceTree = "<group>"; };
@@ -380,7 +378,6 @@
 				8173BDFC13A69300001DC531 /* ASTStoreViewController.xib */,
 				8173BDFD13A69300001DC531 /* ASTStoreViewController-iPad.xib */,
 				8173BDFE13A69300001DC531 /* ASTStoreTableViewCell.xib */,
-				8173BDFF13A69300001DC531 /* ASTStoreTableViewCell-iPad.xib */,
 			);
 			path = XIB;
 			sourceTree = "<group>";
@@ -592,7 +589,6 @@
 				8173BE0213A69300001DC531 /* ASTStoreViewController.xib in Resources */,
 				8173BE0313A69300001DC531 /* ASTStoreViewController-iPad.xib in Resources */,
 				8173BE0413A69300001DC531 /* ASTStoreTableViewCell.xib in Resources */,
-				8173BE0513A69300001DC531 /* ASTStoreTableViewCell-iPad.xib in Resources */,
 				8173BE0F13A69329001DC531 /* storekit_navbar_button_black_effect@2x.png in Resources */,
 				8173BE1013A69329001DC531 /* storekit_navbar_button_black_effect.png in Resources */,
 				8173BE1113A69329001DC531 /* DropShadow@2x.png in Resources */,

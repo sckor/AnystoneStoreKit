@@ -43,7 +43,7 @@
 							<object class="IBUITableView" id="94603894">
 								<reference key="NSNextResponder" ref="148932998"/>
 								<int key="NSvFlags">274</int>
-								<string key="NSFrame">{{2, 2}, {316, 258}}</string>
+								<string key="NSFrameSize">{320, 258}</string>
 								<reference key="NSSuperview" ref="148932998"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="183899898"/>
@@ -54,7 +54,6 @@
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<bool key="IBUIAlwaysBounceVertical">YES</bool>
-								<int key="IBUISeparatorStyle">1</int>
 								<int key="IBUISectionIndexMinimumDisplayRowCount">0</int>
 								<bool key="IBUIShowsSelectionImmediatelyOnTouchBegin">YES</bool>
 								<float key="IBUIRowHeight">44</float>
@@ -66,9 +65,9 @@
 						<reference key="NSSuperview" ref="665995386"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="94603894"/>
-						<object class="NSColor" key="IBUIBackgroundColor">
-							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC40MDAwMDAwMDYgMC40MDAwMDAwMDYgMC40MDAwMDAwMDYAA</bytes>
+						<object class="NSColor" key="IBUIBackgroundColor" id="982420013">
+							<int key="NSColorSpace">3</int>
+							<bytes key="NSWhite">MCAwAA</bytes>
 						</object>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					</object>
@@ -79,10 +78,7 @@
 						<reference key="NSSuperview" ref="665995386"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="254403398"/>
-						<object class="NSColor" key="IBUIBackgroundColor">
-							<int key="NSColorSpace">3</int>
-							<bytes key="NSWhite">MCAwAA</bytes>
-						</object>
+						<reference key="IBUIBackgroundColor" ref="982420013"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<float key="IBUIAlpha">0.69999998807907104</float>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -184,10 +180,7 @@
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="148932998"/>
-				<object class="NSColor" key="IBUIBackgroundColor">
-					<int key="NSColorSpace">1</int>
-					<bytes key="NSRGB">MC41MDE5NjA4MTQgMC41MDE5NjA4MTQgMC41MDE5NjA4MTQAA</bytes>
-				</object>
+				<reference key="IBUIBackgroundColor" ref="982420013"/>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 		</array>
@@ -378,7 +371,6 @@
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="connectingActivityIndicatorView">UIActivityIndicatorView</string>
 						<string key="connectingToStoreLabel">UILabel</string>
-						<string key="removeAllPurchaseButton">UIButton</string>
 						<string key="restorePreviousPurchaseButton">UIButton</string>
 						<string key="storeCell">UITableViewCell</string>
 						<string key="tableContainerView">UIView</string>
@@ -392,10 +384,6 @@
 						<object class="IBToOneOutletInfo" key="connectingToStoreLabel">
 							<string key="name">connectingToStoreLabel</string>
 							<string key="candidateClassName">UILabel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="removeAllPurchaseButton">
-							<string key="name">removeAllPurchaseButton</string>
-							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="restorePreviousPurchaseButton">
 							<string key="name">restorePreviousPurchaseButton</string>

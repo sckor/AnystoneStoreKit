@@ -44,6 +44,7 @@
 								<reference key="NSSuperview" ref="313850854"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="822120857"/>
+								<bool key="IBUIOpaque">NO</bool>
 								<int key="IBUITag">1</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -54,8 +55,8 @@
 							</object>
 							<object class="IBUILabel" id="1006562604">
 								<reference key="NSNextResponder" ref="313850854"/>
-								<int key="NSvFlags">294</int>
-								<string key="NSFrame">{{70, 23}, {167, 21}}</string>
+								<int key="NSvFlags">302</int>
+								<string key="NSFrame">{{70, 23}, {181, 21}}</string>
 								<reference key="NSSuperview" ref="313850854"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="85760036"/>
@@ -86,8 +87,8 @@
 							</object>
 							<object class="IBUILabel" id="85760036">
 								<reference key="NSNextResponder" ref="313850854"/>
-								<int key="NSvFlags">298</int>
-								<string key="NSFrame">{{70, 40}, {167, 22}}</string>
+								<int key="NSvFlags">270</int>
+								<string key="NSFrame">{{70, 40}, {181, 22}}</string>
 								<reference key="NSSuperview" ref="313850854"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="884520593"/>
@@ -112,8 +113,8 @@
 							</object>
 							<object class="IBUILabel" id="822120857">
 								<reference key="NSNextResponder" ref="313850854"/>
-								<int key="NSvFlags">266</int>
-								<string key="NSFrame">{{70, 3}, {167, 22}}</string>
+								<int key="NSvFlags">294</int>
+								<string key="NSFrame">{{70, 3}, {181, 22}}</string>
 								<reference key="NSSuperview" ref="313850854"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="1006562604"/>
@@ -134,10 +135,11 @@
 							</object>
 							<object class="IBUILabel" id="884520593">
 								<reference key="NSNextResponder" ref="313850854"/>
-								<int key="NSvFlags">298</int>
-								<string key="NSFrame">{{237, 23}, {58, 22}}</string>
+								<int key="NSvFlags">299</int>
+								<string key="NSFrame">{{253, 23}, {62, 22}}</string>
 								<reference key="NSSuperview" ref="313850854"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<int key="IBUIContentMode">7</int>
@@ -158,10 +160,10 @@
 								<int key="IBUITextAlignment">2</int>
 							</object>
 						</array>
-						<string key="NSFrameSize">{300, 67}</string>
+						<string key="NSFrameSize">{320, 67}</string>
 						<reference key="NSSuperview" ref="648830896"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="828438078"/>
+						<reference key="NSNextKeyView"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MCAwAA</bytes>
@@ -179,11 +181,10 @@
 				<reference key="NSNextKeyView" ref="313850854"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
-					<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
+					<bytes key="NSWhite">MQA</bytes>
 				</object>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				<int key="IBUISeparatorStyle">1</int>
-				<int key="IBUIAccessoryType">1</int>
 				<reference key="IBUIContentView" ref="313850854"/>
 				<string key="IBUIReuseIdentifier">ASTStoreTableViewCell</string>
 			</object>
@@ -272,9 +273,65 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">9</int>
+			<int key="maxID">11</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">ASTStoreViewController</string>
+					<string key="superclassName">UIViewController</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">restorePreviousPurchaseButtonPressed:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">restorePreviousPurchaseButtonPressed:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">restorePreviousPurchaseButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="connectingActivityIndicatorView">UIActivityIndicatorView</string>
+						<string key="connectingToStoreLabel">UILabel</string>
+						<string key="restorePreviousPurchaseButton">UIButton</string>
+						<string key="storeCell">UITableViewCell</string>
+						<string key="tableContainerView">UIView</string>
+						<string key="tableView">UITableView</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="connectingActivityIndicatorView">
+							<string key="name">connectingActivityIndicatorView</string>
+							<string key="candidateClassName">UIActivityIndicatorView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="connectingToStoreLabel">
+							<string key="name">connectingToStoreLabel</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="restorePreviousPurchaseButton">
+							<string key="name">restorePreviousPurchaseButton</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="storeCell">
+							<string key="name">storeCell</string>
+							<string key="candidateClassName">UITableViewCell</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="tableContainerView">
+							<string key="name">tableContainerView</string>
+							<string key="candidateClassName">UIView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="tableView">
+							<string key="name">tableView</string>
+							<string key="candidateClassName">UITableView</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/ASTStoreViewController.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencies">
