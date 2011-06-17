@@ -25,6 +25,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
+#import <QuartzCore/QuartzCore.h>
 
 #import "ASTStoreViewController.h"
 #import "ASTStoreDetailViewController.h"
@@ -38,7 +39,8 @@ typedef enum
     ASTStoreViewControllerTableViewCellTagExtraInfoLabel = 4,
     ASTStoreViewControllerTableViewCellTagPriceLabel = 5,
     ASTStoreViewControllerTableViewCellTagTopLineView = 6,
-    ASTStoreViewControllerTableViewCellTagBottomLineView = 7
+    ASTStoreViewControllerTableViewCellTagBottomLineView = 7,
+    ASTStoreViewControllerTableViewCellTagDropShadowView = 8
 } ASTStoreViewControllerTableViewCellTags;
 
 @interface ASTStoreViewController()
@@ -228,7 +230,7 @@ typedef enum
     BOOL isPurchased = [self.storeController isProductPurchased:identifier];
     
     
-    //UIImageView *imageView = (UIImageView*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagImageView];
+    UIImageView *imageView = (UIImageView*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagImageView];
     UILabel *title = (UILabel*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagTitleLabel];
     UILabel *description = (UILabel*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagDescriptionLabel];
     UILabel *extraInfo = (UILabel*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagExtraInfoLabel];
@@ -244,20 +246,25 @@ typedef enum
         NSString *availableQuantityString = [NSString stringWithFormat:@"On Hand: %u",  onHand];
         description.text = availableQuantityString;
         price.text = product.localizedPrice;
+        
+        return;
+    }
+    else if( product.type == ASTStoreProductIdentifierTypeNonconsumable )
+    {
+        imageView.image = [UIImage imageNamed:@"default-nonconsumable-image"];
+    }
+    
+    if( isPurchased )
+    {
+        price.text = nil;
+        description.text = @"Purchased - Thank you!";
     }
     else
     {
-        if( isPurchased )
-        {
-            price.text = nil;
-            description.text = @"Purchased - Thank you!";
-        }
-        else
-        {
-            price.text = product.localizedPrice;
-            description.text = nil;
-        }
+        price.text = product.localizedPrice;
+        description.text = nil;
     }
+    
     
     
 }
@@ -274,6 +281,20 @@ typedef enum
         self.storeCell = nil;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+        
+        // Setup rounded corners
+        UIImageView *imageView = (UIImageView*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagImageView];
+        imageView.layer.cornerRadius = 10.0; // Same as the radius that iOS uses
+        imageView.layer.masksToBounds = YES;
+        
+        UIView *dropShadowView = [cell viewWithTag:ASTStoreViewControllerTableViewCellTagDropShadowView];
+        dropShadowView.layer.cornerRadius = 10.0;
+        dropShadowView.layer.masksToBounds = NO;
+        dropShadowView.layer.shadowColor = [[UIColor blackColor] CGColor];
+        dropShadowView.layer.shadowOffset = CGSizeMake(0,2);
+        dropShadowView.layer.shadowRadius = 1;
+        dropShadowView.layer.shadowOpacity = 1;
+        dropShadowView.layer.shouldRasterize = YES;
     }
     
     [self configureCell:cell atIndexPath:indexPath];

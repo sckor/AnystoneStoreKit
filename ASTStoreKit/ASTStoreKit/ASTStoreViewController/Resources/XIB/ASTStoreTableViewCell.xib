@@ -14,6 +14,7 @@
 			<string>IBUITableViewCell</string>
 			<string>IBUIImageView</string>
 			<string>IBUILabel</string>
+			<string>IBUIView</string>
 			<string>IBProxyObject</string>
 		</array>
 		<array key="IBDocument.PluginDependencies">
@@ -37,6 +38,20 @@
 						<reference key="NSNextResponder" ref="648830896"/>
 						<int key="NSvFlags">256</int>
 						<array class="NSMutableArray" key="NSSubviews">
+							<object class="IBUIView" id="9755184">
+								<reference key="NSNextResponder" ref="313850854"/>
+								<int key="NSvFlags">292</int>
+								<string key="NSFrame">{{5, 5}, {57, 57}}</string>
+								<reference key="NSSuperview" ref="313850854"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="828438078"/>
+								<object class="NSColor" key="IBUIBackgroundColor" id="991658381">
+									<int key="NSColorSpace">3</int>
+									<bytes key="NSWhite">MQA</bytes>
+								</object>
+								<int key="IBUITag">8</int>
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+							</object>
 							<object class="IBUIImageView" id="828438078">
 								<reference key="NSNextResponder" ref="313850854"/>
 								<int key="NSvFlags">292</int>
@@ -163,7 +178,7 @@
 						<string key="NSFrameSize">{320, 67}</string>
 						<reference key="NSSuperview" ref="648830896"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
+						<reference key="NSNextKeyView" ref="9755184"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MCAwAA</bytes>
@@ -179,10 +194,7 @@
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="313850854"/>
-				<object class="NSColor" key="IBUIBackgroundColor">
-					<int key="NSColorSpace">3</int>
-					<bytes key="NSWhite">MQA</bytes>
-				</object>
+				<reference key="IBUIBackgroundColor" ref="991658381"/>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				<int key="IBUISeparatorStyle">1</int>
 				<reference key="IBUIContentView" ref="313850854"/>
@@ -198,6 +210,14 @@
 						<reference key="destination" ref="648830896"/>
 					</object>
 					<int key="connectionID">9</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dropShadowView</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="9755184"/>
+					</object>
+					<int key="connectionID">14</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -228,6 +248,7 @@
 							<reference ref="85760036"/>
 							<reference ref="822120857"/>
 							<reference ref="884520593"/>
+							<reference ref="9755184"/>
 						</array>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">Table View Cell - ASTStoreTableViewCell</string>
@@ -257,11 +278,18 @@
 						<reference key="object" ref="884520593"/>
 						<reference key="parent" ref="648830896"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">13</int>
+						<reference key="object" ref="9755184"/>
+						<reference key="parent" ref="648830896"/>
+						<string key="objectName">Image Drop Shadow View</string>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
 				<string key="-1.CustomClassName">ASTStoreViewController</string>
 				<string key="-2.CustomClassName">UIResponder</string>
+				<string key="13.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="3.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -273,7 +301,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">11</int>
+			<int key="maxID">14</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
