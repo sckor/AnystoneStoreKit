@@ -63,6 +63,9 @@
 @property (retain) IBOutlet UILabel *connectingToStoreLabel;
 @property (retain) IBOutlet UIActivityIndicatorView *connectingActivityIndicatorView;
 
+@property (nonatomic,retain) UIColor *cellBackgroundColor1;
+@property (nonatomic,retain) UIColor *cellBackgroundColor2;
+
 @end
 
 @protocol ASTStoreViewControllerDelegate

@@ -23,7 +23,6 @@
 		8173BE0213A69300001DC531 /* ASTStoreViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BDFC13A69300001DC531 /* ASTStoreViewController.xib */; };
 		8173BE0313A69300001DC531 /* ASTStoreViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BDFD13A69300001DC531 /* ASTStoreViewController-iPad.xib */; };
 		8173BE0413A69300001DC531 /* ASTStoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BDFE13A69300001DC531 /* ASTStoreTableViewCell.xib */; };
-		8173BE0513A69300001DC531 /* ASTStoreTableViewCell-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BDFF13A69300001DC531 /* ASTStoreTableViewCell-iPad.xib */; };
 		8173BE0F13A69329001DC531 /* storekit_navbar_button_black_effect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8173BE0613A69329001DC531 /* storekit_navbar_button_black_effect@2x.png */; };
 		8173BE1013A69329001DC531 /* storekit_navbar_button_black_effect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8173BE0713A69329001DC531 /* storekit_navbar_button_black_effect.png */; };
 		8173BE1113A69329001DC531 /* DropShadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8173BE0813A69329001DC531 /* DropShadow@2x.png */; };
@@ -80,6 +79,8 @@
 		81DB9EBA13A799DD003DA9A3 /* ASTStoreKitConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 81DB9EB913A799DD003DA9A3 /* ASTStoreKitConfig.plist */; };
 		81DB9EBE13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 81DB9EBD13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m */; };
 		81DB9EC113A7A0AB003DA9A3 /* ASTStoreConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 81DB9EC013A7A0AB003DA9A3 /* ASTStoreConfig.m */; };
+		81EAF89613ABDFFD0048940A /* default-nonconsumable-image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 81EAF89413ABDFFD0048940A /* default-nonconsumable-image@2x.png */; };
+		81EAF89713ABDFFD0048940A /* default-nonconsumable-image.png in Resources */ = {isa = PBXBuildFile; fileRef = 81EAF89513ABDFFD0048940A /* default-nonconsumable-image.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -104,7 +105,6 @@
 		8173BDFC13A69300001DC531 /* ASTStoreViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreViewController.xib; sourceTree = "<group>"; };
 		8173BDFD13A69300001DC531 /* ASTStoreViewController-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ASTStoreViewController-iPad.xib"; sourceTree = "<group>"; };
 		8173BDFE13A69300001DC531 /* ASTStoreTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreTableViewCell.xib; sourceTree = "<group>"; };
-		8173BDFF13A69300001DC531 /* ASTStoreTableViewCell-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ASTStoreTableViewCell-iPad.xib"; sourceTree = "<group>"; };
 		8173BE0613A69329001DC531 /* storekit_navbar_button_black_effect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "storekit_navbar_button_black_effect@2x.png"; sourceTree = "<group>"; };
 		8173BE0713A69329001DC531 /* storekit_navbar_button_black_effect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = storekit_navbar_button_black_effect.png; sourceTree = "<group>"; };
 		8173BE0813A69329001DC531 /* DropShadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DropShadow@2x.png"; sourceTree = "<group>"; };
@@ -209,6 +209,8 @@
 		81DB9EC013A7A0AB003DA9A3 /* ASTStoreConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreConfig.m; sourceTree = "<group>"; };
 		81DB9EC213A7A218003DA9A3 /* ASTStoreConfig+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ASTStoreConfig+Private.h"; sourceTree = "<group>"; };
 		81DB9EC513A7A8E9003DA9A3 /* ASTStoreConfigKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreConfigKeys.h; sourceTree = "<group>"; };
+		81EAF89413ABDFFD0048940A /* default-nonconsumable-image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default-nonconsumable-image@2x.png"; sourceTree = "<group>"; };
+		81EAF89513ABDFFD0048940A /* default-nonconsumable-image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default-nonconsumable-image.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -359,6 +361,8 @@
 		8173BDF713A692AD001DC531 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				81EAF89413ABDFFD0048940A /* default-nonconsumable-image@2x.png */,
+				81EAF89513ABDFFD0048940A /* default-nonconsumable-image.png */,
 				8173BE0613A69329001DC531 /* storekit_navbar_button_black_effect@2x.png */,
 				8173BE0713A69329001DC531 /* storekit_navbar_button_black_effect.png */,
 				8173BE0813A69329001DC531 /* DropShadow@2x.png */,
@@ -380,7 +384,6 @@
 				8173BDFC13A69300001DC531 /* ASTStoreViewController.xib */,
 				8173BDFD13A69300001DC531 /* ASTStoreViewController-iPad.xib */,
 				8173BDFE13A69300001DC531 /* ASTStoreTableViewCell.xib */,
-				8173BDFF13A69300001DC531 /* ASTStoreTableViewCell-iPad.xib */,
 			);
 			path = XIB;
 			sourceTree = "<group>";
@@ -592,7 +595,6 @@
 				8173BE0213A69300001DC531 /* ASTStoreViewController.xib in Resources */,
 				8173BE0313A69300001DC531 /* ASTStoreViewController-iPad.xib in Resources */,
 				8173BE0413A69300001DC531 /* ASTStoreTableViewCell.xib in Resources */,
-				8173BE0513A69300001DC531 /* ASTStoreTableViewCell-iPad.xib in Resources */,
 				8173BE0F13A69329001DC531 /* storekit_navbar_button_black_effect@2x.png in Resources */,
 				8173BE1013A69329001DC531 /* storekit_navbar_button_black_effect.png in Resources */,
 				8173BE1113A69329001DC531 /* DropShadow@2x.png in Resources */,
@@ -610,6 +612,8 @@
 				8173BEAC13A6AA0D001DC531 /* ASTRootViewController-iPad.xib in Resources */,
 				8173BEAE13A6AA0D001DC531 /* ASTRootViewController.xib in Resources */,
 				81DB9EBA13A799DD003DA9A3 /* ASTStoreKitConfig.plist in Resources */,
+				81EAF89613ABDFFD0048940A /* default-nonconsumable-image@2x.png in Resources */,
+				81EAF89713ABDFFD0048940A /* default-nonconsumable-image.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

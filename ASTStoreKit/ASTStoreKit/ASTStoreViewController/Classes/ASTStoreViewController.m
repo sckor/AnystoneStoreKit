@@ -25,11 +25,23 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
+#import <QuartzCore/QuartzCore.h>
 
 #import "ASTStoreViewController.h"
 #import "ASTStoreDetailViewController.h"
 #import "ASTWebViewController.h"
 
+typedef enum
+{
+    ASTStoreViewControllerTableViewCellTagImageView = 1,
+    ASTStoreViewControllerTableViewCellTagTitleLabel = 2,
+    ASTStoreViewControllerTableViewCellTagDescriptionLabel = 3,
+    ASTStoreViewControllerTableViewCellTagExtraInfoLabel = 4,
+    ASTStoreViewControllerTableViewCellTagPriceLabel = 5,
+    ASTStoreViewControllerTableViewCellTagTopLineView = 6,
+    ASTStoreViewControllerTableViewCellTagBottomLineView = 7,
+    ASTStoreViewControllerTableViewCellTagDropShadowView = 8
+} ASTStoreViewControllerTableViewCellTags;
 
 @interface ASTStoreViewController()
 
@@ -50,6 +62,8 @@
 @synthesize connectingActivityIndicatorView = connectingActivityIndicatorView_;
 @synthesize productIdentifiers = productIdentifiers_;
 @synthesize delegate;
+@synthesize cellBackgroundColor1 = cellBackgroundColor1_;
+@synthesize cellBackgroundColor2 = cellBackgroundColor2_;
 
 
 - (ASTStoreController*)storeController
@@ -67,7 +81,26 @@
     return [[productIdentifiers_ retain] autorelease];
 }
 
+- (UIColor*)cellBackgroundColor1
+{
+    if( nil == cellBackgroundColor1_ )
+    {
+        self.cellBackgroundColor1 = [UIColor lightGrayColor];
+    }
+    
+    ASTReturnRA(cellBackgroundColor1_);
+}
 
+- (UIColor*)cellBackgroundColor2
+{
+    if( nil == cellBackgroundColor2_ )
+    {
+        self.cellBackgroundColor2 = [UIColor colorWithWhite:0.6 alpha:1.0];
+    }
+    
+    ASTReturnRA(cellBackgroundColor2_);
+    
+}
 #pragma mark User Interface
 
 - (IBAction)restorePreviousPurchaseButtonPressed:(id)sender
@@ -132,6 +165,64 @@
     return ( [self.productIdentifiers count] );
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UIView *backgroundView = cell.backgroundView;
+    
+    if((indexPath.row % 2) == 0 )
+    {
+        backgroundView.backgroundColor = self.cellBackgroundColor1;
+    }
+    else
+    {
+        backgroundView.backgroundColor = self.cellBackgroundColor2;
+    }
+    
+    
+    if(( backgroundView.frame.size.height != 0.0 ) &&
+       ( backgroundView.frame.size.width != 0.0 ))
+    {
+        UIView *topLineView = [backgroundView viewWithTag:ASTStoreViewControllerTableViewCellTagTopLineView];
+        UIView *bottomLineView = [backgroundView viewWithTag:ASTStoreViewControllerTableViewCellTagBottomLineView];
+        
+        if( nil == topLineView )
+        {   
+            CGRect frame = backgroundView.frame;
+            frame.size.height = 1;
+            
+            topLineView = [[[UIView alloc] initWithFrame:frame] autorelease];
+            topLineView.tag = ASTStoreViewControllerTableViewCellTagTopLineView;
+            topLineView.backgroundColor = [UIColor whiteColor];
+            [backgroundView addSubview:topLineView];
+        }
+        
+        if( nil == bottomLineView )
+        {   
+            CGRect frame = backgroundView.frame;
+            frame.origin.y = frame.size.height - 1.0;
+            frame.size.height = 1.0;
+            
+            bottomLineView = [[[UIView alloc] initWithFrame:frame] autorelease];
+            bottomLineView.tag = ASTStoreViewControllerTableViewCellTagBottomLineView;
+            bottomLineView.backgroundColor = [UIColor blackColor];
+            [backgroundView addSubview:bottomLineView];
+        }
+        
+        topLineView.alpha = 0.3;
+        bottomLineView.alpha = 0.3;
+
+        if( indexPath.row == 0 )
+        {
+            topLineView.alpha = 0.0;
+        }
+        else if ( indexPath.row == [self.productIdentifiers count] - 1 )
+        {
+            bottomLineView.alpha = 0.0;
+        }
+    }
+    
+}
+
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath 
 {    
     NSString *identifier = [self.productIdentifiers objectAtIndex:indexPath.row];
@@ -139,11 +230,11 @@
     BOOL isPurchased = [self.storeController isProductPurchased:identifier];
     
     
-    //UIImageView *imageView = (UIImageView*) [cell viewWithTag:1];
-    UILabel *title = (UILabel*) [cell viewWithTag:2];
-    UILabel *description = (UILabel*) [cell viewWithTag:3];
-    UILabel *extraInfo = (UILabel*) [cell viewWithTag:4];
-    UILabel *price = (UILabel*) [cell viewWithTag:5];
+    UIImageView *imageView = (UIImageView*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagImageView];
+    UILabel *title = (UILabel*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagTitleLabel];
+    UILabel *description = (UILabel*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagDescriptionLabel];
+    UILabel *extraInfo = (UILabel*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagExtraInfoLabel];
+    UILabel *price = (UILabel*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagPriceLabel];
     
     title.text = product.localizedTitle;
     extraInfo.text = product.extraInformation;
@@ -155,24 +246,27 @@
         NSString *availableQuantityString = [NSString stringWithFormat:@"On Hand: %u",  onHand];
         description.text = availableQuantityString;
         price.text = product.localizedPrice;
+        
+        return;
+    }
+    else if( product.type == ASTStoreProductIdentifierTypeNonconsumable )
+    {
+        imageView.image = [UIImage imageNamed:@"default-nonconsumable-image"];
+    }
+    
+    if( isPurchased )
+    {
+        price.text = nil;
+        description.text = @"Purchased - Thank you!";
     }
     else
     {
-        if( isPurchased )
-        {
-            price.text = nil;
-            description.text = @"Purchased - Thank you!";
-        }
-        else
-        {
-            price.text = product.localizedPrice;
-            description.text = nil;
-        }
+        price.text = product.localizedPrice;
+        description.text = nil;
     }
     
-    //imageView.image = nil;
     
-    cell.backgroundColor = [UIColor lightGrayColor];
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -185,6 +279,22 @@
         [[NSBundle mainBundle] loadNibNamed:@"ASTStoreTableViewCell" owner:self options:nil];
         cell = storeCell_;
         self.storeCell = nil;
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+        
+        // Setup rounded corners
+        UIImageView *imageView = (UIImageView*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagImageView];
+        imageView.layer.cornerRadius = 10.0; // Same as the radius that iOS uses
+        imageView.layer.masksToBounds = YES;
+        
+        UIView *dropShadowView = [cell viewWithTag:ASTStoreViewControllerTableViewCellTagDropShadowView];
+        dropShadowView.layer.cornerRadius = 10.0;
+        dropShadowView.layer.masksToBounds = NO;
+        dropShadowView.layer.shadowColor = [[UIColor blackColor] CGColor];
+        dropShadowView.layer.shadowOffset = CGSizeMake(0,2);
+        dropShadowView.layer.shadowRadius = 1;
+        dropShadowView.layer.shadowOpacity = 1;
+        dropShadowView.layer.shouldRasterize = YES;
     }
     
     [self configureCell:cell atIndexPath:indexPath];
@@ -414,6 +524,9 @@
     self.storeController.delegate = nil;
     
     delegate = nil;
+    
+    [cellBackgroundColor1_ release], cellBackgroundColor1_ = nil;
+    [cellBackgroundColor2_ release], cellBackgroundColor2_ = nil;
     
     [super dealloc];
 }
