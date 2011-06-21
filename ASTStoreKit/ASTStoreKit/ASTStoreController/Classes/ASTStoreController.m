@@ -908,8 +908,8 @@
 - (void)paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error
 {
     DLog(@"failed:%@", error);
-    self.purchaseState = ASTStoreControllerPurchaseStateNone;
     [self invokeDelegateStoreControllerRestoreFailedWithError:error];
+    self.purchaseState = ASTStoreControllerPurchaseStateNone;
 }
 
 #pragma mark Purchase

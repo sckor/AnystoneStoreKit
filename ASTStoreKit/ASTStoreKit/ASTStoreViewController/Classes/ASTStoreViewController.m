@@ -47,6 +47,7 @@ typedef enum
 
 @property (readonly) ASTStoreController *storeController;
 @property (nonatomic,retain) NSArray *productIdentifiers;
+@property BOOL restoreDidFail;
 @end
 
 
@@ -64,6 +65,7 @@ typedef enum
 @synthesize delegate;
 @synthesize cellBackgroundColor1 = cellBackgroundColor1_;
 @synthesize cellBackgroundColor2 = cellBackgroundColor2_;
+@synthesize restoreDidFail = restoreDidFail_;
 
 
 - (ASTStoreController*)storeController
@@ -109,51 +111,137 @@ typedef enum
 }
 
 
+- (void)setConnectingToStoreLabelText:(NSString*)newText animateActivityIndicator:(BOOL)animateActivityIndicator
+{
+    float fadeDuration = 0.3;
+    
+    if( [newText isEqualToString:self.connectingToStoreLabel.text] )
+    {
+        return;
+    }
+    
+    if( nil == newText )
+    {
+        [UIView animateWithDuration:fadeDuration 
+                              delay:0.0 
+                            options:UIViewAnimationCurveEaseOut | UIViewAnimationOptionAllowUserInteraction
+                         animations:
+         ^(void) 
+         { 
+             self.connectingToStoreLabel.alpha = 0.0;
+             self.connectingActivityIndicatorView.alpha = 0.0;
+         }
+                         completion:
+         ^(BOOL finished) 
+         {
+             self.connectingToStoreLabel.text = nil;
+             [self.connectingActivityIndicatorView stopAnimating];
+         }];
+        
+
+        return;
+    }
+    
+    // Fade out and fade in 
+    [UIView animateWithDuration:fadeDuration 
+                          delay:0.0 
+                        options:UIViewAnimationCurveEaseOut | UIViewAnimationOptionAllowUserInteraction
+                     animations:
+     ^(void) 
+     { 
+         self.connectingToStoreLabel.alpha = 0.0;
+         self.connectingActivityIndicatorView.alpha = 0.0;
+     }
+                     completion:
+     ^(BOOL finished) 
+     {
+         float indicatorAlpha = 0.0;
+         
+         self.connectingToStoreLabel.text = newText;
+         if( YES == animateActivityIndicator )
+         {
+             [self.connectingActivityIndicatorView startAnimating];
+             indicatorAlpha = 1.0;
+         }
+         else
+         {
+             [self.connectingActivityIndicatorView stopAnimating];
+         }
+         
+         [UIView animateWithDuration:fadeDuration 
+                               delay:(fadeDuration * 0.5)
+                             options:UIViewAnimationCurveEaseIn | UIViewAnimationOptionAllowUserInteraction
+                          animations:
+          ^(void)
+          { 
+              self.connectingToStoreLabel.alpha = 1.0; 
+              self.connectingActivityIndicatorView.alpha = indicatorAlpha;
+          }
+                          completion:nil];
+     }];
+
+}
 
 - (void)updateStoreStateDisplay
 {
-    switch ( self.storeController.productDataState ) 
-    {            
-        case ASTStoreControllerProductDataStateUpdating:
-            self.connectingToStoreLabel.text = @"Connecting to Store";
-            [self.connectingActivityIndicatorView startAnimating];
-            break;
-            
-        case ASTStoreControllerProductDataStateUpToDate:
-            self.connectingToStoreLabel.text = nil;
-            self.productIdentifiers = nil;
-            [self.tableView reloadData];
-            [self.connectingActivityIndicatorView stopAnimating];
-            break;
-            
-        case ASTStoreControllerProductDataStateUnknown:
-        case ASTStoreControllerProductDataStateStale:
-        case ASTStoreControllerProductDataStateStaleTimeout:
-        default:
-            self.connectingToStoreLabel.text = @"Store Not Available";
-            [self.connectingActivityIndicatorView stopAnimating];
-            break;
-    }
-    
-    switch ( self.storeController.purchaseState ) 
+    if( self.storeController.purchaseState == ASTStoreControllerPurchaseStateNone )
     {
-        case ASTStoreControllerPurchaseStateProcessingPayment:
-            self.connectingToStoreLabel.text = @"Processing";
-            [self.connectingActivityIndicatorView startAnimating];
-            break;
-
-        case ASTStoreControllerPurchaseStateVerifyingReceipt:
-            self.connectingToStoreLabel.text = @"Verifying";
-            [self.connectingActivityIndicatorView startAnimating];
-            break;
-            
-        case ASTStoreControllerPurchaseStateDownloadingContent:
-            self.connectingToStoreLabel.text = @"Downloading";
-            [self.connectingActivityIndicatorView startAnimating];
-            break;
-
-        default:
-            break;
+        switch ( self.storeController.productDataState ) 
+        {            
+            case ASTStoreControllerProductDataStateUpdating:
+                [self setConnectingToStoreLabelText:@"Connecting to Store" animateActivityIndicator:YES];
+                break;
+                
+            case ASTStoreControllerProductDataStateUpToDate:
+                if( self.restoreDidFail )
+                {
+                    [self setConnectingToStoreLabelText:@"Restore Failed" animateActivityIndicator:NO];
+                    self.restoreDidFail = NO;
+                }
+                else
+                {
+                    [self setConnectingToStoreLabelText:@"Store Ready" animateActivityIndicator:NO];
+                }
+                
+                self.productIdentifiers = nil;
+                [self.tableView reloadData];
+                
+                double delayInSeconds = 5.0;
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void)
+                               {
+                                   [self setConnectingToStoreLabelText:nil animateActivityIndicator:NO];
+                               });
+                
+                break;
+                
+            case ASTStoreControllerProductDataStateUnknown:
+            case ASTStoreControllerProductDataStateStale:
+            case ASTStoreControllerProductDataStateStaleTimeout:
+            default:
+                [self setConnectingToStoreLabelText:@"Store Not Available" animateActivityIndicator:NO];
+                break;
+        }
+    }
+    else
+    {
+        switch ( self.storeController.purchaseState ) 
+        {
+            case ASTStoreControllerPurchaseStateProcessingPayment:
+                [self setConnectingToStoreLabelText:@"Processing" animateActivityIndicator:YES];
+                break;
+                
+            case ASTStoreControllerPurchaseStateVerifyingReceipt:
+                [self setConnectingToStoreLabelText:@"Verifying" animateActivityIndicator:YES];
+                break;
+                
+            case ASTStoreControllerPurchaseStateDownloadingContent:
+                [self setConnectingToStoreLabelText:@"Downloading" animateActivityIndicator:YES];
+                break;
+                
+            default:
+                break;
+        }
     }
 }
 
@@ -353,8 +441,9 @@ typedef enum
 - (void)astStoreControllerRestoreFailedWithError:(NSError*)error
 {
     DLog(@"restore failed with error:%@", error);
-    self.connectingToStoreLabel.text = @"Restore Failed";
-    
+    self.restoreDidFail = YES;
+    // No need to invoke the state update as the purchase state will change and that invokes the
+    // update to the display 
 }
 
 - (void)astStoreControllerProductIdentifierExpired:(NSString*)productIdentifier
@@ -380,41 +469,14 @@ typedef enum
     }
 }
 
--(void)layoutLandscape {
-    self.tableContainerView.frame = CGRectMake(160.0, 0.0, 320.0, 290.0);
-    self.restorePreviousPurchaseButton.frame = CGRectMake(7.0, 25.0, 145.0, 50.0);
-    self.connectingToStoreLabel.frame = CGRectMake(7.0, 115.0, 145.0, 21.0);
-    self.connectingActivityIndicatorView.frame = CGRectMake(69.0, 87.0, 20.0, 20.0);
-}
--(void)layoutPortrait {
-    self.tableContainerView.frame = CGRectMake(0.0, 0.0, 320.0, 262.0);
-    self.restorePreviousPurchaseButton.frame = CGRectMake(46.0, 270.0, 228.0, 37.0);
-    self.connectingToStoreLabel.frame = CGRectMake(66.0, 316.0, 189.0, 21.0);
-    self.connectingActivityIndicatorView.frame = CGRectMake(254.0, 317.0, 20.0, 20.0);
-}
 
-#pragma mark - View lifecycle
-
-- (void)updateThisView {
-    UIDeviceOrientation deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    if (UIDeviceOrientationIsLandscape(deviceOrientation)) {
-        if (!isAniPad)
-            [self layoutLandscape];
-    }
-	else { 
-        if (!isAniPad)
-            [self layoutPortrait];
-    }    
-}
-
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[self performSelector:@selector(updateThisView) withObject:nil afterDelay:0.0];
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration 
+{
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
-    //return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 - (void)dismissView:(id)sender 
@@ -458,9 +520,7 @@ typedef enum
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    [self updateThisView];
-    
+        
     self.storeController.delegate = self;
         
     [self.storeController requestProductDataFromiTunes:NO];
