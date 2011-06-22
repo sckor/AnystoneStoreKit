@@ -376,6 +376,10 @@ enum ASTStoreViewControllerButtonsRows
         {
             imageView.image = [UIImage imageNamed:@"default-nonconsumable-image"];
         }
+        else if ( product.type == ASTStoreProductIdentifierTypeAutoRenewable )
+        {
+            imageView.image = [UIImage imageNamed:@"subscription"];
+        }
         
         if( isPurchased )
         {
@@ -388,6 +392,7 @@ enum ASTStoreViewControllerButtonsRows
             description.text = nil;
         }
         
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     else if ( indexPath.section == ASTStoreViewControllerSectionButtons )
     {
@@ -412,6 +417,24 @@ enum ASTStoreViewControllerButtonsRows
     
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    switch (section) 
+    {
+        case ASTStoreViewControllerSectionItems:
+            return NSLocalizedString(@"Items", nil);
+            break;
+            
+        case ASTStoreViewControllerSectionButtons:
+            return NSLocalizedString(@"Actions", nil);
+            
+        default:
+            break;
+    }
+    
+    return nil;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"ASTStoreTableViewCell";
@@ -422,7 +445,6 @@ enum ASTStoreViewControllerButtonsRows
         [[NSBundle mainBundle] loadNibNamed:@"ASTStoreTableViewCell" owner:self options:nil];
         cell = storeCell_;
         self.storeCell = nil;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
         
         // Setup rounded corners
@@ -571,12 +593,17 @@ enum ASTStoreViewControllerButtonsRows
 {
     [super viewDidLoad];
 
-    UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    infoButton.frame = CGRectMake(0, 0, 51.0, 29.0);
+    UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage *storeKitImage = [UIImage imageNamed:@"storekit_navbar_button_black_effect"];
+
+    infoButton.frame = CGRectMake(0, 0, storeKitImage.size.width, storeKitImage.size.height);
+    
     [infoButton addTarget:self action:@selector(infoView:) forControlEvents:UIControlEventTouchUpInside];    
-    [infoButton setImage:[UIImage imageNamed:@"storekit_navbar_button_black_effect.png"] forState:UIControlStateNormal];
+    [infoButton setImage:storeKitImage forState:UIControlStateNormal];
+    
     UIBarButtonItem *modalButton = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
     [self.navigationItem setLeftBarButtonItem:modalButton animated:YES];
+
     [modalButton release];
         
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc]

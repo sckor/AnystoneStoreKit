@@ -32,6 +32,7 @@
 
 - (IBAction)showASTStoreBtnPressed:(id)sender
 {
+
     if (isAniPad) {
         ASTStoreViewController *vc = [[ASTStoreViewController alloc] initWithNibName:@"ASTStoreViewController-iPad" bundle:nil];
         vc.delegate = self;
