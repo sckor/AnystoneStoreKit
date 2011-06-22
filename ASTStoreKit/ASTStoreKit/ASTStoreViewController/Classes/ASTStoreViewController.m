@@ -27,6 +27,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+#import "MBProgressHUD.h"
 #import "ASTStoreViewController.h"
 #import "ASTStoreDetailViewController.h"
 #import "ASTWebViewController.h"
@@ -59,13 +60,16 @@ enum ASTStoreViewControllerButtonsRows
     ASTStoreViewControllerButtonsRowsMax
 };
 
-@interface ASTStoreViewController()
+@interface ASTStoreViewController() <MBProgressHUDDelegate>
 
 @property (readonly) ASTStoreController *storeController;
 @property (nonatomic,retain) NSArray *consumableProductIdentifiers;
 @property (nonatomic,retain) NSArray *autoRenewableProductIdentifiers;
 @property (nonatomic,retain) NSArray *nonconsumableProductIdentifiers;
-@property BOOL restoreDidFail;
+@property BOOL needsHideHUD;
+
+@property (nonatomic,retain) MBProgressHUD *progessHUD;
+
 @end
 
 
@@ -76,22 +80,20 @@ enum ASTStoreViewControllerButtonsRows
 @synthesize tableContainerView = tableContainerView_;
 @synthesize tableView = tableView_;
 @synthesize storeCell = storeCell_;
-@synthesize restorePreviousPurchaseButton = restorePreviousPurchaseButton_;
-@synthesize connectingToStoreLabel = connectingToStoreLabel_;
-@synthesize connectingActivityIndicatorView = connectingActivityIndicatorView_;
 @synthesize delegate;
 @synthesize cellBackgroundColor1 = cellBackgroundColor1_;
 @synthesize cellBackgroundColor2 = cellBackgroundColor2_;
-@synthesize restoreDidFail = restoreDidFail_;
+@synthesize needsHideHUD = needsHideHUD_;
 @synthesize consumableProductIdentifiers = consumableProductIdentifiers_;
 @synthesize autoRenewableProductIdentifiers = autoRenewableProductIdentifiers_;
 @synthesize nonconsumableProductIdentifiers = nonconsumableProductIdentifiers_;
-
+@synthesize progessHUD = progessHUD_;
 
 - (ASTStoreController*)storeController
 {
     return ( [ASTStoreController sharedStoreController] );
 }
+
 
 - (NSArray*)consumableProductIdentifiers
 {
@@ -153,148 +155,98 @@ enum ASTStoreViewControllerButtonsRows
     ASTReturnRA(cellBackgroundColor2_);
     
 }
+
+#pragma mark HUD Related
+#define kHudHideDelay 2.5
+
+- (void)hudWasHidden:(MBProgressHUD*)aHud
+{
+    if( aHud == self.progessHUD )
+    {
+        self.progessHUD = nil;
+    }
+}
+
+- (MBProgressHUD*)activityProgessHUDWithLabel:(NSString*)aLabel
+{
+    MBProgressHUD *aProgressHUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    [self.navigationController.view addSubview:aProgressHUD];
+    
+    aProgressHUD.delegate = self;
+    aProgressHUD.labelText = aLabel;
+    aProgressHUD.removeFromSuperViewOnHide = YES;
+    
+    self.needsHideHUD = YES;
+    [aProgressHUD show:YES];
+    
+    ASTReturnRA(aProgressHUD);
+}
+
+- (MBProgressHUD*)successProgessHUDWithLabel:(NSString*)aLabel
+{
+    MBProgressHUD *aProgressHUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    [self.navigationController.view addSubview:aProgressHUD];
+
+    aProgressHUD.delegate = self;
+    aProgressHUD.customView = [[[UIImageView alloc] 
+                                initWithImage:nil]
+                               autorelease];
+
+    aProgressHUD.mode = MBProgressHUDModeCustomView;
+    aProgressHUD.labelText = aLabel;
+    aProgressHUD.removeFromSuperViewOnHide = YES;
+    
+    self.needsHideHUD = NO;
+
+    [aProgressHUD show:YES];
+    [aProgressHUD hide:YES afterDelay:kHudHideDelay];
+    
+    ASTReturnRA(aProgressHUD);
+}
+
+- (MBProgressHUD*)failProgessHUDWithLabel:(NSString*)aLabel
+{
+    MBProgressHUD *aProgressHUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    [self.navigationController.view addSubview:aProgressHUD];
+    
+    aProgressHUD.delegate = self;
+    aProgressHUD.customView = [[[UIImageView alloc] 
+                                initWithImage:nil]
+                               autorelease];
+    
+    aProgressHUD.removeFromSuperViewOnHide = YES;
+    aProgressHUD.mode = MBProgressHUDModeCustomView;
+    aProgressHUD.labelText = aLabel;
+    
+    self.needsHideHUD = NO;
+    [aProgressHUD show:YES];
+    [aProgressHUD hide:YES afterDelay:kHudHideDelay];
+    
+    ASTReturnRA(aProgressHUD);
+}
+
+- (void)setProgessHUD:(MBProgressHUD *)progessHUD
+{
+    if( nil != progessHUD_ )
+    {
+        [progessHUD_ hide:YES];
+        [progessHUD_ release];
+    }
+    
+    progessHUD_ = [progessHUD retain];
+}
+
 #pragma mark User Interface
 
 - (IBAction)restorePreviousPurchaseButtonPressed:(id)sender
 {
     [self.storeController restorePreviousPurchases];
-}
-
-
-- (void)setConnectingToStoreLabelText:(NSString*)newText animateActivityIndicator:(BOOL)animateActivityIndicator
-{
-    float fadeDuration = 0.3;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:ASTStoreViewControllerButtonsRowsRestore 
+                                                inSection:ASTStoreViewControllerSectionButtons];
     
-    if( [newText isEqualToString:self.connectingToStoreLabel.text] )
-    {
-        return;
-    }
-    
-    if( nil == newText )
-    {
-        [UIView animateWithDuration:fadeDuration 
-                              delay:0.0 
-                            options:UIViewAnimationCurveEaseOut | UIViewAnimationOptionAllowUserInteraction
-                         animations:
-         ^(void) 
-         { 
-             self.connectingToStoreLabel.alpha = 0.0;
-             self.connectingActivityIndicatorView.alpha = 0.0;
-         }
-                         completion:
-         ^(BOOL finished) 
-         {
-             self.connectingToStoreLabel.text = nil;
-             [self.connectingActivityIndicatorView stopAnimating];
-         }];
-        
-
-        return;
-    }
-    
-    // Fade out and fade in 
-    [UIView animateWithDuration:fadeDuration 
-                          delay:0.0 
-                        options:UIViewAnimationCurveEaseOut | UIViewAnimationOptionAllowUserInteraction
-                     animations:
-     ^(void) 
-     { 
-         self.connectingToStoreLabel.alpha = 0.0;
-         self.connectingActivityIndicatorView.alpha = 0.0;
-     }
-                     completion:
-     ^(BOOL finished) 
-     {
-         float indicatorAlpha = 0.0;
-         
-         self.connectingToStoreLabel.text = newText;
-         if( YES == animateActivityIndicator )
-         {
-             [self.connectingActivityIndicatorView startAnimating];
-             indicatorAlpha = 1.0;
-         }
-         else
-         {
-             [self.connectingActivityIndicatorView stopAnimating];
-         }
-         
-         [UIView animateWithDuration:fadeDuration 
-                               delay:(fadeDuration * 0.5)
-                             options:UIViewAnimationCurveEaseIn | UIViewAnimationOptionAllowUserInteraction
-                          animations:
-          ^(void)
-          { 
-              self.connectingToStoreLabel.alpha = 1.0; 
-              self.connectingActivityIndicatorView.alpha = indicatorAlpha;
-          }
-                          completion:nil];
-     }];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 
 }
-
-- (void)updateStoreStateDisplay
-{
-    if( self.storeController.purchaseState == ASTStoreControllerPurchaseStateNone )
-    {
-        switch ( self.storeController.productDataState ) 
-        {            
-            case ASTStoreControllerProductDataStateUpdating:
-                [self setConnectingToStoreLabelText:@"Connecting to Store" animateActivityIndicator:YES];
-                break;
-                
-            case ASTStoreControllerProductDataStateUpToDate:
-                if( self.restoreDidFail )
-                {
-                    [self setConnectingToStoreLabelText:@"Restore Failed" animateActivityIndicator:NO];
-                    self.restoreDidFail = NO;
-                }
-                else
-                {
-                    [self setConnectingToStoreLabelText:@"Store Ready" animateActivityIndicator:NO];
-                }
-                
-                [self resetProductIdentifierArrays];
-                [self.tableView reloadData];
-                
-                double delayInSeconds = 5.0;
-                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-                dispatch_after(popTime, dispatch_get_main_queue(), ^(void)
-                               {
-                                   [self setConnectingToStoreLabelText:nil animateActivityIndicator:NO];
-                               });
-                
-                break;
-                
-            case ASTStoreControllerProductDataStateUnknown:
-            case ASTStoreControllerProductDataStateStale:
-            case ASTStoreControllerProductDataStateStaleTimeout:
-            default:
-                [self setConnectingToStoreLabelText:@"Store Not Available" animateActivityIndicator:NO];
-                break;
-        }
-    }
-    else
-    {
-        switch ( self.storeController.purchaseState ) 
-        {
-            case ASTStoreControllerPurchaseStateProcessingPayment:
-                [self setConnectingToStoreLabelText:@"Processing" animateActivityIndicator:YES];
-                break;
-                
-            case ASTStoreControllerPurchaseStateVerifyingReceipt:
-                [self setConnectingToStoreLabelText:@"Verifying" animateActivityIndicator:YES];
-                break;
-                
-            case ASTStoreControllerPurchaseStateDownloadingContent:
-                [self setConnectingToStoreLabelText:@"Downloading" animateActivityIndicator:YES];
-                break;
-                
-            default:
-                break;
-        }
-    }
-}
-
 
 #pragma mark - Table View Datasource
 
@@ -595,37 +547,88 @@ enum ASTStoreViewControllerButtonsRows
     DLog(@"stateChanged:%d", state);
     
     // Update table now that the state of the data has changed
+    [self resetProductIdentifierArrays];
     [self.tableView reloadData];
-    [self updateStoreStateDisplay];
+    
+    switch ( state ) 
+    {            
+        case ASTStoreControllerProductDataStateUpdating:
+            self.progessHUD = [self activityProgessHUDWithLabel:NSLocalizedString(@"Connecting to Store", nil)];
+            break;
+            
+        case ASTStoreControllerProductDataStateUpToDate:
+            if( self.needsHideHUD )
+            {
+                DLog(@"hide");
+                [self.progessHUD hide:YES];
+                self.needsHideHUD = NO;
+            }
+            
+            break;
+            
+        case ASTStoreControllerProductDataStateUnknown:
+        case ASTStoreControllerProductDataStateStale:
+        case ASTStoreControllerProductDataStateStaleTimeout:
+        default:
+            self.progessHUD = [self failProgessHUDWithLabel:NSLocalizedString(@"Store Not Available", nil)];
+            break;
+    }
+
 }
 
 - (void)astStoreControllerProductIdentifierPurchased:(NSString*)productIdentifier
 {
     DLog(@"purchased:%@", productIdentifier);
     [self.tableView reloadData];
-    [self updateStoreStateDisplay];
 }
 
 - (void)astStoreControllerPurchaseStateChanged:(ASTStoreControllerPurchaseState)state
 {
     DLog(@"purchaseStateChanged:%d", state);
-    [self updateStoreStateDisplay];
+    NSString *labelText =  nil;
+    
+    switch ( self.storeController.purchaseState ) 
+    {
+        case ASTStoreControllerPurchaseStateProcessingPayment:
+            labelText = NSLocalizedString(@"Processing", nil);
+            break;
+            
+        case ASTStoreControllerPurchaseStateVerifyingReceipt:
+            labelText = NSLocalizedString(@"Verifying", nil);
+            break;
+            
+        case ASTStoreControllerPurchaseStateDownloadingContent:
+            labelText = NSLocalizedString(@"Downloading", nil);
+            break;
+            
+        default:
+            break;
+    }
+    
+    if( nil != labelText )
+    {
+        self.progessHUD = [self activityProgessHUDWithLabel:labelText];
+    }
+       
 }
 
 // Additionally will invoke this once the restore queue has been processed
 - (void)astStoreControllerRestoreComplete
 {
     DLog(@"restore Complete");
-    [self updateStoreStateDisplay];
+    self.progessHUD = [self successProgessHUDWithLabel:NSLocalizedString(@"Restore Complete", nil)];
 }
 
 // Failures during the restore
 - (void)astStoreControllerRestoreFailedWithError:(NSError*)error
 {
     DLog(@"restore failed with error:%@", error);
-    self.restoreDidFail = YES;
-    // No need to invoke the state update as the purchase state will change and that invokes the
-    // update to the display 
+    if( self.needsHideHUD )
+    {
+        [self.progessHUD hide:YES];
+    }
+    
+    self.progessHUD = [self failProgessHUDWithLabel:NSLocalizedString(@"Restore Failed", nil)];
 }
 
 - (void)astStoreControllerProductIdentifierExpired:(NSString*)productIdentifier
@@ -711,7 +714,6 @@ enum ASTStoreViewControllerButtonsRows
     self.storeController.delegate = self;
         
     [self.storeController requestProductDataFromiTunes:NO];
-    [self updateStoreStateDisplay];
     [self.tableView reloadData];
 }
 
@@ -738,9 +740,6 @@ enum ASTStoreViewControllerButtonsRows
     self.tableContainerView = nil;
     self.tableView = nil;
     self.storeCell = nil;
-    self.restorePreviousPurchaseButton = nil;
-    self.connectingToStoreLabel = nil;
-    self.connectingActivityIndicatorView = nil;
 }
 
 #pragma  mark - Memory Management
@@ -776,6 +775,8 @@ enum ASTStoreViewControllerButtonsRows
     [consumableProductIdentifiers_ release], consumableProductIdentifiers_ = nil;
     [autoRenewableProductIdentifiers_ release], autoRenewableProductIdentifiers_ = nil;
     [nonconsumableProductIdentifiers_ release], nonconsumableProductIdentifiers_ = nil;
+    
+    [progessHUD_ release], progessHUD_ = nil;
     
     [super dealloc];
 }
