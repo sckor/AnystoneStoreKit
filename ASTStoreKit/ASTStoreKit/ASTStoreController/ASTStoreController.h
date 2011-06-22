@@ -47,7 +47,7 @@ typedef enum
     ASTStoreControllerPurchaseStateNone,
     ASTStoreControllerPurchaseStateProcessingPayment,
     ASTStoreControllerPurchaseStateVerifyingReceipt,
-    ASTStoreControllerPurchaseStateDownloadingContent
+    ASTStoreControllerPurchaseStateDownloadingContent,
 } ASTStoreControllerPurchaseState;
 
 @interface ASTStoreController : NSObject {}

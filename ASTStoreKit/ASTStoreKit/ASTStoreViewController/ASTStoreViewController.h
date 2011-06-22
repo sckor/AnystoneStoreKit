@@ -59,10 +59,6 @@
 @property (retain) IBOutlet UITableView *tableView;
 @property (retain) IBOutlet UITableViewCell *storeCell;
 
-@property (retain) IBOutlet UIButton *restorePreviousPurchaseButton;
-@property (retain) IBOutlet UILabel *connectingToStoreLabel;
-@property (retain) IBOutlet UIActivityIndicatorView *connectingActivityIndicatorView;
-
 @property (nonatomic,retain) UIColor *cellBackgroundColor1;
 @property (nonatomic,retain) UIColor *cellBackgroundColor2;
 

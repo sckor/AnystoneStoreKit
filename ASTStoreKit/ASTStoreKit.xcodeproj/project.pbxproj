@@ -76,6 +76,12 @@
 		8173BEAC13A6AA0D001DC531 /* ASTRootViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BEA813A6AA0D001DC531 /* ASTRootViewController-iPad.xib */; };
 		8173BEAD13A6AA0D001DC531 /* ASTRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8173BEAA13A6AA0D001DC531 /* ASTRootViewController.m */; };
 		8173BEAE13A6AA0D001DC531 /* ASTRootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BEAB13A6AA0D001DC531 /* ASTRootViewController.xib */; };
+		819BC41F13B123470000C17F /* restorePurchases2.png in Resources */ = {isa = PBXBuildFile; fileRef = 819BC41D13B123470000C17F /* restorePurchases2.png */; };
+		819BC42013B123470000C17F /* restorePurchases2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 819BC41E13B123470000C17F /* restorePurchases2@2x.png */; };
+		819BC43513B2415A0000C17F /* subscription.png in Resources */ = {isa = PBXBuildFile; fileRef = 819BC43313B2415A0000C17F /* subscription.png */; };
+		819BC43613B2415A0000C17F /* subscription@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 819BC43413B2415A0000C17F /* subscription@2x.png */; };
+		819BC44313B2680E0000C17F /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 819BC44113B2680E0000C17F /* MBProgressHUD.m */; };
+		819BC44413B2680E0000C17F /* README.mdown in Resources */ = {isa = PBXBuildFile; fileRef = 819BC44213B2680E0000C17F /* README.mdown */; };
 		81DB9EBA13A799DD003DA9A3 /* ASTStoreKitConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 81DB9EB913A799DD003DA9A3 /* ASTStoreKitConfig.plist */; };
 		81DB9EBE13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 81DB9EBD13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m */; };
 		81DB9EC113A7A0AB003DA9A3 /* ASTStoreConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 81DB9EC013A7A0AB003DA9A3 /* ASTStoreConfig.m */; };
@@ -202,6 +208,13 @@
 		8173BEA913A6AA0D001DC531 /* ASTRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTRootViewController.h; sourceTree = "<group>"; };
 		8173BEAA13A6AA0D001DC531 /* ASTRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTRootViewController.m; sourceTree = "<group>"; };
 		8173BEAB13A6AA0D001DC531 /* ASTRootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTRootViewController.xib; sourceTree = "<group>"; };
+		819BC41D13B123470000C17F /* restorePurchases2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = restorePurchases2.png; sourceTree = "<group>"; };
+		819BC41E13B123470000C17F /* restorePurchases2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "restorePurchases2@2x.png"; sourceTree = "<group>"; };
+		819BC43313B2415A0000C17F /* subscription.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = subscription.png; sourceTree = "<group>"; };
+		819BC43413B2415A0000C17F /* subscription@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "subscription@2x.png"; sourceTree = "<group>"; };
+		819BC44013B2680E0000C17F /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		819BC44113B2680E0000C17F /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		819BC44213B2680E0000C17F /* README.mdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.mdown; sourceTree = "<group>"; };
 		81DB9EB913A799DD003DA9A3 /* ASTStoreKitConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ASTStoreKitConfig.plist; sourceTree = "<group>"; };
 		81DB9EBC13A7A041003DA9A3 /* ASTStoreConfigPlistReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreConfigPlistReader.h; sourceTree = "<group>"; };
 		81DB9EBD13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreConfigPlistReader.m; sourceTree = "<group>"; };
@@ -333,6 +346,7 @@
 				8173BE1813A69366001DC531 /* ASTStoreViewController.h */,
 				8173BDF113A6925F001DC531 /* Classes */,
 				8173BDF013A69227001DC531 /* Resources */,
+				819BC43F13B267E80000C17F /* Third Party */,
 			);
 			path = ASTStoreViewController;
 			sourceTree = "<group>";
@@ -370,6 +384,10 @@
 				8173BE0A13A69329001DC531 /* DropShadow-iPad.png */,
 				8173BE0B13A69329001DC531 /* default-purchase-image@2x.png */,
 				8173BE0C13A69329001DC531 /* default-purchase-image.png */,
+				819BC41D13B123470000C17F /* restorePurchases2.png */,
+				819BC41E13B123470000C17F /* restorePurchases2@2x.png */,
+				819BC43313B2415A0000C17F /* subscription.png */,
+				819BC43413B2415A0000C17F /* subscription@2x.png */,
 			);
 			path = Graphics;
 			sourceTree = "<group>";
@@ -535,6 +553,16 @@
 			path = SimStoreKit;
 			sourceTree = "<group>";
 		};
+		819BC43F13B267E80000C17F /* Third Party */ = {
+			isa = PBXGroup;
+			children = (
+				819BC44013B2680E0000C17F /* MBProgressHUD.h */,
+				819BC44113B2680E0000C17F /* MBProgressHUD.m */,
+				819BC44213B2680E0000C17F /* README.mdown */,
+			);
+			path = "Third Party";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -614,6 +642,11 @@
 				81DB9EBA13A799DD003DA9A3 /* ASTStoreKitConfig.plist in Resources */,
 				81EAF89613ABDFFD0048940A /* default-nonconsumable-image@2x.png in Resources */,
 				81EAF89713ABDFFD0048940A /* default-nonconsumable-image.png in Resources */,
+				819BC41F13B123470000C17F /* restorePurchases2.png in Resources */,
+				819BC42013B123470000C17F /* restorePurchases2@2x.png in Resources */,
+				819BC43513B2415A0000C17F /* subscription.png in Resources */,
+				819BC43613B2415A0000C17F /* subscription@2x.png in Resources */,
+				819BC44413B2680E0000C17F /* README.mdown in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -660,6 +693,7 @@
 				8173BEAD13A6AA0D001DC531 /* ASTRootViewController.m in Sources */,
 				81DB9EBE13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m in Sources */,
 				81DB9EC113A7A0AB003DA9A3 /* ASTStoreConfig.m in Sources */,
+				819BC44313B2680E0000C17F /* MBProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
