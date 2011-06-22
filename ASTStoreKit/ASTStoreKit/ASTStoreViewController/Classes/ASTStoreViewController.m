@@ -46,7 +46,9 @@ typedef enum
 enum ASTStoreViewControllerSections 
 {
     ASTStoreViewControllerSectionButtons = 0,
-    ASTStoreViewControllerSectionItems,
+    ASTStoreViewControllerSectionConsumables,
+    ASTStoreViewControllerSectionAutoRenewables,
+    ASTStoreViewControllerSectionNonconsumables,
     ASTStoreViewControllerSectionMax
 };
 
@@ -60,7 +62,9 @@ enum ASTStoreViewControllerButtonsRows
 @interface ASTStoreViewController()
 
 @property (readonly) ASTStoreController *storeController;
-@property (nonatomic,retain) NSArray *productIdentifiers;
+@property (nonatomic,retain) NSArray *consumableProductIdentifiers;
+@property (nonatomic,retain) NSArray *autoRenewableProductIdentifiers;
+@property (nonatomic,retain) NSArray *nonconsumableProductIdentifiers;
 @property BOOL restoreDidFail;
 @end
 
@@ -75,11 +79,13 @@ enum ASTStoreViewControllerButtonsRows
 @synthesize restorePreviousPurchaseButton = restorePreviousPurchaseButton_;
 @synthesize connectingToStoreLabel = connectingToStoreLabel_;
 @synthesize connectingActivityIndicatorView = connectingActivityIndicatorView_;
-@synthesize productIdentifiers = productIdentifiers_;
 @synthesize delegate;
 @synthesize cellBackgroundColor1 = cellBackgroundColor1_;
 @synthesize cellBackgroundColor2 = cellBackgroundColor2_;
 @synthesize restoreDidFail = restoreDidFail_;
+@synthesize consumableProductIdentifiers = consumableProductIdentifiers_;
+@synthesize autoRenewableProductIdentifiers = autoRenewableProductIdentifiers_;
+@synthesize nonconsumableProductIdentifiers = nonconsumableProductIdentifiers_;
 
 
 - (ASTStoreController*)storeController
@@ -87,14 +93,44 @@ enum ASTStoreViewControllerButtonsRows
     return ( [ASTStoreController sharedStoreController] );
 }
 
-- (NSArray*)productIdentifiers
+- (NSArray*)consumableProductIdentifiers
 {
-    if( nil == productIdentifiers_ )
+    if( nil == consumableProductIdentifiers_ )
     {
-        self.productIdentifiers = [self.storeController sortedProductIdentifiers];
+        self.consumableProductIdentifiers = [self.storeController productIdentifiersForProductType:ASTStoreProductIdentifierTypeConsumable 
+                                                                             sortedUsingComparator:nil];
     }
     
-    return [[productIdentifiers_ retain] autorelease];
+    ASTReturnRA( consumableProductIdentifiers_ );
+}
+
+- (NSArray*)autoRenewableProductIdentifiers
+{
+    if( nil == autoRenewableProductIdentifiers_ )
+    {
+        self.autoRenewableProductIdentifiers = [self.storeController productIdentifiersForProductType:ASTStoreProductIdentifierTypeAutoRenewable 
+                                                                                sortedUsingComparator:nil];
+    }
+    
+    ASTReturnRA( autoRenewableProductIdentifiers_ );
+}
+
+- (NSArray*)nonconsumableProductIdentifiers
+{
+    if( nil == nonconsumableProductIdentifiers_ )
+    {
+        self.nonconsumableProductIdentifiers = [self.storeController productIdentifiersForProductType:ASTStoreProductIdentifierTypeNonconsumable 
+                                                                                sortedUsingComparator:nil];
+    }
+    
+    ASTReturnRA( nonconsumableProductIdentifiers_ );
+}
+
+- (void)resetProductIdentifierArrays
+{
+    self.consumableProductIdentifiers = nil;
+    self.autoRenewableProductIdentifiers = nil;
+    self.nonconsumableProductIdentifiers = nil;
 }
 
 - (UIColor*)cellBackgroundColor1
@@ -217,7 +253,7 @@ enum ASTStoreViewControllerButtonsRows
                     [self setConnectingToStoreLabelText:@"Store Ready" animateActivityIndicator:NO];
                 }
                 
-                self.productIdentifiers = nil;
+                [self resetProductIdentifierArrays];
                 [self.tableView reloadData];
                 
                 double delayInSeconds = 5.0;
@@ -270,9 +306,16 @@ enum ASTStoreViewControllerButtonsRows
             return( ASTStoreViewControllerButtonsRowsMax );
             break;
             
-            case ASTStoreViewControllerSectionItems:
-            return ( [self.productIdentifiers count] );
+        case ASTStoreViewControllerSectionConsumables:
+            return ( [self.consumableProductIdentifiers count] );
+            break;
             
+        case ASTStoreViewControllerSectionNonconsumables:
+            return ( [self.nonconsumableProductIdentifiers count] );
+            break;
+            
+        case ASTStoreViewControllerSectionAutoRenewables:
+            return ( [self.autoRenewableProductIdentifiers count] );
             break;
             
         default:
@@ -281,6 +324,7 @@ enum ASTStoreViewControllerButtonsRows
 
     return 0;
 }
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return ASTStoreViewControllerSectionMax;
@@ -336,12 +380,28 @@ enum ASTStoreViewControllerButtonsRows
         {
             topLineView.alpha = 0.0;
         }
-        else if ( indexPath.row == [self.productIdentifiers count] - 1 )
-        {
-            bottomLineView.alpha = 0.0;
-        }
+    }
+}
+
+- (NSString*)productIdentifierForIndexPath:(NSIndexPath*)indexPath
+{
+    
+    switch (indexPath.section)
+    {
+        case ASTStoreViewControllerSectionConsumables:
+            return [self.consumableProductIdentifiers objectAtIndex:indexPath.row];
+            break;
+            
+        case ASTStoreViewControllerSectionNonconsumables:
+            return [self.nonconsumableProductIdentifiers objectAtIndex:indexPath.row];
+            break;
+            
+        case ASTStoreViewControllerSectionAutoRenewables:
+            return [self.autoRenewableProductIdentifiers objectAtIndex:indexPath.row];
+            break;
     }
     
+    return nil;
 }
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath 
@@ -351,68 +411,77 @@ enum ASTStoreViewControllerButtonsRows
     UILabel *description = (UILabel*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagDescriptionLabel];
     UILabel *extraInfo = (UILabel*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagExtraInfoLabel];
     UILabel *price = (UILabel*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagPriceLabel];
-
-    if( indexPath.section == ASTStoreViewControllerSectionItems )
-    {
-        
-        NSString *identifier = [self.productIdentifiers objectAtIndex:indexPath.row];
-        ASTStoreProduct *product = [self.storeController storeProductForIdentifier:identifier];
-        BOOL isPurchased = [self.storeController isProductPurchased:identifier];
-        
-        title.text = product.localizedTitle;
-        extraInfo.text = product.extraInformation;
-        
-        if( product.type == ASTStoreProductIdentifierTypeConsumable )
-        {
-            NSUInteger onHand = [self.storeController availableQuantityForProduct:identifier];
-            
-            NSString *availableQuantityString = [NSString stringWithFormat:@"On Hand: %u",  onHand];
-            description.text = availableQuantityString;
-            price.text = product.localizedPrice;
-            
-            return;
-        }
-        else if( product.type == ASTStoreProductIdentifierTypeNonconsumable )
-        {
-            imageView.image = [UIImage imageNamed:@"default-nonconsumable-image"];
-        }
-        else if ( product.type == ASTStoreProductIdentifierTypeAutoRenewable )
-        {
-            imageView.image = [UIImage imageNamed:@"subscription"];
-        }
-        
-        if( isPurchased )
-        {
-            price.text = nil;
-            description.text = @"Purchased - Thank you!";
-        }
-        else
-        {
-            price.text = product.localizedPrice;
-            description.text = nil;
-        }
-        
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    }
-    else if ( indexPath.section == ASTStoreViewControllerSectionButtons )
+    
+    if( indexPath.section == ASTStoreViewControllerSectionButtons )
     {
         cell.accessoryType = UITableViewCellAccessoryNone;
         description.text = nil;
         extraInfo.text = nil;
         price.text = nil;
-
+        
         if( indexPath.row == ASTStoreViewControllerButtonsRowsRestore )
         {
             imageView.image = [UIImage imageNamed:@"restorePurchases2"];
             title.text = NSLocalizedString(@"Restore Purchases...", nil);
         }
         /*
-        else if( indexPath.row == ASTStoreViewControllerButtonsRowsReceiveVoucher )
-        {
-            title.text = NSLocalizedString(@"Receive Voucher...", nil);            
-        }
+         else if( indexPath.row == ASTStoreViewControllerButtonsRowsReceiveVoucher )
+         {
+         title.text = NSLocalizedString(@"Receive Voucher...", nil);            
+         }
          */
+
+        return;
+    }
+    
+    
+    NSString *identifier =  [self productIdentifierForIndexPath:indexPath];
+    ASTStoreProduct *product = [self.storeController storeProductForIdentifier:identifier];
+    BOOL isPurchased = [self.storeController isProductPurchased:identifier];
+    
+    title.text = product.localizedTitle;
+    extraInfo.text = product.extraInformation;
+    
+    if( isPurchased )
+    {
+        price.text = nil;
+        description.text = @"Purchased - Thank you!";
+    }
+    else
+    {
+        price.text = product.localizedPrice;
+        description.text = nil;
+    }
+    
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
+    switch (indexPath.section)
+    {
+        case ASTStoreViewControllerSectionConsumables:
+        {
+            NSUInteger onHand = [self.storeController availableQuantityForProduct:identifier];
+            
+            NSString *availableQuantityString = [NSString stringWithFormat:@"On Hand: %u",  onHand];
+            description.text = availableQuantityString;
+            price.text = product.localizedPrice;
+
+            break;
+        }
+            
+        case ASTStoreViewControllerSectionNonconsumables:
+        {
+            imageView.image = [UIImage imageNamed:@"default-nonconsumable-image"];
+
+            break;
+        }
+        case ASTStoreViewControllerSectionAutoRenewables:
+        {
+            imageView.image = [UIImage imageNamed:@"subscription"];
+            break;
+        }
         
+        default:
+            break;
     }
     
 }
@@ -421,10 +490,18 @@ enum ASTStoreViewControllerButtonsRows
 {
     switch (section) 
     {
-        case ASTStoreViewControllerSectionItems:
-            return NSLocalizedString(@"Items", nil);
+        case ASTStoreViewControllerSectionConsumables:
+            return NSLocalizedString(@"Consumables", nil);
             break;
-            
+
+        case ASTStoreViewControllerSectionNonconsumables:
+            return NSLocalizedString(@"Purchases", nil);
+            break;
+
+        case ASTStoreViewControllerSectionAutoRenewables:
+            return NSLocalizedString(@"Subscriptions", nil);
+            break;
+
         case ASTStoreViewControllerSectionButtons:
             return NSLocalizedString(@"Actions", nil);
             
@@ -476,26 +553,39 @@ enum ASTStoreViewControllerButtonsRows
        
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if( indexPath.section == ASTStoreViewControllerSectionItems )
+    switch (indexPath.section) 
     {
-        ASTStoreDetailViewController *vc = [[[ASTStoreDetailViewController alloc] init] autorelease];
-        NSString *identifier = [self.productIdentifiers objectAtIndex:indexPath.row];
-        
-        vc.productIdentifier = identifier;
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-    else if( indexPath.section == ASTStoreViewControllerSectionButtons )
-    {
-        if( indexPath.row == ASTStoreViewControllerButtonsRowsRestore )
+        case ASTStoreViewControllerSectionConsumables:
+        case ASTStoreViewControllerSectionNonconsumables:
+        case ASTStoreViewControllerSectionAutoRenewables:
         {
-            [self restorePreviousPurchaseButtonPressed:nil];
-        }
-        /*
-        else if( indexPath.row == ASTStoreViewControllerButtonsRowsReceiveVoucher )
-        {
+            ASTStoreDetailViewController *vc = [[[ASTStoreDetailViewController alloc] init] autorelease];
+            NSString *identifier = [self productIdentifierForIndexPath:indexPath];
             
+            vc.productIdentifier = identifier;
+            [self.navigationController pushViewController:vc animated:YES];
+
+            break;
         }
-         */
+            
+        case ASTStoreViewControllerSectionButtons:
+        {
+            if( indexPath.row == ASTStoreViewControllerButtonsRowsRestore )
+            {
+                [self restorePreviousPurchaseButtonPressed:nil];
+            }
+            /*
+             else if( indexPath.row == ASTStoreViewControllerButtonsRowsReceiveVoucher )
+             {
+             
+             }
+             */
+            
+            break;
+        }
+            
+        default:
+            break;
     }
 }
 #pragma mark ASTStoreControllerDelegate Methods
@@ -657,9 +747,6 @@ enum ASTStoreViewControllerButtonsRows
 
 - (void)dealloc
 {
-    
-    [productIdentifiers_ release], productIdentifiers_ = nil;
-    
     [tableContainerView_ release];
     tableContainerView_ = nil;
     
@@ -684,6 +771,11 @@ enum ASTStoreViewControllerButtonsRows
     
     [cellBackgroundColor1_ release], cellBackgroundColor1_ = nil;
     [cellBackgroundColor2_ release], cellBackgroundColor2_ = nil;
+    
+    
+    [consumableProductIdentifiers_ release], consumableProductIdentifiers_ = nil;
+    [autoRenewableProductIdentifiers_ release], autoRenewableProductIdentifiers_ = nil;
+    [nonconsumableProductIdentifiers_ release], nonconsumableProductIdentifiers_ = nil;
     
     [super dealloc];
 }
