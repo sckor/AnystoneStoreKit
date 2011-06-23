@@ -17,7 +17,6 @@
 		8173BDDA13A69083001DC531 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BDD813A69083001DC531 /* MainWindow-iPad.xib */; };
 		8173BDF413A6928A001DC531 /* ASTStoreDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8173BDF313A6928A001DC531 /* ASTStoreDetailViewController.m */; };
 		8173BDF613A69297001DC531 /* ASTStoreDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BDF513A69297001DC531 /* ASTStoreDetailViewController.xib */; };
-		8173BDF913A692F4001DC531 /* ASTStoreDetailViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BDF813A692F4001DC531 /* ASTStoreDetailViewController-iPad.xib */; };
 		8173BE0013A69300001DC531 /* ASTWebView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BDFA13A69300001DC531 /* ASTWebView.xib */; };
 		8173BE0113A69300001DC531 /* ASTWebView-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BDFB13A69300001DC531 /* ASTWebView-iPad.xib */; };
 		8173BE0213A69300001DC531 /* ASTStoreViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BDFC13A69300001DC531 /* ASTStoreViewController.xib */; };
@@ -82,6 +81,7 @@
 		819BC43613B2415A0000C17F /* subscription@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 819BC43413B2415A0000C17F /* subscription@2x.png */; };
 		819BC44313B2680E0000C17F /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 819BC44113B2680E0000C17F /* MBProgressHUD.m */; };
 		819BC44413B2680E0000C17F /* README.mdown in Resources */ = {isa = PBXBuildFile; fileRef = 819BC44213B2680E0000C17F /* README.mdown */; };
+		81C0EB9813B3D74300F494BE /* GradientButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C0EB9713B3D74300F494BE /* GradientButton.m */; };
 		81DB9EBA13A799DD003DA9A3 /* ASTStoreKitConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 81DB9EB913A799DD003DA9A3 /* ASTStoreKitConfig.plist */; };
 		81DB9EBE13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 81DB9EBD13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m */; };
 		81DB9EC113A7A0AB003DA9A3 /* ASTStoreConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 81DB9EC013A7A0AB003DA9A3 /* ASTStoreConfig.m */; };
@@ -105,7 +105,6 @@
 		8173BDF213A6928A001DC531 /* ASTStoreDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreDetailViewController.h; sourceTree = "<group>"; };
 		8173BDF313A6928A001DC531 /* ASTStoreDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreDetailViewController.m; sourceTree = "<group>"; };
 		8173BDF513A69297001DC531 /* ASTStoreDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreDetailViewController.xib; sourceTree = "<group>"; };
-		8173BDF813A692F4001DC531 /* ASTStoreDetailViewController-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ASTStoreDetailViewController-iPad.xib"; sourceTree = "<group>"; };
 		8173BDFA13A69300001DC531 /* ASTWebView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTWebView.xib; sourceTree = "<group>"; };
 		8173BDFB13A69300001DC531 /* ASTWebView-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ASTWebView-iPad.xib"; sourceTree = "<group>"; };
 		8173BDFC13A69300001DC531 /* ASTStoreViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreViewController.xib; sourceTree = "<group>"; };
@@ -215,6 +214,8 @@
 		819BC44013B2680E0000C17F /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		819BC44113B2680E0000C17F /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		819BC44213B2680E0000C17F /* README.mdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.mdown; sourceTree = "<group>"; };
+		81C0EB9613B3D74300F494BE /* GradientButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientButton.h; sourceTree = "<group>"; };
+		81C0EB9713B3D74300F494BE /* GradientButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientButton.m; sourceTree = "<group>"; };
 		81DB9EB913A799DD003DA9A3 /* ASTStoreKitConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ASTStoreKitConfig.plist; sourceTree = "<group>"; };
 		81DB9EBC13A7A041003DA9A3 /* ASTStoreConfigPlistReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreConfigPlistReader.h; sourceTree = "<group>"; };
 		81DB9EBD13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreConfigPlistReader.m; sourceTree = "<group>"; };
@@ -396,7 +397,6 @@
 			isa = PBXGroup;
 			children = (
 				8173BDF513A69297001DC531 /* ASTStoreDetailViewController.xib */,
-				8173BDF813A692F4001DC531 /* ASTStoreDetailViewController-iPad.xib */,
 				8173BDFA13A69300001DC531 /* ASTWebView.xib */,
 				8173BDFB13A69300001DC531 /* ASTWebView-iPad.xib */,
 				8173BDFC13A69300001DC531 /* ASTStoreViewController.xib */,
@@ -556,6 +556,8 @@
 		819BC43F13B267E80000C17F /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
+				81C0EB9613B3D74300F494BE /* GradientButton.h */,
+				81C0EB9713B3D74300F494BE /* GradientButton.m */,
 				819BC44013B2680E0000C17F /* MBProgressHUD.h */,
 				819BC44113B2680E0000C17F /* MBProgressHUD.m */,
 				819BC44213B2680E0000C17F /* README.mdown */,
@@ -617,7 +619,6 @@
 				8173BDCB13A69076001DC531 /* MainWindow.xib in Resources */,
 				8173BDDA13A69083001DC531 /* MainWindow-iPad.xib in Resources */,
 				8173BDF613A69297001DC531 /* ASTStoreDetailViewController.xib in Resources */,
-				8173BDF913A692F4001DC531 /* ASTStoreDetailViewController-iPad.xib in Resources */,
 				8173BE0013A69300001DC531 /* ASTWebView.xib in Resources */,
 				8173BE0113A69300001DC531 /* ASTWebView-iPad.xib in Resources */,
 				8173BE0213A69300001DC531 /* ASTStoreViewController.xib in Resources */,
@@ -694,6 +695,7 @@
 				81DB9EBE13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m in Sources */,
 				81DB9EC113A7A0AB003DA9A3 /* ASTStoreConfig.m in Sources */,
 				819BC44313B2680E0000C17F /* MBProgressHUD.m in Sources */,
+				81C0EB9813B3D74300F494BE /* GradientButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

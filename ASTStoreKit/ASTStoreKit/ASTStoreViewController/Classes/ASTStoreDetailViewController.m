@@ -222,60 +222,30 @@
     self.statusLabel.text = @"Purchase Cancelled";
 }
 
-#pragma mark - View lifecycle
--(void)layoutLandscape {
-    self.purchaseImage.frame = CGRectMake(20.0, 17.0, 57.0, 57.0);
-    self.productTitle.frame = CGRectMake(85.0, 30.0, 361.0, 21.0);
-    self.onHand.frame = CGRectMake(85.0, 46.0, 375.0, 22.0);
-    self.description.frame = CGRectMake(20.0, 84.0, 440.0, 98.0);
-    self.extraInfo.frame = CGRectMake(20.0, 193.0, 440.0, 22.0);
-    self.purchaseButton.frame = CGRectMake(20.0, 225.0, 198.0, 37.0);
-    self.statusLabel.frame = CGRectMake(226.0, 233.0, 189.0, 21.0);
-    self.connectingActivityIndicatorView.frame = CGRectMake(423.0, 225.0, 37.0, 37.0);
-}
--(void)layoutPortrait {
-    self.purchaseImage.frame = CGRectMake(20.0, 17.0, 57.0, 57.0);
-    self.productTitle.frame = CGRectMake(85.0, 35.0, 215.0, 21.0);
-    self.onHand.frame = CGRectMake(85.0, 53.0, 215.0, 22.0);
-    self.description.frame = CGRectMake(20.0, 83.0, 280.0, 189.0);
-    self.extraInfo.frame = CGRectMake(20.0, 280.0, 280.0, 22.0);
-    self.purchaseButton.frame = CGRectMake(20.0, 310.0, 280.0, 37.0);
-    self.statusLabel.frame = CGRectMake(66.0, 363.0, 189.0, 21.0);
-    self.connectingActivityIndicatorView.frame = CGRectMake(263.0, 355.0, 37.0, 37.0);
-}
 
 #pragma mark - View lifecycle
 
 // The designated initializer. Override to perform setup that is required before the view is loaded.
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil 
+{
+    if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) 
+    {
         // Custom initialization
 		isAniPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
     }
     return self;
 }
 
-- (void)updateThisView {
-    UIDeviceOrientation deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    if (UIDeviceOrientationIsLandscape(deviceOrientation)) {
-		if (!isAniPad)
-            [self layoutLandscape];
-    }
-	else { 
-		if (!isAniPad)
-            [self layoutPortrait];
-    }    
-}
-
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[self performSelector:@selector(updateThisView) withObject:nil afterDelay:0.0];
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
-    // return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
+- (void)viewDidLoad
+{
+    [self.purchaseButton useBlueConfirmStyle];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];

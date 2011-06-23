@@ -27,6 +27,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ASTStoreController.h"
+#import "GradientButton.h"
 
 @interface ASTStoreDetailViewController : UIViewController <ASTStoreControllerDelegate>
 {
@@ -34,7 +35,7 @@
     UILabel *productTitle_;
     UITextView *description_;
     UILabel *extraInfo_;
-    UIButton *purchaseButton_;
+    GradientButton *purchaseButton_;
     
     NSString *productIdentifier_;
     UILabel *onHand_;
@@ -50,7 +51,7 @@
 @property (retain) IBOutlet UILabel *productTitle;
 @property (retain) IBOutlet UITextView *description;
 @property (retain) IBOutlet UILabel *extraInfo;
-@property (retain) IBOutlet UIButton *purchaseButton;
+@property (retain) IBOutlet GradientButton *purchaseButton;
 @property (retain) IBOutlet UILabel *onHand;
 
 @property (retain) NSString *productIdentifier;

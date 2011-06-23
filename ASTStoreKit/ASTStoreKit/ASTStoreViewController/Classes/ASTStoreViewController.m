@@ -511,7 +511,7 @@ enum ASTStoreViewControllerButtonsRows
         case ASTStoreViewControllerSectionNonconsumables:
         case ASTStoreViewControllerSectionAutoRenewables:
         {
-            ASTStoreDetailViewController *vc = [[[ASTStoreDetailViewController alloc] init] autorelease];
+            ASTStoreDetailViewController *vc = [[[ASTStoreDetailViewController alloc] initWithNibName:nil bundle:nil] autorelease];
             NSString *identifier = [self productIdentifierForIndexPath:indexPath];
             
             vc.productIdentifier = identifier;
