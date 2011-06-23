@@ -154,7 +154,6 @@
 								<string key="NSFrame">{{253, 25}, {62, 22}}</string>
 								<reference key="NSSuperview" ref="313850854"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<int key="IBUIContentMode">7</int>
@@ -320,26 +319,11 @@
 						</object>
 					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="connectingActivityIndicatorView">UIActivityIndicatorView</string>
-						<string key="connectingToStoreLabel">UILabel</string>
-						<string key="restorePreviousPurchaseButton">UIButton</string>
 						<string key="storeCell">UITableViewCell</string>
 						<string key="tableContainerView">UIView</string>
 						<string key="tableView">UITableView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="connectingActivityIndicatorView">
-							<string key="name">connectingActivityIndicatorView</string>
-							<string key="candidateClassName">UIActivityIndicatorView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="connectingToStoreLabel">
-							<string key="name">connectingToStoreLabel</string>
-							<string key="candidateClassName">UILabel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="restorePreviousPurchaseButton">
-							<string key="name">restorePreviousPurchaseButton</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="storeCell">
 							<string key="name">storeCell</string>
 							<string key="candidateClassName">UITableViewCell</string>
