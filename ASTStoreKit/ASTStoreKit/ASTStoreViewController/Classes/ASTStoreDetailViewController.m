@@ -28,6 +28,7 @@
 #import "ASTStoreDetailViewController.h"
 #import "ASTStoreController.h"
 #import "UIImageView+ReflectedImage.h"
+#import "UIView+SimpleLayerGradient.h"
 
 @interface ASTStoreDetailViewController ()
 
@@ -37,6 +38,8 @@
 
 @implementation ASTStoreDetailViewController
 
+@synthesize gradientView;
+@synthesize titleView;
 @synthesize purchaseImage = purchaseImage_;
 @synthesize productTitle = productTitle_;
 @synthesize description = description_;
@@ -255,6 +258,9 @@
     [super viewWillAppear:animated];
     
     [self updateViewData];
+
+    [self.gradientView setSimpleLayerGradient:[UIColor colorWithWhite:0.5 alpha:1.0] 
+                                     endColor:[UIColor lightGrayColor]];
     
     self.reflectionImageView.image = [self.purchaseImage reflectedImageWithHeight:14.0];
     self.reflectionImageView.alpha = 0.4;
@@ -295,6 +301,8 @@
     statusLabel_ = nil;
     
     [self setReflectionImageView:nil];
+    [self setTitleView:nil];
+    [self setGradientView:nil];
     [super viewDidUnload];
 }
 
@@ -311,6 +319,8 @@
     [statusLabel_ release];
     
     [reflectionImageView release];
+    [titleView release];
+    [gradientView release];
     [super dealloc];
 }
 

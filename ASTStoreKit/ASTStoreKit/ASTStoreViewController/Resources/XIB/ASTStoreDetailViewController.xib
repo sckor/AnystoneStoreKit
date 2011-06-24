@@ -35,6 +35,22 @@
 				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">274</int>
 				<array class="NSMutableArray" key="NSSubviews">
+					<object class="IBUIView" id="273918419">
+						<reference key="NSNextResponder" ref="994893813"/>
+						<int key="NSvFlags">290</int>
+						<string key="NSFrameSize">{320, 60}</string>
+						<reference key="NSSuperview" ref="994893813"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="41449827"/>
+						<object class="NSColor" key="IBUIBackgroundColor">
+							<int key="NSColorSpace">3</int>
+							<bytes key="NSWhite">MQA</bytes>
+							<object class="NSColorSpace" key="NSCustomColorSpace">
+								<int key="NSID">2</int>
+							</object>
+						</object>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+					</object>
 					<object class="IBUIView" id="485087818">
 						<reference key="NSNextResponder" ref="994893813"/>
 						<int key="NSvFlags">290</int>
@@ -185,7 +201,7 @@
 						<string key="NSFrame">{{0, 81}, {320, 270}}</string>
 						<reference key="NSSuperview" ref="994893813"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="41449827"/>
+						<reference key="NSNextKeyView" ref="273918419"/>
 						<reference key="IBUIBackgroundColor" ref="165535614"/>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIMultipleTouchEnabled">YES</bool>
@@ -375,6 +391,22 @@
 					</object>
 					<int key="connectionID">94</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">titleView</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="485087818"/>
+					</object>
+					<int key="connectionID">98</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">gradientView</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="273918419"/>
+					</object>
+					<int key="connectionID">100</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -405,6 +437,7 @@
 							<reference ref="872102251"/>
 							<reference ref="41449827"/>
 							<reference ref="998556136"/>
+							<reference ref="273918419"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -502,6 +535,12 @@
 						<reference key="object" ref="998556136"/>
 						<reference key="parent" ref="994893813"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">99</int>
+						<reference key="object" ref="273918419"/>
+						<reference key="parent" ref="994893813"/>
+						<string key="objectName">Gradient View</string>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -521,12 +560,13 @@
 				<string key="91.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="92.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="93.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="99.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">97</int>
+			<int key="maxID">100</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -548,12 +588,14 @@
 						<string key="connectingActivityIndicatorView">UIActivityIndicatorView</string>
 						<string key="description">UITextView</string>
 						<string key="extraInfo">UILabel</string>
+						<string key="gradientView">UIView</string>
 						<string key="onHand">UILabel</string>
 						<string key="productTitle">UILabel</string>
 						<string key="purchaseButton">GradientButton</string>
 						<string key="purchaseImage">UIImageView</string>
 						<string key="reflectionImageView">UIImageView</string>
 						<string key="statusLabel">UILabel</string>
+						<string key="titleView">UIView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="connectingActivityIndicatorView">
@@ -567,6 +609,10 @@
 						<object class="IBToOneOutletInfo" key="extraInfo">
 							<string key="name">extraInfo</string>
 							<string key="candidateClassName">UILabel</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="gradientView">
+							<string key="name">gradientView</string>
+							<string key="candidateClassName">UIView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="onHand">
 							<string key="name">onHand</string>
@@ -591,6 +637,10 @@
 						<object class="IBToOneOutletInfo" key="statusLabel">
 							<string key="name">statusLabel</string>
 							<string key="candidateClassName">UILabel</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="titleView">
+							<string key="name">titleView</string>
+							<string key="candidateClassName">UIView</string>
 						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
