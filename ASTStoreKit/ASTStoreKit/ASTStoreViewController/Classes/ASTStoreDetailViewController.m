@@ -27,6 +27,8 @@
 
 #import "ASTStoreDetailViewController.h"
 #import "ASTStoreController.h"
+#import "UIImageView+ReflectedImage.h"
+#import "UIView+SimpleLayerGradient.h"
 
 @interface ASTStoreDetailViewController ()
 
@@ -36,6 +38,8 @@
 
 @implementation ASTStoreDetailViewController
 
+@synthesize gradientView;
+@synthesize titleView;
 @synthesize purchaseImage = purchaseImage_;
 @synthesize productTitle = productTitle_;
 @synthesize description = description_;
@@ -47,6 +51,7 @@
 @synthesize onHand = onHand_;
 @synthesize connectingActivityIndicatorView = connectingActivityIndicatorView_;
 @synthesize statusLabel = statusLabel_;
+@synthesize reflectionImageView;
 
 - (ASTStoreController*)storeController
 {
@@ -70,9 +75,6 @@
 #pragma mark view updates
 - (void)updateViewData
 {
-    // TODO: This should be customizable and associated with the product...
-    self.purchaseImage.image = [UIImage imageNamed:@"default-purchase-image.png"];
-    
     self.productTitle.text = [self.storeProduct localizedTitle];
     self.description.text = [self.storeProduct localizedDescription];
     self.extraInfo.text = self.storeProduct.extraInformation;
@@ -244,6 +246,11 @@
 - (void)viewDidLoad
 {
     [self.purchaseButton useBlueConfirmStyle];
+    self.purchaseImage.layer.cornerRadius = 10.0; // Same as the radius that iOS uses
+    self.purchaseImage.layer.masksToBounds = YES;
+    
+    self.reflectionImageView.layer.cornerRadius = 10.0;
+    self.reflectionImageView.layer.masksToBounds = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -251,6 +258,13 @@
     [super viewWillAppear:animated];
     
     [self updateViewData];
+
+    [self.gradientView setSimpleLayerGradient:[UIColor colorWithWhite:0.5 alpha:1.0] 
+                                     endColor:[UIColor lightGrayColor]];
+    
+    self.reflectionImageView.image = [self.purchaseImage reflectedImageWithHeight:14.0];
+    self.reflectionImageView.alpha = 0.4;
+
     self.storeController.delegate = self;
 }
 
@@ -286,6 +300,9 @@
     [statusLabel_ release];
     statusLabel_ = nil;
     
+    [self setReflectionImageView:nil];
+    [self setTitleView:nil];
+    [self setGradientView:nil];
     [super viewDidUnload];
 }
 
@@ -301,6 +318,9 @@
     [connectingActivityIndicatorView_ release];
     [statusLabel_ release];
     
+    [reflectionImageView release];
+    [titleView release];
+    [gradientView release];
     [super dealloc];
 }
 
