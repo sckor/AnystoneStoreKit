@@ -82,6 +82,7 @@
 		819BC44313B2680E0000C17F /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 819BC44113B2680E0000C17F /* MBProgressHUD.m */; };
 		819BC44413B2680E0000C17F /* README.mdown in Resources */ = {isa = PBXBuildFile; fileRef = 819BC44213B2680E0000C17F /* README.mdown */; };
 		81C0EB9813B3D74300F494BE /* GradientButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C0EB9713B3D74300F494BE /* GradientButton.m */; };
+		81C0EBB413B5191000F494BE /* UIImageView+ReflectedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C0EBB313B5191000F494BE /* UIImageView+ReflectedImage.m */; };
 		81DB9EBA13A799DD003DA9A3 /* ASTStoreKitConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 81DB9EB913A799DD003DA9A3 /* ASTStoreKitConfig.plist */; };
 		81DB9EBE13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 81DB9EBD13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m */; };
 		81DB9EC113A7A0AB003DA9A3 /* ASTStoreConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 81DB9EC013A7A0AB003DA9A3 /* ASTStoreConfig.m */; };
@@ -216,6 +217,8 @@
 		819BC44213B2680E0000C17F /* README.mdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.mdown; sourceTree = "<group>"; };
 		81C0EB9613B3D74300F494BE /* GradientButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientButton.h; sourceTree = "<group>"; };
 		81C0EB9713B3D74300F494BE /* GradientButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientButton.m; sourceTree = "<group>"; };
+		81C0EBB213B5191000F494BE /* UIImageView+ReflectedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+ReflectedImage.h"; sourceTree = "<group>"; };
+		81C0EBB313B5191000F494BE /* UIImageView+ReflectedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+ReflectedImage.m"; sourceTree = "<group>"; };
 		81DB9EB913A799DD003DA9A3 /* ASTStoreKitConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ASTStoreKitConfig.plist; sourceTree = "<group>"; };
 		81DB9EBC13A7A041003DA9A3 /* ASTStoreConfigPlistReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreConfigPlistReader.h; sourceTree = "<group>"; };
 		81DB9EBD13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreConfigPlistReader.m; sourceTree = "<group>"; };
@@ -561,6 +564,8 @@
 				819BC44013B2680E0000C17F /* MBProgressHUD.h */,
 				819BC44113B2680E0000C17F /* MBProgressHUD.m */,
 				819BC44213B2680E0000C17F /* README.mdown */,
+				81C0EBB213B5191000F494BE /* UIImageView+ReflectedImage.h */,
+				81C0EBB313B5191000F494BE /* UIImageView+ReflectedImage.m */,
 			);
 			path = "Third Party";
 			sourceTree = "<group>";
@@ -696,6 +701,7 @@
 				81DB9EC113A7A0AB003DA9A3 /* ASTStoreConfig.m in Sources */,
 				819BC44313B2680E0000C17F /* MBProgressHUD.m in Sources */,
 				81C0EB9813B3D74300F494BE /* GradientButton.m in Sources */,
+				81C0EBB413B5191000F494BE /* UIImageView+ReflectedImage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

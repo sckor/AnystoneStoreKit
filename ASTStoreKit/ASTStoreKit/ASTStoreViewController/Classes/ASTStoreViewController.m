@@ -512,6 +512,11 @@ enum ASTStoreViewControllerButtonsRows
         case ASTStoreViewControllerSectionAutoRenewables:
         {
             ASTStoreDetailViewController *vc = [[[ASTStoreDetailViewController alloc] initWithNibName:nil bundle:nil] autorelease];
+            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+            UIImageView *purchaseImageView = (UIImageView*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagImageView];
+            
+            vc.purchaseImage.image = purchaseImageView.image;
+            
             NSString *identifier = [self productIdentifierForIndexPath:indexPath];
             
             vc.productIdentifier = identifier;

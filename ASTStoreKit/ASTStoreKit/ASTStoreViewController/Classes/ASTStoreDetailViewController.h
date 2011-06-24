@@ -43,6 +43,7 @@
     UILabel *statusLabel_;
     
 	BOOL isAniPad;
+    UIImageView *reflectionImageView;
 }
 
 - (IBAction)purchaseButtonPressed:(id)sender;
@@ -57,5 +58,6 @@
 @property (retain) NSString *productIdentifier;
 @property (retain) IBOutlet UIActivityIndicatorView *connectingActivityIndicatorView;
 @property (retain) IBOutlet UILabel *statusLabel;
+@property (nonatomic, retain) IBOutlet UIImageView *reflectionImageView;
 
 @end
