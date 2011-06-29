@@ -85,12 +85,12 @@
 
         if( [lowerAutoRenewable isEqualToString:[kASTStoreProductInfoAutoRenewQuantity3Months lowercaseString]] )
         {
-            return ( ASTStoreProductAutoRenewableType2Months );
+            return ( ASTStoreProductAutoRenewableType3Months );
         }
         
         if( [lowerAutoRenewable isEqualToString:[kASTStoreProductInfoAutoRenewQuantity6Months lowercaseString]] )
         {
-            return ( ASTStoreProductAutoRenewableType2Months );
+            return ( ASTStoreProductAutoRenewableType6Months );
         }
 
         if( [lowerAutoRenewable isEqualToString:[kASTStoreProductInfoAutoRenewQuantity1Year lowercaseString]] )

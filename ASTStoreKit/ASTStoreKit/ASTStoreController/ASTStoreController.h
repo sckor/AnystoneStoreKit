@@ -193,6 +193,17 @@ typedef enum
 // Provides access to the ASTStoreProduct associated with a managed productIdentifier
 - (ASTStoreProduct*)storeProductForIdentifier:(NSString*)productIdentifier;
 
+// Returns an array of NSString family identifiers for a type of product where
+// the family identifier will only appear once (ie: unique family identifier)
+- (NSArray*)uniqueFamilyIdentifiersForProductType:(ASTStoreProductIdentifierType)type 
+                                                   sortedUsingComparator:(NSComparator)cmptr;
+
+// Returns an array of store products for the correstponding familyIdentifier
+// Typically useful for auto renewables and maybe for consumables
+// For autoRenewables sorted by subscription duration
+// Fpr others - sorted alphabetically by name
+- (NSArray*)storeProductsForFamilyIdentifier:(NSString*)familyIdentifier;
+
 #pragma mark Update Products from iTunes
 // Default to retying store connection every 15 seconds
 @property  NSTimeInterval retryStoreConnectionInterval;

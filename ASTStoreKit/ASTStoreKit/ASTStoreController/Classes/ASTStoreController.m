@@ -442,6 +442,60 @@
     return [NSArray arrayWithArray:sortedArray];
 }
 
+- (NSComparator)localizedTitleComparator
+{
+    NSComparator cmptr = ^NSComparisonResult(id obj1, id obj2) 
+    {
+        ASTStoreProduct *p1 = obj1;
+        ASTStoreProduct *p2 = obj2;
+        
+        NSComparisonResult compResult = [p1.localizedTitle localizedCompare:p2.localizedTitle];
+        
+        return compResult;
+    };
+
+    return cmptr;
+}
+
+- (NSComparator)familyQuantityComparator
+{
+    NSComparator cmptr = ^NSComparisonResult(id obj1, id obj2) 
+    {
+        ASTStoreProduct *p1 = obj1;
+        ASTStoreProduct *p2 = obj2;
+        
+        if( p1.familyQuanity < p2.familyQuanity )
+        {
+            return NSOrderedAscending;
+        }
+        else if ( p1.familyQuanity > p2.familyQuanity )
+        {
+            return NSOrderedDescending;
+        }
+        else
+        {
+            return NSOrderedSame;
+        }
+    };
+    
+    return cmptr;
+}
+
+- (NSComparator)stringComparator
+{
+    NSComparator cmptr = ^NSComparisonResult(id obj1, id obj2) 
+    {
+        NSString *p1 = obj1;
+        NSString *p2 = obj2;
+        
+        NSComparisonResult compResult = [p1 compare:p2];
+        
+        return compResult;
+    };
+    
+    return cmptr;
+}
+
 - (NSArray*)productIdentifiersForProductType:(ASTStoreProductIdentifierType)type sortedUsingComparator:(NSComparator)cmptr
 {
     NSMutableArray *unsortedArray = [[[NSMutableArray alloc] init] autorelease];
@@ -459,15 +513,7 @@
     if( nil == cmptr )
     {
         // if no comparator supplied, sort alphabetically by localizedTitle
-        cmptr = ^NSComparisonResult(id obj1, id obj2) 
-        {
-            ASTStoreProduct *p1 = obj1;
-            ASTStoreProduct *p2 = obj2;
-            
-            NSComparisonResult compResult = [p1.localizedTitle localizedCompare:p2.localizedTitle];
-            
-            return compResult;
-        };
+        cmptr = [self localizedTitleComparator];
     }
     
     NSArray *titleSortedArray = [unsortedArray sortedArrayUsingComparator:cmptr];
@@ -506,6 +552,78 @@
 
     return productData;
 }
+
+- (NSArray*)uniqueFamilyIdentifiersForProductType:(ASTStoreProductIdentifierType)type 
+                            sortedUsingComparator:(NSComparator)cmptr
+{
+    NSMutableSet *familyIdSet = [[NSMutableSet alloc] init];
+
+        
+    for( NSString *productId in self.storeProductDictionary )
+    {
+        ASTStoreProduct *theProduct = [self.storeProductDictionary objectForKey:productId];
+        
+        if( theProduct.type == type )
+        {
+            [familyIdSet addObject:theProduct.familyIdentifier];
+        }
+    }
+    
+    NSArray *result = nil;
+    
+    if( [familyIdSet count] > 0 )
+    {
+        if( nil == cmptr )
+        {
+            cmptr = [self stringComparator];
+        }
+        
+        result = [[familyIdSet allObjects] sortedArrayUsingComparator:cmptr];
+    }
+    
+    [familyIdSet release];
+    
+    return result;
+}
+
+- (NSArray*)storeProductsForFamilyIdentifier:(NSString*)familyIdentifier
+{
+    NSMutableArray *tmpArray = [[NSMutableArray alloc] init];
+        
+    for( NSString *productId in self.storeProductDictionary )
+    {
+        ASTStoreProduct *theProduct = [self.storeProductDictionary objectForKey:productId];
+
+        if( [theProduct.familyIdentifier isEqualToString:familyIdentifier] )
+        {
+            [tmpArray addObject:theProduct];
+        }
+    }
+    
+    NSArray *result = nil;
+    
+    if( [tmpArray count] > 0 )
+    {
+        ASTStoreProduct *aProduct = [tmpArray objectAtIndex:0];
+        NSComparator cmptr;
+        
+        if( aProduct.type == ASTStoreProductIdentifierTypeAutoRenewable )
+        {
+            cmptr = [self familyQuantityComparator];
+        }
+        else
+        {
+            cmptr = [self stringComparator];
+        }
+        
+        result = [tmpArray sortedArrayUsingComparator:cmptr];
+    }
+    
+    [tmpArray release];
+    
+    return result;
+}
+
 
 #pragma mark SKProductRequest and SKRequest Delegate Methods
 

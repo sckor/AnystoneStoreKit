@@ -54,7 +54,7 @@
 #define kASTStoreProductInfoAutoRenewQuantity1Month @"1Month"
 #define kASTStoreProductInfoAutoRenewQuantity2Months @"2Months"
 #define kASTStoreProductInfoAutoRenewQuantity3Months @"3Months"
-#define kASTStoreProductInfoAutoRenewQuantity6Months @"7Months"
+#define kASTStoreProductInfoAutoRenewQuantity6Months @"6Months"
 #define kASTStoreProductInfoAutoRenewQuantity1Year @"1Year"
 
 #define kASTStoreProductInfoBundleIdKey @"bundleIdentifier"

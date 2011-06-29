@@ -31,18 +31,8 @@
 #import "ASTStoreViewController.h"
 #import "ASTStoreDetailViewController.h"
 #import "ASTWebViewController.h"
-
-typedef enum
-{
-    ASTStoreViewControllerTableViewCellTagImageView = 1,
-    ASTStoreViewControllerTableViewCellTagTitleLabel = 2,
-    ASTStoreViewControllerTableViewCellTagDescriptionLabel = 3,
-    ASTStoreViewControllerTableViewCellTagExtraInfoLabel = 4,
-    ASTStoreViewControllerTableViewCellTagPriceLabel = 5,
-    ASTStoreViewControllerTableViewCellTagTopLineView = 6,
-    ASTStoreViewControllerTableViewCellTagBottomLineView = 7,
-    ASTStoreViewControllerTableViewCellTagDropShadowView = 8
-} ASTStoreViewControllerTableViewCellTags;
+#import "ASTStoreViewControllerCommon.h"
+#import "ASTStoreSubscriptionDetailViewController.h"
 
 enum ASTStoreViewControllerSections 
 {
@@ -110,8 +100,8 @@ enum ASTStoreViewControllerButtonsRows
 {
     if( nil == autoRenewableProductIdentifiers_ )
     {
-        self.autoRenewableProductIdentifiers = [self.storeController productIdentifiersForProductType:ASTStoreProductIdentifierTypeAutoRenewable 
-                                                                                sortedUsingComparator:nil];
+        self.autoRenewableProductIdentifiers = [self.storeController uniqueFamilyIdentifiersForProductType:ASTStoreProductIdentifierTypeAutoRenewable 
+                                                                                     sortedUsingComparator:nil];
     }
     
     ASTReturnRA( autoRenewableProductIdentifiers_ );
@@ -283,56 +273,8 @@ enum ASTStoreViewControllerButtonsRows
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UIView *backgroundView = cell.backgroundView;
-    
-    if((indexPath.row % 2) == 0 )
-    {
-        backgroundView.backgroundColor = self.cellBackgroundColor1;
-    }
-    else
-    {
-        backgroundView.backgroundColor = self.cellBackgroundColor2;
-    }
-    
-    
-    if(( backgroundView.frame.size.height != 0.0 ) &&
-       ( backgroundView.frame.size.width != 0.0 ))
-    {
-        UIView *topLineView = [backgroundView viewWithTag:ASTStoreViewControllerTableViewCellTagTopLineView];
-        UIView *bottomLineView = [backgroundView viewWithTag:ASTStoreViewControllerTableViewCellTagBottomLineView];
-        
-        if( nil == topLineView )
-        {   
-            CGRect frame = backgroundView.frame;
-            frame.size.height = 1;
-            
-            topLineView = [[[UIView alloc] initWithFrame:frame] autorelease];
-            topLineView.tag = ASTStoreViewControllerTableViewCellTagTopLineView;
-            topLineView.backgroundColor = [UIColor whiteColor];
-            [backgroundView addSubview:topLineView];
-        }
-        
-        if( nil == bottomLineView )
-        {   
-            CGRect frame = backgroundView.frame;
-            frame.origin.y = frame.size.height - 1.0;
-            frame.size.height = 1.0;
-            
-            bottomLineView = [[[UIView alloc] initWithFrame:frame] autorelease];
-            bottomLineView.tag = ASTStoreViewControllerTableViewCellTagBottomLineView;
-            bottomLineView.backgroundColor = [UIColor blackColor];
-            [backgroundView addSubview:bottomLineView];
-        }
-        
-        topLineView.alpha = 0.3;
-        bottomLineView.alpha = 0.3;
-
-        if( indexPath.row == 0 )
-        {
-            topLineView.alpha = 0.0;
-        }
-    }
+{    
+    updateCellBackgrounds(cell, indexPath, self.cellBackgroundColor1, self.cellBackgroundColor2);
 }
 
 - (NSString*)productIdentifierForIndexPath:(NSIndexPath*)indexPath
@@ -349,8 +291,20 @@ enum ASTStoreViewControllerButtonsRows
             break;
             
         case ASTStoreViewControllerSectionAutoRenewables:
-            return [self.autoRenewableProductIdentifiers objectAtIndex:indexPath.row];
+        {
+            // Choose a representative product id sample from the family - since the content will all
+            // be the same from the app store
+            NSString *familyIdentifier = [self.autoRenewableProductIdentifiers objectAtIndex:indexPath.row];
+            NSArray *productsForFamily = [self.storeController storeProductsForFamilyIdentifier:familyIdentifier];
+            
+            if( [productsForFamily count] > 0 )
+            {
+                ASTStoreProduct *aProduct = [productsForFamily objectAtIndex:0];
+                return aProduct.productIdentifier;
+            }
+            
             break;
+        }
     }
     
     return nil;
@@ -397,7 +351,7 @@ enum ASTStoreViewControllerButtonsRows
     if( isPurchased )
     {
         price.text = nil;
-        description.text = @"Purchased - Thank you!";
+        description.text = NSLocalizedString(@"Purchased - Thank you!", nil);
     }
     else
     {
@@ -429,6 +383,12 @@ enum ASTStoreViewControllerButtonsRows
         case ASTStoreViewControllerSectionAutoRenewables:
         {
             imageView.image = [UIImage imageNamed:@"subscription"];
+            price.text = nil;
+            
+            if( isPurchased )
+            {
+                description.text = NSLocalizedString(@"Subscribed - Thank you!", nil);
+            }
             break;
         }
         
@@ -476,6 +436,10 @@ enum ASTStoreViewControllerButtonsRows
         self.storeCell = nil;
         cell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
         
+        cell.backgroundView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin |
+        UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin |
+        UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        
         // Setup rounded corners
         UIImageView *imageView = (UIImageView*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagImageView];
         imageView.layer.cornerRadius = 10.0; // Same as the radius that iOS uses
@@ -509,7 +473,6 @@ enum ASTStoreViewControllerButtonsRows
     {
         case ASTStoreViewControllerSectionConsumables:
         case ASTStoreViewControllerSectionNonconsumables:
-        case ASTStoreViewControllerSectionAutoRenewables:
         {
             ASTStoreDetailViewController *vc = [[[ASTStoreDetailViewController alloc] initWithNibName:nil bundle:nil] autorelease];
             UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
@@ -524,7 +487,21 @@ enum ASTStoreViewControllerButtonsRows
 
             break;
         }
+
+        case ASTStoreViewControllerSectionAutoRenewables:
+        {
+            ASTStoreSubscriptionDetailViewController *vc = [[[ASTStoreSubscriptionDetailViewController alloc] initWithNibName:nil bundle:nil] autorelease];
+            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+            UIImageView *purchaseImageView = (UIImageView*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagImageView];
             
+            vc.purchaseImage.image = purchaseImageView.image;
+                        
+            vc.familyIdentifier = [self.autoRenewableProductIdentifiers objectAtIndex:indexPath.row];
+            [self.navigationController pushViewController:vc animated:YES];
+            
+            break;
+        }
+
         case ASTStoreViewControllerSectionButtons:
         {
             if( indexPath.row == ASTStoreViewControllerButtonsRowsRestore )

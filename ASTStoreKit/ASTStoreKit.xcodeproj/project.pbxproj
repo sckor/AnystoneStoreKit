@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		81482D5613BB789A00F843C0 /* ASTStoreSubscriptionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 81482D5513BB789A00F843C0 /* ASTStoreSubscriptionTableViewCell.xib */; };
 		8173BDB813A69076001DC531 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8173BDB713A69076001DC531 /* UIKit.framework */; };
 		8173BDBA13A69076001DC531 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8173BDB913A69076001DC531 /* Foundation.framework */; };
 		8173BDBC13A69076001DC531 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8173BDBB13A69076001DC531 /* CoreGraphics.framework */; };
@@ -85,6 +86,9 @@
 		819C799E13B5256F0049C203 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 819C799D13B5256F0049C203 /* QuartzCore.framework */; };
 		81C0EB9813B3D74300F494BE /* GradientButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C0EB9713B3D74300F494BE /* GradientButton.m */; };
 		81C0EBB413B5191000F494BE /* UIImageView+ReflectedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C0EBB313B5191000F494BE /* UIImageView+ReflectedImage.m */; };
+		81D315D113BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81D315CF13BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.m */; };
+		81D315D213BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 81D315D013BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.xib */; };
+		81D315D613BA6FE5005F6DC8 /* ASTStoreViewControllerCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 81D315D413BA6FE4005F6DC8 /* ASTStoreViewControllerCommon.m */; };
 		81DB9EBA13A799DD003DA9A3 /* ASTStoreKitConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 81DB9EB913A799DD003DA9A3 /* ASTStoreKitConfig.plist */; };
 		81DB9EBE13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 81DB9EBD13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m */; };
 		81DB9EC113A7A0AB003DA9A3 /* ASTStoreConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 81DB9EC013A7A0AB003DA9A3 /* ASTStoreConfig.m */; };
@@ -93,7 +97,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		8173BDB313A69076001DC531 /* ASTStoreKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ASTStoreKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		81482D5513BB789A00F843C0 /* ASTStoreSubscriptionTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreSubscriptionTableViewCell.xib; sourceTree = "<group>"; };
+		8173BDB313A69076001DC531 /* ASTExampleStore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ASTExampleStore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8173BDB713A69076001DC531 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		8173BDB913A69076001DC531 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8173BDBB13A69076001DC531 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -224,6 +229,11 @@
 		81C0EB9713B3D74300F494BE /* GradientButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientButton.m; sourceTree = "<group>"; };
 		81C0EBB213B5191000F494BE /* UIImageView+ReflectedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+ReflectedImage.h"; sourceTree = "<group>"; };
 		81C0EBB313B5191000F494BE /* UIImageView+ReflectedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+ReflectedImage.m"; sourceTree = "<group>"; };
+		81D315CE13BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreSubscriptionDetailViewController.h; sourceTree = "<group>"; };
+		81D315CF13BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreSubscriptionDetailViewController.m; sourceTree = "<group>"; };
+		81D315D013BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ASTStoreSubscriptionDetailViewController.xib; path = ../../Classes/ASTStoreSubscriptionDetailViewController.xib; sourceTree = "<group>"; };
+		81D315D413BA6FE4005F6DC8 /* ASTStoreViewControllerCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreViewControllerCommon.m; sourceTree = "<group>"; };
+		81D315D513BA6FE4005F6DC8 /* ASTStoreViewControllerCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreViewControllerCommon.h; sourceTree = "<group>"; };
 		81DB9EB913A799DD003DA9A3 /* ASTStoreKitConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ASTStoreKitConfig.plist; sourceTree = "<group>"; };
 		81DB9EBC13A7A041003DA9A3 /* ASTStoreConfigPlistReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreConfigPlistReader.h; sourceTree = "<group>"; };
 		81DB9EBD13A7A042003DA9A3 /* ASTStoreConfigPlistReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreConfigPlistReader.m; sourceTree = "<group>"; };
@@ -268,7 +278,7 @@
 		8173BDB413A69076001DC531 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8173BDB313A69076001DC531 /* ASTStoreKit.app */,
+				8173BDB313A69076001DC531 /* ASTExampleStore.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -377,6 +387,10 @@
 				8173BE1913A6936D001DC531 /* ASTStoreViewController.m */,
 				8173BDF213A6928A001DC531 /* ASTStoreDetailViewController.h */,
 				8173BDF313A6928A001DC531 /* ASTStoreDetailViewController.m */,
+				81D315CE13BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.h */,
+				81D315CF13BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.m */,
+				81D315D513BA6FE4005F6DC8 /* ASTStoreViewControllerCommon.h */,
+				81D315D413BA6FE4005F6DC8 /* ASTStoreViewControllerCommon.m */,
 				8173BE1B13A69386001DC531 /* ASTWebViewController.h */,
 				8173BE1C13A69386001DC531 /* ASTWebViewController.m */,
 				819C799A13B524A40049C203 /* UIView+SimpleLayerGradient.h */,
@@ -409,11 +423,13 @@
 			isa = PBXGroup;
 			children = (
 				8173BDF513A69297001DC531 /* ASTStoreDetailViewController.xib */,
+				81D315D013BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.xib */,
 				8173BDFA13A69300001DC531 /* ASTWebView.xib */,
 				8173BDFB13A69300001DC531 /* ASTWebView-iPad.xib */,
 				8173BDFC13A69300001DC531 /* ASTStoreViewController.xib */,
 				8173BDFD13A69300001DC531 /* ASTStoreViewController-iPad.xib */,
 				8173BDFE13A69300001DC531 /* ASTStoreTableViewCell.xib */,
+				81482D5513BB789A00F843C0 /* ASTStoreSubscriptionTableViewCell.xib */,
 			);
 			path = XIB;
 			sourceTree = "<group>";
@@ -596,7 +612,7 @@
 			);
 			name = ASTStoreKit;
 			productName = ASTStoreKit;
-			productReference = 8173BDB313A69076001DC531 /* ASTStoreKit.app */;
+			productReference = 8173BDB313A69076001DC531 /* ASTExampleStore.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -662,6 +678,8 @@
 				819BC43513B2415A0000C17F /* subscription.png in Resources */,
 				819BC43613B2415A0000C17F /* subscription@2x.png in Resources */,
 				819BC44413B2680E0000C17F /* README.mdown in Resources */,
+				81D315D213BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.xib in Resources */,
+				81482D5613BB789A00F843C0 /* ASTStoreSubscriptionTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -712,6 +730,8 @@
 				81C0EB9813B3D74300F494BE /* GradientButton.m in Sources */,
 				81C0EBB413B5191000F494BE /* UIImageView+ReflectedImage.m in Sources */,
 				819C799C13B524A40049C203 /* UIView+SimpleLayerGradient.m in Sources */,
+				81D315D113BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.m in Sources */,
+				81D315D613BA6FE5005F6DC8 /* ASTStoreViewControllerCommon.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -754,11 +774,11 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				SDKROOT = iphoneos;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				SDKROOT = iphoneos4.3;
 			};
 			name = Debug;
 		};
@@ -768,12 +788,12 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				SDKROOT = iphoneos;
+				SDKROOT = iphoneos4.3;
 			};
 			name = Release;
 		};
@@ -786,8 +806,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ASTStoreKit/ASTStoreKit-Prefix.pch";
 				INFOPLIST_FILE = "ASTStoreKit/ASTStoreKit-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				PRODUCT_NAME = ASTExampleStore;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -801,8 +821,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ASTStoreKit/ASTStoreKit-Prefix.pch";
 				INFOPLIST_FILE = "ASTStoreKit/ASTStoreKit-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				PRODUCT_NAME = ASTExampleStore;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;

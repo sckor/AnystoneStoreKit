@@ -33,7 +33,7 @@
 @interface ASTStoreDetailViewController ()
 
 @property (readonly) ASTStoreController *storeController;
-@property (readonly) ASTStoreProduct *storeProduct;
+@property (readonly,retain) ASTStoreProduct *storeProduct;
 @end
 
 @implementation ASTStoreDetailViewController
@@ -238,6 +238,15 @@
     return self;
 }
 
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration
+{
+    if( UIInterfaceOrientationIsLandscape(interfaceOrientation) )
+    {
+        [self.gradientView setSimpleLayerGradient:[UIColor colorWithWhite:0.5 alpha:1.0] 
+                                         endColor:[UIColor lightGrayColor]];
+    }
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
@@ -308,6 +317,8 @@
 
 - (void)dealloc
 {
+    
+    [storeProduct_ release], storeProduct_ = nil;
     [purchaseImage_ release];
     [productTitle_ release];
     [description_ release];

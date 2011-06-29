@@ -72,47 +72,93 @@
 	</dict>
 	<dict>
 		<key>description</key>
-		<string>Deprecated Keys</string>
-		<key>productIdentifier</key>
-		<string>com.anystonetech.storecontroller.nonconsumable.deprecated</string>
-		<key>shouldDisplay</key>
-		<string>YES</string>
-		<key>title</key>
-		<string>Use Deprecated PList Keys</string>
-		<key>type</key>
-		<string>Nonconsumable</string>
-	</dict>
-	<dict>
-		<key>description</key>
-		<string>Auto Renewable 7 Days</string>
+		<string>Berry of the week club - enjoy a new berry every day while subscribed</string>
 		<key>familyIdentifier</key>
 		<string>com.anystonetech.ASTExampleStore</string>
-		<key>productIdentifier</key>
-		<string>com.anystonetech.ASTExampleStore.7days2</string>
 		<key>familyQuantity</key>
 		<string>7Days</string>
 		<key>isHidden</key>
 		<string>NO</string>
-		<key>title</key>
-		<string>7 Day Subscription</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.ASTExampleStore.7days2</string>
 		<key>productType</key>
 		<string>AutoRenewable</string>
+		<key>title</key>
+		<string>Berry Subscription</string>
 	</dict>
 	<dict>
 		<key>description</key>
-		<string>Auto Renewable 1 Month</string>
+		<string>Berry of the week club - enjoy a new berry every day while subscribed</string>
 		<key>familyIdentifier</key>
 		<string>com.anystonetech.ASTExampleStore</string>
-		<key>productIdentifier</key>
-		<string>com.anystonetech.ASTExampleStore.1month</string>
 		<key>familyQuantity</key>
 		<string>1Month</string>
 		<key>isHidden</key>
 		<string>NO</string>
-		<key>title</key>
-		<string>1 Month Subscription</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.ASTExampleStore.1month</string>
 		<key>productType</key>
 		<string>AutoRenewable</string>
+		<key>title</key>
+		<string>Berry Subscription</string>
+	</dict>
+	<dict>
+		<key>familyIdentifier</key>
+		<string>com.anystonetech.ASTExampleStore</string>
+		<key>familyQuantity</key>
+		<string>2Months</string>
+		<key>isHidden</key>
+		<string>NO</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.ASTExampleStore.2months</string>
+		<key>productType</key>
+		<string>AutoRenewable</string>
+		<key>title</key>
+		<string>Berry Subscription</string>
+	</dict>
+	<dict>
+		<key>familyIdentifier</key>
+		<string>com.anystonetech.ASTExampleStore</string>
+		<key>familyQuantity</key>
+		<string>3Months</string>
+		<key>isHidden</key>
+		<string>NO</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.ASTExampleStore.3months</string>
+		<key>productType</key>
+		<string>AutoRenewable</string>
+		<key>title</key>
+		<string>Berry Subscription</string>
+	</dict>
+	<dict>
+		<key>familyIdentifier</key>
+		<string>com.anystonetech.ASTExampleStore</string>
+		<key>familyQuantity</key>
+		<string>6Months</string>
+		<key>isHidden</key>
+		<string>NO</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.ASTExampleStore.6months</string>
+		<key>productType</key>
+		<string>AutoRenewable</string>
+		<key>title</key>
+		<string>Berry Subscription</string>
+	</dict>
+	<dict>
+		<key>familyIdentifier</key>
+		<string>com.anystonetech.ASTExampleStore</string>
+		<key>familyQuantity</key>
+		<string>1Year</string>
+		<key>isHidden</key>
+		<string>NO</string>
+		<key>productIdentifier</key>
+		<string>com.anystonetech.ASTExampleStore.1year</string>
+		<key>productType</key>
+		<string>AutoRenewable</string>
+		<key>title</key>
+		<string>Berry Subscription</string>
+		<key>extraInformation</key>
+		<string>Best Value!</string>
 	</dict>
 </array>
 </plist>
