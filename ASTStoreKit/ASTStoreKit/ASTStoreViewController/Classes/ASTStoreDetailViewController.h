@@ -29,7 +29,7 @@
 #import "ASTStoreController.h"
 #import "GradientButton.h"
 
-@interface ASTStoreDetailViewController : UIViewController <ASTStoreControllerDelegate>
+@interface ASTStoreDetailViewController : UIViewController
 {
     UIImageView *purchaseImage_;
     UILabel *productTitle_;
@@ -39,14 +39,13 @@
     
     NSString *productIdentifier_;
     UILabel *onHand_;
-    UIActivityIndicatorView *connectingActivityIndicatorView_;
-    UILabel *statusLabel_;
     
-	BOOL isAniPad;
     UIImageView *reflectionImageView;
     UIView *titleView;
     UIView *gradientView;
 }
+
+- (void)updateViewData;
 
 - (IBAction)purchaseButtonPressed:(id)sender;
 @property (nonatomic, retain) IBOutlet UIView *gradientView;
@@ -60,8 +59,6 @@
 @property (retain) IBOutlet UILabel *onHand;
 
 @property (retain) NSString *productIdentifier;
-@property (retain) IBOutlet UIActivityIndicatorView *connectingActivityIndicatorView;
-@property (retain) IBOutlet UILabel *statusLabel;
 @property (nonatomic, retain) IBOutlet UIImageView *reflectionImageView;
 
 @end

@@ -47,6 +47,8 @@
     UITableView *tableView;
 }
 
+- (void)updateViewData;
+
 @property (retain) NSString *familyIdentifier;
 @property (nonatomic,retain) UIColor *cellBackgroundColor1;
 @property (nonatomic,retain) UIColor *cellBackgroundColor2;

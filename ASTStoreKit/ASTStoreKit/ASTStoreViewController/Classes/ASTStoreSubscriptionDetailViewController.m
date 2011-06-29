@@ -143,50 +143,6 @@
     self.expiresLabel.text = [NSString stringWithFormat:@"%@%@", expiresString, expiryDateAsString];
 }
 
-#pragma mark ASTStoreControllerDelegate Methods
-
-- (void)astStoreControllerProductDataStateChanged:(ASTStoreControllerProductDataState)state
-{
-    DLog(@"stateChanged:%d", state);
-    
-    // Update table now that the state of the data has changed
-    [self updateViewData];
-}
-
-- (void)astStoreControllerPurchaseStateChanged:(ASTStoreControllerPurchaseState)state
-{
-    DLog(@"purchaseStateChanged:%d", state);
-    
-    if( ASTStoreControllerPurchaseStateNone == state )
-    {
-    }
-    else
-    {
-    }
-    
-    [self updateViewData];
-}
-
-// Should implement this, otherwise no purchase notifications for you
-// Restore will invoke astStoreControllerProductIdentifierPurchased: for any restored purchases
-- (void)astStoreControllerProductIdentifierPurchased:(NSString*)productIdentifier
-{
-    DLog(@"purchased: %@", productIdentifier);
-    [self updateViewData];
-}
-
-#pragma mark Purchase Related Delegate Methods
-// Invoked for actual purchase failures - may want to display a message to the user
-- (void)astStoreControllerProductIdentifierFailedPurchase:(NSString*)productIdentifier withError:(NSError*)error
-{
-    DLog(@"failed purchase: %@ error:%@", productIdentifier, error);
-}
-
-// Invoked for cancellations - no message should be shown to user per programming guide
-- (void)astStoreControllerProductIdentifierCancelledPurchase:(NSString*)productIdentifier
-{
-    DLog(@"cancelled purchase: %@", productIdentifier);
-}
 
 #pragma mark - Button Actions
 
@@ -373,14 +329,11 @@
     
     self.reflectionImageView.image = [self.purchaseImage reflectedImageWithHeight:14.0];
     self.reflectionImageView.alpha = 0.4;
-    
-    self.storeController.delegate = self;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    self.storeController.delegate = nil;
 }
 
 - (void)viewDidUnload
@@ -404,13 +357,7 @@
     {
         [self.gradientView setSimpleLayerGradient:[UIColor colorWithWhite:0.5 alpha:1.0] 
                                          endColor:[UIColor lightGrayColor]];
-        
-        
     }
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

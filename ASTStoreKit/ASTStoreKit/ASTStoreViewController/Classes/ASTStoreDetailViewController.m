@@ -49,8 +49,6 @@
 @synthesize storeProduct = storeProduct_;
 @synthesize productIdentifier = productIdentifier_;
 @synthesize onHand = onHand_;
-@synthesize connectingActivityIndicatorView = connectingActivityIndicatorView_;
-@synthesize statusLabel = statusLabel_;
 @synthesize reflectionImageView;
 
 - (ASTStoreController*)storeController
@@ -80,12 +78,11 @@
     self.extraInfo.text = self.storeProduct.extraInformation;
     
     NSString *purchaseTitle = nil;
-    NSString *statusText = nil;
     
     if( [self.storeController isProductPurchased:self.productIdentifier] )
     {
-        purchaseTitle = @"Purchased - Thank You!";
-                self.purchaseButton.enabled = NO;
+        purchaseTitle = NSLocalizedString(@"Purchased - Thank You!", nil);
+        self.purchaseButton.enabled = NO;
     }
     else if( self.storeController.productDataState == ASTStoreControllerProductDataStateUpToDate )
     {
@@ -98,68 +95,35 @@
             }
             else
             {
-                purchaseTitle = [NSString stringWithFormat:@"Only %@", [self.storeProduct localizedPrice]];
+                purchaseTitle = [NSString stringWithFormat:NSLocalizedString(@"Only %@", @"Only %@"), [self.storeProduct localizedPrice]];
             }
             self.purchaseButton.enabled = YES;
         }
         else
         {
-            purchaseTitle = @"Store Error";
+            purchaseTitle = NSLocalizedString(@"Store Error", nil);
             self.purchaseButton.enabled = NO;
         }
     }
     else
     {
-        purchaseTitle = @"Connecting to Store";
+        purchaseTitle = NSLocalizedString(@"Connecting to Store", nil);
         self.purchaseButton.enabled = NO;
     }
  
         
     if( self.storeProduct.type == ASTStoreProductIdentifierTypeConsumable )
     {
-        self.onHand.text = [NSString stringWithFormat:@"On Hand: %d", 
+        self.onHand.text = [NSString stringWithFormat:NSLocalizedString(@"On Hand: %d", @"On Hand: %d"),
                             [self.storeController availableQuantityForProduct:self.productIdentifier]];
     }
     else
     {
         self.onHand.text = nil;
     }
-    
-    if( self.storeController.purchaseState != ASTStoreControllerPurchaseStateNone )
-    {
-        [self.connectingActivityIndicatorView startAnimating];
-        purchaseTitle = @"Please Wait";
-    }
-    else
-    {
-        [self.connectingActivityIndicatorView stopAnimating];
-    }
-    
-    switch ( self.storeController.purchaseState ) 
-    {
-        case ASTStoreControllerPurchaseStateProcessingPayment:
-            statusText = @"Processing";
-            
-            break;
-            
-        case ASTStoreControllerPurchaseStateVerifyingReceipt:
-            statusText = @"Verifying";
-            break;
-            
-        case ASTStoreControllerPurchaseStateDownloadingContent:
-            statusText = @"Downloading";
-            break;
-
-        default:
-            break;
-    }
-    
-
-    self.statusLabel.text = statusText;
-    
+        
     [self.purchaseButton setTitle:purchaseTitle forState:UIControlStateNormal];
     [self.purchaseButton setTitle:purchaseTitle forState:UIControlStateHighlighted];
-
 }
 
 
@@ -170,73 +134,8 @@
     [self.storeController purchaseProduct:self.productIdentifier];
 }
 
-#pragma mark ASTStoreControllerDelegate Methods
-
-- (void)astStoreControllerProductDataStateChanged:(ASTStoreControllerProductDataState)state
-{
-    DLog(@"stateChanged:%d", state);
-    
-    // Update table now that the state of the data has changed
-    [self updateViewData];
-}
-
-- (void)astStoreControllerPurchaseStateChanged:(ASTStoreControllerPurchaseState)state
-{
-    DLog(@"purchaseStateChanged:%d", state);
-    
-    if( ASTStoreControllerPurchaseStateNone == state )
-    {
-        DLog(@"enable buttons");
-        self.purchaseButton.enabled = YES;
-        self.purchaseButton.userInteractionEnabled = YES;
-    }
-    else
-    {
-        DLog(@"disable buttons");
-        self.purchaseButton.enabled = NO;
-        self.purchaseButton.userInteractionEnabled = NO;
-    }
-    
-    [self updateViewData];
-}
-
-// Should implement this, otherwise no purchase notifications for you
-// Restore will invoke astStoreControllerProductIdentifierPurchased: for any restored purchases
-- (void)astStoreControllerProductIdentifierPurchased:(NSString*)productIdentifier
-{
-    DLog(@"purchased: %@", productIdentifier);
-    [self updateViewData];
-    self.statusLabel.text = @"Purchase Successful";
-}
-
-#pragma mark Purchase Related Delegate Methods
-// Invoked for actual purchase failures - may want to display a message to the user
-- (void)astStoreControllerProductIdentifierFailedPurchase:(NSString*)productIdentifier withError:(NSError*)error
-{
-    DLog(@"failed purchase: %@ error:%@", productIdentifier, error);
-    self.statusLabel.text = @"Purchase Failed";
-}
-
-// Invoked for cancellations - no message should be shown to user per programming guide
-- (void)astStoreControllerProductIdentifierCancelledPurchase:(NSString*)productIdentifier
-{
-    DLog(@"cancelled purchase: %@", productIdentifier);
-    self.statusLabel.text = @"Purchase Cancelled";
-}
-
 
 #pragma mark - View lifecycle
-
-// The designated initializer. Override to perform setup that is required before the view is loaded.
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil 
-{
-    if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) 
-    {
-        // Custom initialization
-		isAniPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
-    }
-    return self;
-}
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration
 {
@@ -273,14 +172,11 @@
     
     self.reflectionImageView.image = [self.purchaseImage reflectedImageWithHeight:14.0];
     self.reflectionImageView.alpha = 0.4;
-
-    self.storeController.delegate = self;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    self.storeController.delegate = nil;
 }
 
 - (void)viewDidUnload
@@ -303,12 +199,6 @@
     [onHand_ release];
     onHand_ = nil;
     
-    [connectingActivityIndicatorView_ release];
-    connectingActivityIndicatorView_ = nil;
-    
-    [statusLabel_ release];
-    statusLabel_ = nil;
-    
     [self setReflectionImageView:nil];
     [self setTitleView:nil];
     [self setGradientView:nil];
@@ -326,8 +216,6 @@
     [purchaseButton_ release];
     [productIdentifier_ release];    
     [onHand_ release];
-    [connectingActivityIndicatorView_ release];
-    [statusLabel_ release];
     
     [reflectionImageView release];
     [titleView release];

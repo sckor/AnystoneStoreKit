@@ -522,6 +522,35 @@ enum ASTStoreViewControllerButtonsRows
             break;
     }
 }
+
+- (void)updateDetailViewControllers
+{
+    // If a detailviewcontroller or subscriptiondetailviewcontroller is the visible controller
+    // then this will inform them to update if necessary
+    UIViewController *visibleViewController = [self.navigationController visibleViewController];
+    
+    if( [visibleViewController isEqual:self] )
+    {
+        return;
+    }
+    
+    if( [visibleViewController isKindOfClass:[ASTStoreDetailViewController class]] )
+    {
+        ASTStoreDetailViewController *vc = (ASTStoreDetailViewController*) visibleViewController;
+        [vc updateViewData];
+    }
+    else if( [visibleViewController isKindOfClass:[ASTStoreSubscriptionDetailViewController class]] )
+    {
+        ASTStoreSubscriptionDetailViewController *vc = (ASTStoreSubscriptionDetailViewController*) visibleViewController;
+        [vc updateViewData];
+    }
+    else
+    {
+        DLog(@"Unexpected view controller: %@", NSStringFromClass([visibleViewController class]));
+    }
+    
+}
+
 #pragma mark ASTStoreControllerDelegate Methods
 
 - (void)astStoreControllerProductDataStateChanged:(ASTStoreControllerProductDataState)state
@@ -531,6 +560,7 @@ enum ASTStoreViewControllerButtonsRows
     // Update table now that the state of the data has changed
     [self resetProductIdentifierArrays];
     [self.tableView reloadData];
+    [self updateDetailViewControllers];
     
     switch ( state ) 
     {            
@@ -562,7 +592,18 @@ enum ASTStoreViewControllerButtonsRows
 {
     DLog(@"purchased:%@", productIdentifier);
     [self.tableView reloadData];
+    [self updateDetailViewControllers];
+    self.progessHUD = [self successProgessHUDWithLabel:NSLocalizedString(@"Purchase Complete", nil)];
 }
+
+- (void)astStoreControllerProductIdentifierFailedPurchase:(NSString*)productIdentifier withError:(NSError*)error
+{
+    DLog(@"failed purchase:%@", productIdentifier);
+    [self.tableView reloadData];
+    [self updateDetailViewControllers];
+    self.progessHUD = [self failProgessHUDWithLabel:NSLocalizedString(@"Purchase Failed", nil)];
+}
+
 
 - (void)astStoreControllerPurchaseStateChanged:(ASTStoreControllerPurchaseState)state
 {
@@ -591,7 +632,6 @@ enum ASTStoreViewControllerButtonsRows
     {
         self.progessHUD = [self activityProgessHUDWithLabel:labelText];
     }
-       
 }
 
 // Additionally will invoke this once the restore queue has been processed
@@ -617,6 +657,7 @@ enum ASTStoreViewControllerButtonsRows
 {
     DLog(@"product identifier expired:%@", productIdentifier);
     [self.tableView reloadData];
+    [self updateDetailViewControllers];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex 
@@ -634,11 +675,6 @@ enum ASTStoreViewControllerButtonsRows
         default:
             break;
     }
-}
-
-
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration 
-{
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -702,7 +738,7 @@ enum ASTStoreViewControllerButtonsRows
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    self.storeController.delegate = nil;    
+    //self.storeController.delegate = nil;    
 }
 
 // The designated initializer. Override to perform setup that is required before the view is loaded.
