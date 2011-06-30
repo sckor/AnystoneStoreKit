@@ -138,6 +138,9 @@ typedef enum
 //       Optional Key: minimumVersion NSString
 //       Optional Key: extraInformation NSString 
 //       Optional Key: isFree boolean - should allow purchase without going to app store
+//       Optional Key: productImage - Image file name to use when displaying item. 
+//                                    Should be 57x57 and 114x114 @2x for Retina display
+
 
 // Read in products to manage from a plist included in the application bundle
 // The plist name should not include the .plist extension as it will be 
