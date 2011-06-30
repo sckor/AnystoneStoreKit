@@ -382,7 +382,7 @@ static id<ASTStoreFamilyDataExpiryProtocol> astFamilyDataDelegate = nil;
 
 - (void)setReceipt:(NSString *)receipt
 {
-    if( receipt_ != receipt )
+    if( NO == [receipt_ isEqualToString:receipt] )
     {
         [receipt_ release];
         receipt_ = [receipt copy];
@@ -394,7 +394,7 @@ static id<ASTStoreFamilyDataExpiryProtocol> astFamilyDataDelegate = nil;
 
 - (void)setExpiresDate:(NSDate *)anExpiresDate
 {
-    if (expiresDate_ != anExpiresDate)
+    if( NO == [expiresDate_ isEqualToDate:anExpiresDate])
     {
         [anExpiresDate retain];
         [expiresDate_ release];
@@ -419,9 +419,21 @@ static id<ASTStoreFamilyDataExpiryProtocol> astFamilyDataDelegate = nil;
                                                                       selector:@selector(familyDataVerifySubscriptionTimerInvoked:)
                                                                       userInfo:nil 
                                                                        repeats:NO];
-                DLog(@"set expiry timer for: %f", expireInterval);
+                DLog(@"set expiry timer for: %f (now:%@ setDate:%@)", expireInterval, now, anExpiresDate);
             }
-
+            else
+            {
+                if( self.expiryDateTimer )
+                {
+                    if( [self.expiryDateTimer isValid] )
+                    {
+                        self.expiryDateTimer = nil;
+                    }
+                }
+                // Invoke the delegate immediately to check the status - it's possible
+                // this is being run on startup and want to make sure sub is valid
+                [self familyDataVerifySubscriptionTimerInvoked:nil];
+            }
         }
         
         [self save];
@@ -437,7 +449,11 @@ static id<ASTStoreFamilyDataExpiryProtocol> astFamilyDataDelegate = nil;
 {
     if( nil != expiryDateTimer_ )
     {
-        [expiryDateTimer_ invalidate];
+        if( [expiryDateTimer_ isValid] )
+        {
+            [expiryDateTimer_ invalidate];
+        }
+        
         [expiryDateTimer_ release];
         expiryDateTimer_ = nil;
     }

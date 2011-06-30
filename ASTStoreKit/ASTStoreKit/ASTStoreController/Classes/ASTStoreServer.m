@@ -405,7 +405,7 @@
             break;
             
         case 21002:
-            DLog(@"The data in the receipt-data property was malformed.");
+            DLog(@"The data in the receipt-data property was malformed. %@", receiptBase64Data);
             break;
             
         case 21003:

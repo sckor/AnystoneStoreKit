@@ -827,6 +827,8 @@
         previousPurchaseState = YES;
     }
     
+    DLog(@"prevPurchase:%d result:%d", previousPurchaseState, result);
+    
     if( ASTStoreServerResultPass == result )
     {
         // Pass could mean subscription is valid or it could be expired - will need to check the date

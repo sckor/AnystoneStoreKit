@@ -93,5 +93,33 @@ void updateCellBackgrounds(UITableViewCell* cell, NSIndexPath *indexPath, UIColo
             topLineView.alpha = 0.0;
         }
     }
+}
 
+
+void setLabelForExpiresDate(NSDate *expiresDate, UILabel *expiresLabel, int isPurchased)
+{
+    NSString *expiryDateAsString = [NSDateFormatter localizedStringFromDate:expiresDate 
+                                                                  dateStyle:kCFDateFormatterMediumStyle 
+                                                                  timeStyle:kCFDateFormatterShortStyle];
+    NSString *expiresString = nil;
+    
+    expiresLabel.textColor = [UIColor blackColor];
+    
+    if( nil == expiryDateAsString )
+    {
+        expiresLabel.text = NSLocalizedString(@"Not Subscribed", nil);
+        return;
+    }
+    
+    if( isPurchased )
+    {
+        expiresString = NSLocalizedString(@"Expires: ", nil);
+    }
+    else
+    {
+        expiresLabel.textColor = [UIColor redColor];
+        expiresString = NSLocalizedString(@"Expired: ", nil);
+    }
+    
+    expiresLabel.text = [NSString stringWithFormat:@"%@%@", expiresString, expiryDateAsString];
 }

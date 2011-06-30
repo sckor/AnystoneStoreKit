@@ -117,30 +117,7 @@
     self.productTitle.text = [self.storeProduct localizedTitle];
     self.description.text = [self.storeProduct localizedDescription];
     
-    NSString *expiryDateAsString = [NSDateFormatter localizedStringFromDate:self.storeProduct.expiresDate 
-                                                                  dateStyle:kCFDateFormatterMediumStyle 
-                                                                  timeStyle:kCFDateFormatterShortStyle];
-    NSString *expiresString = nil;
-    
-    
-    if( nil == expiryDateAsString )
-    {
-        self.expiresLabel.text = nil;
-        return;
-    }
-    
-    if( self.storeProduct.isPurchased )
-    {
-        self.expiresLabel.textColor = [UIColor blackColor];
-        expiresString = NSLocalizedString(@"Expires: ", nil);
-    }
-    else
-    {
-        self.expiresLabel.textColor = [UIColor redColor];
-        expiresString = NSLocalizedString(@"Expired: ", nil);
-    }
-                              
-    self.expiresLabel.text = [NSString stringWithFormat:@"%@%@", expiresString, expiryDateAsString];
+    setLabelForExpiresDate(self.storeProduct.expiresDate, self.expiresLabel, self.storeProduct.isPurchased);
 }
 
 
@@ -185,7 +162,6 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath 
 {    
-    
     UILabel *titleLabel = (UILabel*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagTitleLabel];
     UILabel *extraInfoLabel = (UILabel*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagExtraInfoLabel];
     GradientButton *purchaseButton = (GradientButton*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagPurchaseButton];
@@ -317,6 +293,7 @@
     self.reflectionImageView.layer.cornerRadius = 10.0;
     self.reflectionImageView.layer.masksToBounds = YES;
 
+    self.tableView.allowsSelection = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated

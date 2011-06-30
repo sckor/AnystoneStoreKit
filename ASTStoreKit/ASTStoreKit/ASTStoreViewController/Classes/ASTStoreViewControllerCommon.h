@@ -47,3 +47,4 @@ typedef enum
 
 
 void updateCellBackgrounds(UITableViewCell* cell, NSIndexPath *indexPath, UIColor *cellBackgroundColor1, UIColor *cellBackgroundColor2);
+void setLabelForExpiresDate(NSDate *expiresDate, UILabel *expiresLabel, int isPurchased);

@@ -318,6 +318,8 @@ enum ASTStoreViewControllerButtonsRows
     UILabel *extraInfo = (UILabel*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagExtraInfoLabel];
     UILabel *price = (UILabel*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagPriceLabel];
     
+    description.textColor = [UIColor blackColor];
+
     if( indexPath.section == ASTStoreViewControllerSectionButtons )
     {
         cell.accessoryType = UITableViewCellAccessoryNone;
@@ -339,7 +341,6 @@ enum ASTStoreViewControllerButtonsRows
 
         return;
     }
-    
     
     NSString *identifier =  [self productIdentifierForIndexPath:indexPath];
     ASTStoreProduct *product = [self.storeController storeProductForIdentifier:identifier];
@@ -383,11 +384,7 @@ enum ASTStoreViewControllerButtonsRows
         case ASTStoreViewControllerSectionAutoRenewables:
         {
             price.text = nil;
-            
-            if( isPurchased )
-            {
-                description.text = NSLocalizedString(@"Subscribed - Thank you!", nil);
-            }
+            setLabelForExpiresDate(product.expiresDate, description, product.isPurchased);
             break;
         }
         
@@ -595,6 +592,12 @@ enum ASTStoreViewControllerButtonsRows
     self.progessHUD = [self failProgessHUDWithLabel:NSLocalizedString(@"Purchase Failed", nil)];
 }
 
+- (void)astStoreControllerProductIdentifierCancelledPurchase:(NSString*)productIdentifier
+{
+    [self.progessHUD hide:YES];
+    self.needsHideHUD = NO;
+}
+
 
 - (void)astStoreControllerPurchaseStateChanged:(ASTStoreControllerPurchaseState)state
 {
@@ -733,10 +736,12 @@ enum ASTStoreViewControllerButtonsRows
 }
 
 // The designated initializer. Override to perform setup that is required before the view is loaded.
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil 
+{
+    if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) 
+    {
         // Custom initialization
-        self.title = @"AST Store";
+        self.title = @"Store";
 		isAniPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
     }
     return self;
