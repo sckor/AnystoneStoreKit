@@ -39,7 +39,10 @@
 @synthesize description = description_;
 @synthesize productData = productData_;
 @synthesize isFree = isFree_;
+@synthesize productImageName = productImageName_;
+
 @dynamic expiresDate;
+@dynamic productImage;
 
 #pragma mark Class Methods
 
@@ -190,6 +193,34 @@
     return ( self.productData.expiresDate );
 }
 
+- (UIImage*)productImage
+{
+    UIImage *anImage = [UIImage imageNamed:self.productImageName];
+    
+    if( nil == anImage )
+    {
+        switch (self.type) 
+        {
+            case ASTStoreProductIdentifierTypeAutoRenewable:
+                anImage = [UIImage imageNamed:@"default-autorenewable-image"];
+                break;
+                
+            case ASTStoreProductIdentifierTypeConsumable:
+                anImage = [UIImage imageNamed:@"default-consumable-image"];
+                break;
+                
+            case ASTStoreProductIdentifierTypeNonconsumable:
+                anImage = [UIImage imageNamed:@"default-nonconsumable-image"];
+                break;
+                
+            default:
+                break;
+        }
+    }
+    
+    return anImage;
+}
+
 #pragma mark SKProduct related properties
 
 - (NSString*)localizedPrice
@@ -295,6 +326,7 @@
     skProduct_ = nil;
     isValid_ = YES;
     isFree_ = NO;
+    productImageName_ = nil;
     
     return self;
 }
@@ -333,6 +365,8 @@
 
 - (void)dealloc 
 {    
+    [productImageName_ release], productImageName_ = nil;
+    
     [minimumVersion_ release];
     minimumVersion_ = nil;
     

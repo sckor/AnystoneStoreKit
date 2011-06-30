@@ -104,6 +104,21 @@
 // is invalid upon querying for it
 @property  (readonly) BOOL isValid;
 
+// Set to the name of a file to read using [UIImage imageNamed:] to associate
+// with the product
+@property (copy) NSString *productImageName;
+
+// Returns an image based on the productImageName
+// if productImageName is nil then will attempt to return a default image 
+// based on the type of product with the following file names:
+//   default-nonconsumable-image
+//   default-consumable-image
+//   default-autorenewable-image
+//
+// if productImageName file is not found will return nil
+// (obviously including the default ones if there are no corresponding files)
+@property (readonly) UIImage *productImage;
+
 // The following properties are valid when the data has been retrieved from
 // iTunes by the ASTStoreController; If there is no data, the methods
 // will return nil or use the values provided for title/description above. 

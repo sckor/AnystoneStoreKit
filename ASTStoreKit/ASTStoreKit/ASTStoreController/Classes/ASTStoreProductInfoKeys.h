@@ -44,7 +44,7 @@
 #define kASTStoreProductPlistShouldDisplayKey @"shouldDisplay" // deprecated
 
 #define kASTStoreProductInfoExtraInformationKey @"extraInformation"
-
+#define kASTStoreProductInfoProductImageKey @"productImage"
 
 
 #define kASTStoreProductInfoTypeFamilyIdentifierKey @"familyIdentifier"

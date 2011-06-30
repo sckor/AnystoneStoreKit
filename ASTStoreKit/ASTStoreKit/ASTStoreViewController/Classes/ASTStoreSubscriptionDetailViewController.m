@@ -326,6 +326,8 @@
 
     [self.gradientView setSimpleLayerGradient:[UIColor colorWithWhite:0.5 alpha:1.0] 
                                      endColor:[UIColor lightGrayColor]];
+
+    self.purchaseImage.image = self.storeProduct.productImage;
     
     self.reflectionImageView.image = [self.purchaseImage reflectedImageWithHeight:14.0];
     self.reflectionImageView.alpha = 0.4;

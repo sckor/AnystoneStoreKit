@@ -360,7 +360,8 @@ enum ASTStoreViewControllerButtonsRows
     }
     
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-
+    imageView.image = product.productImage;
+    
     switch (indexPath.section)
     {
         case ASTStoreViewControllerSectionConsumables:
@@ -376,13 +377,11 @@ enum ASTStoreViewControllerButtonsRows
             
         case ASTStoreViewControllerSectionNonconsumables:
         {
-            imageView.image = [UIImage imageNamed:@"default-nonconsumable-image"];
-
             break;
         }
+            
         case ASTStoreViewControllerSectionAutoRenewables:
         {
-            imageView.image = [UIImage imageNamed:@"subscription"];
             price.text = nil;
             
             if( isPurchased )
@@ -475,11 +474,7 @@ enum ASTStoreViewControllerButtonsRows
         case ASTStoreViewControllerSectionNonconsumables:
         {
             ASTStoreDetailViewController *vc = [[[ASTStoreDetailViewController alloc] initWithNibName:nil bundle:nil] autorelease];
-            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-            UIImageView *purchaseImageView = (UIImageView*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagImageView];
-            
-            vc.purchaseImage.image = purchaseImageView.image;
-            
+                        
             NSString *identifier = [self productIdentifierForIndexPath:indexPath];
             
             vc.productIdentifier = identifier;
@@ -491,11 +486,7 @@ enum ASTStoreViewControllerButtonsRows
         case ASTStoreViewControllerSectionAutoRenewables:
         {
             ASTStoreSubscriptionDetailViewController *vc = [[[ASTStoreSubscriptionDetailViewController alloc] initWithNibName:nil bundle:nil] autorelease];
-            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-            UIImageView *purchaseImageView = (UIImageView*) [cell viewWithTag:ASTStoreViewControllerTableViewCellTagImageView];
-            
-            vc.purchaseImage.image = purchaseImageView.image;
-                        
+                                    
             vc.familyIdentifier = [self.autoRenewableProductIdentifiers objectAtIndex:indexPath.row];
             [self.navigationController pushViewController:vc animated:YES];
             

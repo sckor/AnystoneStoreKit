@@ -185,6 +185,7 @@
         NSString *minimumVersion = [dict objectForKey:kASTStoreProductInfoMinimumVersionKey];
         NSNumber *isHiddenAsNumber = [dict objectForKey:kASTStoreProductInfoIsHiddenKey];
         NSNumber *isFreeAsNumber = [dict objectForKey:kASTStoreProductInfoIsFreeKey];
+        NSString *productImageName = [dict objectForKey:kASTStoreProductInfoProductImageKey];
         
         if( title )
         {
@@ -240,6 +241,10 @@
             aProduct.isFree = [isFreeAsNumber boolValue];
         }
 
+        if( productImageName )
+        {
+            aProduct.productImageName = productImageName;
+        }
         
         [tmpStoreProductArray addObject:aProduct];
     }

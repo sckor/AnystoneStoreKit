@@ -27,6 +27,8 @@
 		<string>Consumable</string>
 		<key>title</key>
 		<string>Consumable - 1 berry</string>
+		<key>productImage</key>
+		<string>blue</string>
 	</dict>
 	<dict>
 		<key>description</key>
@@ -47,6 +49,8 @@
 		<string>Consumable</string>
 		<key>title</key>
 		<string>Consumable - 10 berries</string>
+		<key>productImage</key>
+		<string>purple</string>
 	</dict>
 	<dict>
 		<key>description</key>
@@ -69,6 +73,8 @@
 		<string>Consumable</string>
 		<key>title</key>
 		<string>Consumable - 99 berries</string>
+		<key>productImage</key>
+		<string>nosuchimage</string>
 	</dict>
 	<dict>
 		<key>description</key>
@@ -145,6 +151,8 @@
 		<string>Berry Subscription</string>
 	</dict>
 	<dict>
+		<key>extraInformation</key>
+		<string>Best Value!</string>
 		<key>familyIdentifier</key>
 		<string>com.anystonetech.ASTExampleStore</string>
 		<key>familyQuantity</key>
@@ -157,8 +165,6 @@
 		<string>AutoRenewable</string>
 		<key>title</key>
 		<string>Berry Subscription</string>
-		<key>extraInformation</key>
-		<string>Best Value!</string>
 	</dict>
 </array>
 </plist>
