@@ -46,6 +46,10 @@
 @property (nonatomic, copy) NSString *serviceURLPathProductQuery;
 @property (nonatomic, copy) NSString *serviceURLPathProductList;
 @property (nonatomic, copy) NSString *serviceURLPathSubscriptionValidation;
+@property (nonatomic, readonly, assign) dispatch_queue_t subscriptionDispatchQueue;
+@property BOOL subscriptionQueueEnabled;
+
+- (void)configureSubscriptionQueue;
 
 @end
 
@@ -66,6 +70,8 @@
 @synthesize serviceURLPaths = serviceURLPaths_;
 @synthesize serviceURLPathSubscriptionValidation = serviceURLPathSubscriptionValidation_;
 @synthesize sharedSecret = sharedSecret_;
+@synthesize subscriptionDispatchQueue = subscriptionDispatchQueue_;
+@synthesize subscriptionQueueEnabled = subscriptionQueueEnabled_;
 
 #pragma mark private methods
 
@@ -87,7 +93,21 @@
 }
 
 
+
 #pragma mark Override Synthesized Methods
+
+- (dispatch_queue_t)subscriptionDispatchQueue
+{
+    if(  nil == subscriptionDispatchQueue_ )
+    {
+        subscriptionDispatchQueue_ = dispatch_queue_create("com.anystonetech.ASTStoreKit.StoreServer", NULL);
+        
+        self.subscriptionQueueEnabled = YES;
+        [self configureSubscriptionQueue];
+    }
+    
+    return subscriptionDispatchQueue_;
+}
 
 - (NSString*)bundleId
 {
@@ -239,6 +259,52 @@
     ASTReturnRA( serviceURLPathSubscriptionValidation_ );    
 }
 
+- (void)setServerUrl:(NSURL *)aServerUrl
+{
+    if (serverUrl_ != aServerUrl)
+    {
+        [serverUrl_ release];
+        serverUrl_ = [aServerUrl copy];
+        
+        [self configureSubscriptionQueue];
+    }
+}
+
+- (void)setSharedSecret:(NSString *)aSharedSecret
+{
+    if (sharedSecret_ != aSharedSecret)
+    {
+        [sharedSecret_ release];
+        sharedSecret_ = [aSharedSecret copy];
+        
+        [self configureSubscriptionQueue];
+    }
+}
+
+- (void)configureSubscriptionQueue
+{
+    if(( self.serverUrl != nil ) ||
+       ( self.sharedSecret != nil ))
+    {
+        if( self.subscriptionQueueEnabled == NO )
+        {
+            DLog(@"Resuming subscription queue");
+            dispatch_resume( self.subscriptionDispatchQueue );
+            self.subscriptionQueueEnabled = YES;
+        }
+    }
+    else
+    {
+        if( self.subscriptionQueueEnabled == YES )
+        {
+            DLog(@"Suspending subscription queue");
+            dispatch_suspend( self.subscriptionDispatchQueue );
+            self.subscriptionQueueEnabled = NO;
+        }
+    }
+}
+
+
 #pragma mark Receipt Verification
 - (ASTStoreServerResult)verifySubscriptionReceipt:(NSString*)receiptBase64Data 
                            expiresDate:(NSDate**)expiresDate 
@@ -262,16 +328,18 @@
     }
     else if(( nil != self.serverUrl ) && ( nil != self.sharedSecret ))
     {
-        DLog(@"WARNING: It is recommended that shared secrets not be embedded in the application");
+        DLog(@"Note: It is recommended that shared secrets not be embedded in the application");
         receiptServer = [self.serverUrl absoluteString];
         receiptServicePath = self.serviceURLPathSubscriptionValidation;
     }
     else if(( nil == self.serverUrl ) && ( nil == self.sharedSecret ))
     {
         DLog(@"CANNOT VERIFY RECEIPT: need one of a server URL or a shared secret");
-        return ASTStoreServerResultFail;
+        return ASTStoreServerResultUnconfigured;
     }
     
+    DLog(@"serverUrl:%@ receiptServer:%@ path:%@", self.serverUrl, receiptServer, receiptServicePath);
+
     NSURL *serviceURL = [[NSURL URLWithString:receiptServer] URLByAppendingPathComponent:receiptServicePath];
     DLog(@"serviceURL:%@", serviceURL);
     
@@ -429,9 +497,8 @@
 
 - (void)asyncVerifySubscriptionReceipt:(NSString*)receiptBase64Data withCompletionBlock:(ASTVerifySubscriptionBlock)completionBlock
 {
-    dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     
-    dispatch_async(globalQueue, ^{
+    dispatch_async(self.subscriptionDispatchQueue, ^{
         NSString *latestReceipt = nil;
         NSDate *expiresDate = nil;
         
@@ -813,6 +880,8 @@
     serviceURLPathReceiptValidation_ = nil;
     serviceURLPaths_ = nil;
     sharedSecret_ = nil;
+    subscriptionDispatchQueue_ = nil;
+    subscriptionQueueEnabled_ = NO;
     
     DLog(@"Instantiated ASTStoreServer");
     return self;
@@ -820,6 +889,11 @@
 
 - (void)dealloc 
 {
+    if( nil != subscriptionDispatchQueue_ )
+    {
+        dispatch_release( subscriptionDispatchQueue_ );
+        subscriptionDispatchQueue_ = nil;
+    }
     [serverUrl_ release];
     serverUrl_ = nil;
     

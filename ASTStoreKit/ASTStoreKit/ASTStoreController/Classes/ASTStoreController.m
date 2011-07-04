@@ -67,8 +67,8 @@
 @synthesize customerIdentifier = customerIdentifier_;
 @synthesize serverConsumablesEnabled = serverConsumablesEnabled_;
 @synthesize serverPromoCodesEnabled = serverPromoCodesEnabled_;
-@synthesize serviceURLPaths = serviceURLPaths_;
-@synthesize sharedSecret = sharedSecret_;
+@dynamic serviceURLPaths;
+@dynamic sharedSecret;
 
 #pragma mark Delegate Selector Stubs
 
@@ -278,6 +278,8 @@
 
 - (void)setSharedSecret:(NSString *)sharedSecret
 {
+    
+    
     self.storeServer.sharedSecret = sharedSecret;
 }
 
@@ -838,7 +840,7 @@
         {
             productData.receipt = latestReceiptBase64Data;            
         }
-        else
+        else if( transaction != nil )
         {
             productData.receipt = [ASIHTTPRequest base64forData:transaction.transactionReceipt];
         }
@@ -964,21 +966,25 @@
                                                        NSString *latestReceiptBase64Data, 
                                                        ASTStoreServerResult result) 
      {
-         // Find any products with the family id and invoke the handler
-         NSArray *renewableProductIds = [self productIdentifiersForProductType:ASTStoreProductIdentifierTypeAutoRenewable 
-                                                         sortedUsingComparator:nil];
-         
-         for( NSString *aProductId in renewableProductIds )
+         if( result == ASTStoreServerResultUnconfigured )
          {
-             ASTStoreProductData *productData = [self storeProductDataForIdentifier:aProductId];
-             if( [productData.familyIdentifier isEqualToString:familyData.familyIdentifier] )
-             {
-                 [self completionHandlerForSubscriptionProductData:productData
-                                                       expiresDate:expiresDate 
-                                           latestReceiptBase64Data:latestReceiptBase64Data 
-                                                       transaction:nil 
-                                            withVerificationResult:result];
-             }
+             DLog(@"Attempted to verify subscription for family:%@ but no server or shared secret found.", familyData);
+             return;
+         }
+         
+         // Find any products with the family id and invoke the handler
+         NSArray *renewableProductIds = [self storeProductsForFamilyIdentifier:familyData.familyIdentifier];
+         
+         for( ASTStoreProduct *product in renewableProductIds )
+         {
+             ASTStoreProductData *productData = [ASTStoreProductData storeProductDataFromProductIdentifier:product.productIdentifier];
+             
+             [self completionHandlerForSubscriptionProductData:productData
+                                                   expiresDate:expiresDate 
+                                       latestReceiptBase64Data:latestReceiptBase64Data 
+                                                   transaction:nil 
+                                        withVerificationResult:result];
+
          }
      }];
 
@@ -1351,8 +1357,6 @@
     customerIdentifier_ = nil;
     serverConsumablesEnabled_ = NO;
     serverPromoCodesEnabled_ = NO;
-    serviceURLPaths_ = nil;
-    sharedSecret_ = nil;
     
     [ASTStoreFamilyData setFamilyDataDelegate:self];
     

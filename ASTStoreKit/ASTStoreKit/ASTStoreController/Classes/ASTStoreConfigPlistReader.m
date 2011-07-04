@@ -49,9 +49,14 @@
     NSString *aString = nil;
     
     storeConfig.productPlistFile = [plistDictionary objectForKey:kASTStoreConfigProductPlistFileKey];
+
+    aString = [plistDictionary objectForKey:kASTStoreConfigSharedSecretKey];
     
-    storeConfig.sharedSecret = [plistDictionary objectForKey:kASTStoreConfigSharedSecretKey];
-    
+    if(NO == [aString isEqualToString:@""] )
+    {
+        storeConfig.sharedSecret = aString;        
+    }
+
     aNumber = [plistDictionary objectForKey:kASTStoreConfigRetryStoreConnectionIntervalKey];
     if( nil == aNumber )
     {
@@ -63,9 +68,9 @@
     }
     
     aString = [plistDictionary objectForKey:kASTStoreConfigServerURLKey];
-    if( nil != aString )
+    if( NO == [aString isEqualToString:@""] )
     {
-        storeConfig.serverURL = [NSURL URLWithString:aString];
+        storeConfig.serverURL = [NSURL URLWithString:aString];            
     }
     
     aNumber = [plistDictionary objectForKey:kASTStoreConfigServerConnectionTimeoutKey];

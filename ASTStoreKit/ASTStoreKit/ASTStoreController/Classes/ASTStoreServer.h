@@ -33,7 +33,8 @@ typedef enum
 {
     ASTStoreServerResultPass,
     ASTStoreServerResultFail,
-    ASTStoreServerResultInconclusive
+    ASTStoreServerResultInconclusive,
+    ASTStoreServerResultUnconfigured
 } ASTStoreServerResult;
 
 #define kASTStoreServerDefaultNetworkTimeout 15.0
@@ -42,11 +43,11 @@ typedef enum
 
 + (NSString*)productIdentifierForTransaction:(SKPaymentTransaction*)transaction;
 
-@property (copy) NSURL *serverUrl;
+@property (nonatomic, copy) NSURL *serverUrl;
 @property (copy) NSString *vendorUuid;
 @property  NSTimeInterval serverConnectionTimeout;
 @property (copy) NSDictionary *serviceURLPaths;
-@property (copy) NSString *sharedSecret;
+@property (nonatomic, copy) NSString *sharedSecret;
 
 #pragma mark Verify Related Methods
 
