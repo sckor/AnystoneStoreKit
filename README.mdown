@@ -1,0 +1,148 @@
+# About ASTStoreKit - Version 0.5
+
+ASTStoreKit is ready for general use and has been deployed in apps that are already in the App Store!
+
+## Features
+* Built-in and fully functional store view controller
+* Configurable using plist files (no code changes required to the library itself)
+* Supports consumable, nonconsumables, and autorenewables
+* Supports consumable families to enable multiple product ids to manipulate the same resource
+* Delegate methods for all of the major changes you might want to be notified about
+* Ability to wipe local data clean (for debug and for dealing with possible corruption)
+* Testing in simulator using the embedded SimStoreKit (not including AutoRenewables)
+* Encrypted family data storage for purchase quantities
+
+For some more information, have a look at:
+http://www.anystonetech.com/blog/2011/03/24/introducing-the-anystone-store-kit/
+
+## Version History
+### Version 0.5
+* Refactored to remove shared library and allow for easier integration into projects
+* Merge changes over from Meechware
+* Create a debug view controller for manipulating settings separately from the store proper
+* Add ability to sort products for display in the store
+* Full support for Auto Renewable Subscriptions
+* Allows for customization of URL paths via a new configuration plist file
+* Provides for automatic initialization based on configuration plist file
+* Much improved store user interface and improved graphics
+
+### Version 0.4
+* Prep support for communication with app engine server
+* Upversion JSONKit and Fix bug when compiled for release mode
+* Encrypt family data
+* Change key names for plist definition of products and mark old ones as deprecated via a log
+* Ability to produce consumables locally without requiring a purchase
+* Provide ability to consume and produce based on family id in addition to product id
+* Fix warnings stemming from ilsimkit
+* Cleanup error handling when reading bad archive files
+* Enable use of SimKit on simulator when built in release mode
+* Implement promo code device side support
+
+## License
+
+This project is licensed under the MIT licence. This basically means you're free to do what you want with the code.
+http://creativecommons.org/licenses/MIT/
+
+Also note that ASTStoreController includes the following packages, which have their own licenses. If you use the ASTStoreController
+you will also need to abide by any licenses associated with the other packages:
+
+* SSKeychain
+* JSONKit
+* Reachability
+* ASIHTTPRequest
+* SimStoreKit
+
+Additionally the ASTStoreViewController makes use of some code that originated from:
+
+* Apple Reflection: http://developer.apple.com/library/ios/#samplecode/Reflection/Introduction/Intro.html
+* MBProgressHUD
+* Gradient Button:  http://iphonedevelopment.blogspot.com/2010/05/programmatic-gradient-buttons.html
+
+If you do make use of this code, Anystone Technologies Inc would *appreciate* it if you would:
+
+* Make an attribution reference in your app or on your website
+* Let us know that you are making use of it, and in what app
+
+## Project Structure
+The project includes 3 major components which are layered to allow developers to choose an approach which suits a particular project best:
+
+1. ASTStoreController - An API wrapper interface that sits on top of Apple's StoreKit
+1. ASTStoreViewController - A fully featured set of view controllers that provide a generic store infrastructure
+1. ASTExampleStore - A simple application that demonstrates the use of the ASTStoreViewController and underlying ASTStoreController
+
+
+# Usage
+The following instructions assume the use of Xcode 4. If you are using Xcode 3, the steps are similar, but different. ;)
+
+## Project Configuration
+1. In Xcode 4, open the project you wish to add in app purchase functionality to
+1. In the finder, find the location of the top level "ASTStoreKit" directory
+1. Drag the "ASTStoreController" directory into your project
+1. (optional) If you are planning to use the ASTStoreViewController then drag the "ASTStoreViewController" directory into your project
+
+The following frameworks must be added to the project:
+
+* CFNetwork
+* libz.1.2.3.dylib
+* MobileCoreServices
+* SystemConfiguration
+* StoreKit
+* CoreGraphics
+* Security
+
+
+## Startup
+The ASTStoreController is a singleton class. It is recommended that you initialize it in your AppDelegate so that it can process any outstanding transactions from the App Store as soon as possible.
+
+1. In your AppDelegate.m add the following in the header import section:
+
+```
+ #import "ASTStoreController.h"
+```
+
+In the AppDelegate.m function:
+
+```
+ - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions 
+```
+
+Add the following code to setup the ASTStoreController. This method assumes that lazy access to the app store is desired.
+
+```
+ [ASTStoreController sharedStoreController];
+```
+
+Upon initialization of the sharedStoreController, the ASTStoreKit will look for a "ASTStoreKitConfig.plist" file. If it finds it, it will use it to setup any options you have configured. It will also read another plist file containing the list of product identifiers to manage. If you do not have either plist file then you should then initialize the controller with the list of products you wish to manage. For a simple application with a nonconsumable purchase you could use:
+
+```
+ [[ASTStoreController sharedStoreController] setNonConsumableProductIdentifier:@"com.example.purchase"];
+```
+
+This function can be called multiple times to add multiple non-consumable product identifiers.
+For more complex in app purchase setup you are recommended to take advantage of the plist initialization format. See the "ASTStoreKitConfig.plist" and "sampleProductIdentifiers.plist" files included in the project. The options are also documented in the "ASTStoreController.h" header.
+
+Setup your server URL (optional).
+If you are going to verify receipts, or take advantage of some of the other features (coming soon) you will need to configure up a base URL for your server. ASTStoreController is designed to communicate with a server installation on Google's App Engine.
+
+```
+ [ASTStoreController sharedStoreController].serverURL = [NSURL URLWithString:@"http://xyz.appspot.com"];
+```
+
+ASTStoreController allows for lazy initialization of the store. Why communicate with the app store if your customer doesn't enter your in-app store? 
+
+In your viewDidLoad or viewWillAppear methods, invoke the ASTStoreController method to start downloading the information from the app store.
+
+```
+ [[ASTStoreController sharedStoreController].delegate = self;
+ [[ASTStoreController sharedStoreController] requestProductDataFromiTunes:NO];
+```
+
+It will then start issuing updates to the delegate via
+
+```
+ - (void)astStoreControllerProductDataStateChanged:(ASTStoreControllerProductDataState)state;
+```
+
+To allow you to update your view with appropriate status for your customer.
+
+

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>productPlistFile</key>
+	<string>sampleProductIdentifiers</string>
+	<key>sharedSecret</key>
+	<string></string>
+	<key>retryStoreConnectionInterval</key>
+	<integer>15</integer>
+	<key>serverConnectionTimeout</key>
+	<integer>15</integer>
+	<key>serverConsumablesEnabled</key>
+	<false/>
+	<key>serverPromoCodesEnabled</key>
+	<false/>
+	<key>serverURL</key>
+	<string></string>
+	<key>serviceURLPaths</key>
+	<dict>
+		<key>productList</key>
+		<string>service/product/list</string>
+		<key>productQuery</key>
+		<string>service/product/query</string>
+		<key>promoCodeValidation</key>
+		<string>service/purchase/validate</string>
+		<key>receiptValidation</key>
+		<string>service/receipt/validate</string>
+	</dict>
+	<key>vendorUuid</key>
+	<string></string>
+	<key>verifyReceipts</key>
+	<false/>
+</dict>
+</plist>
