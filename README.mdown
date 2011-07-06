@@ -100,7 +100,7 @@ The ASTStoreController is a singleton class. It is recommended that you initiali
  #import "ASTStoreController.h"
 ```
 
-1. In the AppDelegate.m function:
+In the AppDelegate.m function:
 
 ```
  - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions 
@@ -112,22 +112,22 @@ Add the following code to setup the ASTStoreController. This method assumes that
  [ASTStoreController sharedStoreController];
 ```
 
-1. Upon initialization of the sharedStoreController, the ASTStoreKit will look for a "ASTStoreKitConfig.plist" file. If it finds it, it will use it to setup any options you have configured. It will also read another plist file containing the list of product identifiers to manage. If you do not have either plist file then you should then initialize the controller with the list of products you wish to manage. For a simple application with a nonconsumable purchase you could use:
+Upon initialization of the sharedStoreController, the ASTStoreKit will look for a "ASTStoreKitConfig.plist" file. If it finds it, it will use it to setup any options you have configured. It will also read another plist file containing the list of product identifiers to manage. If you do not have either plist file then you should then initialize the controller with the list of products you wish to manage. For a simple application with a nonconsumable purchase you could use:
 
 ```
  [[ASTStoreController sharedStoreController] setNonConsumableProductIdentifier:@"com.example.purchase"];
 ```
+
 This function can be called multiple times to add multiple non-consumable product identifiers.
 For more complex in app purchase setup you are recommended to take advantage of the plist initialization format. See the "ASTStoreKitConfig.plist" and "sampleProductIdentifiers.plist" files included in the project. The options are also documented in the "ASTStoreController.h" header.
 
-1. Setup your server URL (optional).
+Setup your server URL (optional).
 If you are going to verify receipts, or take advantage of some of the other features (coming soon) you will need to configure up a base URL for your server. ASTStoreController is designed to communicate with a server installation on Google's App Engine.
 
 ```
  [ASTStoreController sharedStoreController].serverURL = [NSURL URLWithString:@"http://xyz.appspot.com"];
 ```
 
-# Store View Controller
 ASTStoreController allows for lazy initialization of the store. Why communicate with the app store if your customer doesn't enter your in-app store? 
 
 In your viewDidLoad or viewWillAppear methods, invoke the ASTStoreController method to start downloading the information from the app store.
