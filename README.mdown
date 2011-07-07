@@ -78,6 +78,7 @@ The following instructions assume the use of Xcode 4. If you are using Xcode 3, 
 1. In Xcode 4, open the project you wish to add in app purchase functionality to
 1. In the finder, find the location of the top level "ASTStoreKit" directory
 1. Drag the "ASTStoreController" directory into your project
+1. Add a #import "ASTStorePrefix.pch" to the project's Prefix.pch file
 1. (optional) If you are planning to use the ASTStoreViewController then drag the "ASTStoreViewController" directory into your project
 
 The following frameworks must be added to the project:
@@ -89,6 +90,7 @@ The following frameworks must be added to the project:
 * StoreKit
 * CoreGraphics
 * Security
+* QuartzCore
 
 
 ## Startup
