@@ -74,6 +74,9 @@ The project includes 3 major components which are layered to allow developers to
 # Usage
 The following instructions assume the use of Xcode 4. If you are using Xcode 3, the steps are similar, but different. ;)
 
+For a more graphical introduction to setting up ASTStoreKit for use in a project, have a look at:
+http://www.anystonetech.com/blog/2011/07/07/in-app-store-with-aststorekit-tutorial-part-1/
+
 ## Project Configuration
 1. In Xcode 4, open the project you wish to add in app purchase functionality to
 1. In the finder, find the location of the top level "ASTStoreKit" directory
