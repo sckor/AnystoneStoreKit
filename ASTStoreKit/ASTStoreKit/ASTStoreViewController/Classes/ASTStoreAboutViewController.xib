@@ -88,7 +88,7 @@
 							<object class="IBUILabel" id="1062075099">
 								<reference key="NSNextResponder" ref="413528680"/>
 								<int key="NSvFlags">290</int>
-								<string key="NSFrame">{{73, 24}, {235, 25}}</string>
+								<string key="NSFrame">{{73, 21}, {235, 25}}</string>
 								<reference key="NSSuperview" ref="413528680"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="477396692"/>
@@ -121,7 +121,7 @@
 							<object class="IBUILabel" id="512843793">
 								<reference key="NSNextResponder" ref="413528680"/>
 								<int key="NSvFlags">290</int>
-								<string key="NSFrame">{{73, 57}, {235, 25}}</string>
+								<string key="NSFrame">{{73, 56}, {235, 25}}</string>
 								<reference key="NSSuperview" ref="413528680"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="178502015"/>
@@ -151,7 +151,7 @@
 							<object class="IBUILabel" id="520115818">
 								<reference key="NSNextResponder" ref="413528680"/>
 								<int key="NSvFlags">290</int>
-								<string key="NSFrame">{{73, 41}, {235, 25}}</string>
+								<string key="NSFrame">{{73, 39}, {235, 25}}</string>
 								<reference key="NSSuperview" ref="413528680"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="512843793"/>
@@ -339,7 +339,6 @@
 								<string key="NSFrame">{{0, 1}, {320, 1}}</string>
 								<reference key="NSSuperview" ref="605706709"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<reference key="IBUIBackgroundColor" ref="419919382"/>
 								<float key="IBUIAlpha">0.30000001192092896</float>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -717,6 +716,7 @@
 							<string>imageView</string>
 							<string>reflectionImageView</string>
 							<string>tableView</string>
+							<string>versionLabel</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -724,6 +724,7 @@
 							<string>UIImageView</string>
 							<string>UIImageView</string>
 							<string>UITableView</string>
+							<string>UILabel</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -734,6 +735,7 @@
 							<string>imageView</string>
 							<string>reflectionImageView</string>
 							<string>tableView</string>
+							<string>versionLabel</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -752,6 +754,10 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">tableView</string>
 								<string key="candidateClassName">UITableView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">versionLabel</string>
+								<string key="candidateClassName">UILabel</string>
 							</object>
 						</object>
 					</object>

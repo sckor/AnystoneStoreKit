@@ -10,8 +10,6 @@
 		81482D5613BB789A00F843C0 /* ASTStoreSubscriptionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 81482D5513BB789A00F843C0 /* ASTStoreSubscriptionTableViewCell.xib */; };
 		816BC7E713C74549009CF822 /* ASTStoreAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 816BC7E513C74549009CF822 /* ASTStoreAboutViewController.m */; };
 		816BC7E813C74549009CF822 /* ASTStoreAboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 816BC7E613C74549009CF822 /* ASTStoreAboutViewController.xib */; };
-		816BC7EC13C74797009CF822 /* AnystoneStoreKitLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 816BC7EA13C74797009CF822 /* AnystoneStoreKitLogo@2x.png */; };
-		816BC7ED13C74797009CF822 /* AnystoneStoreKitLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 816BC7EB13C74797009CF822 /* AnystoneStoreKitLogo.png */; };
 		8173BDB813A69076001DC531 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8173BDB713A69076001DC531 /* UIKit.framework */; };
 		8173BDBA13A69076001DC531 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8173BDB913A69076001DC531 /* Foundation.framework */; };
 		8173BDBC13A69076001DC531 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8173BDBB13A69076001DC531 /* CoreGraphics.framework */; };
@@ -80,8 +78,6 @@
 		8173BEAC13A6AA0D001DC531 /* ASTRootViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BEA813A6AA0D001DC531 /* ASTRootViewController-iPad.xib */; };
 		8173BEAD13A6AA0D001DC531 /* ASTRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8173BEAA13A6AA0D001DC531 /* ASTRootViewController.m */; };
 		8173BEAE13A6AA0D001DC531 /* ASTRootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8173BEAB13A6AA0D001DC531 /* ASTRootViewController.xib */; };
-		819BC41F13B123470000C17F /* restorePurchases2.png in Resources */ = {isa = PBXBuildFile; fileRef = 819BC41D13B123470000C17F /* restorePurchases2.png */; };
-		819BC42013B123470000C17F /* restorePurchases2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 819BC41E13B123470000C17F /* restorePurchases2@2x.png */; };
 		819BC43513B2415A0000C17F /* default-autorenewable-image.png in Resources */ = {isa = PBXBuildFile; fileRef = 819BC43313B2415A0000C17F /* default-autorenewable-image.png */; };
 		819BC43613B2415A0000C17F /* default-autorenewable-image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 819BC43413B2415A0000C17F /* default-autorenewable-image@2x.png */; };
 		819BC44313B2680E0000C17F /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 819BC44113B2680E0000C17F /* MBProgressHUD.m */; };
@@ -94,6 +90,14 @@
 		81C967B713BCF153003AEB0E /* blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 81C967B113BCF151003AEB0E /* blue@2x.png */; };
 		81C967B813BCF153003AEB0E /* purple.png in Resources */ = {isa = PBXBuildFile; fileRef = 81C967B213BCF151003AEB0E /* purple.png */; };
 		81C967B913BCF153003AEB0E /* purple@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 81C967B313BCF152003AEB0E /* purple@2x.png */; };
+		81D2D4A113C788790049147F /* StoreKit.png in Resources */ = {isa = PBXBuildFile; fileRef = 81D2D49F13C788790049147F /* StoreKit.png */; };
+		81D2D4A213C788790049147F /* StoreKit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 81D2D4A013C788790049147F /* StoreKit@2x.png */; };
+		81D2D4B213C78A500049147F /* check2.png in Resources */ = {isa = PBXBuildFile; fileRef = 81D2D4AA13C78A500049147F /* check2.png */; };
+		81D2D4B313C78A500049147F /* check2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 81D2D4AB13C78A500049147F /* check2@2x.png */; };
+		81D2D4B613C78A500049147F /* cross2.png in Resources */ = {isa = PBXBuildFile; fileRef = 81D2D4AE13C78A500049147F /* cross2.png */; };
+		81D2D4B713C78A500049147F /* cross2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 81D2D4AF13C78A500049147F /* cross2@2x.png */; };
+		81D2D4BA13C78B7E0049147F /* restore.png in Resources */ = {isa = PBXBuildFile; fileRef = 81D2D4B813C78B7D0049147F /* restore.png */; };
+		81D2D4BB13C78B7E0049147F /* restore@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 81D2D4B913C78B7E0049147F /* restore@2x.png */; };
 		81D315D113BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81D315CF13BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.m */; };
 		81D315D213BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 81D315D013BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.xib */; };
 		81D315D613BA6FE5005F6DC8 /* ASTStoreViewControllerCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 81D315D413BA6FE4005F6DC8 /* ASTStoreViewControllerCommon.m */; };
@@ -109,8 +113,6 @@
 		816BC7E413C74549009CF822 /* ASTStoreAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreAboutViewController.h; sourceTree = "<group>"; };
 		816BC7E513C74549009CF822 /* ASTStoreAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreAboutViewController.m; sourceTree = "<group>"; };
 		816BC7E613C74549009CF822 /* ASTStoreAboutViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ASTStoreAboutViewController.xib; path = ../../Classes/ASTStoreAboutViewController.xib; sourceTree = "<group>"; };
-		816BC7EA13C74797009CF822 /* AnystoneStoreKitLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AnystoneStoreKitLogo@2x.png"; sourceTree = "<group>"; };
-		816BC7EB13C74797009CF822 /* AnystoneStoreKitLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AnystoneStoreKitLogo.png; sourceTree = "<group>"; };
 		8173BDB313A69076001DC531 /* ASTExampleStore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ASTExampleStore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8173BDB713A69076001DC531 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		8173BDB913A69076001DC531 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -228,8 +230,6 @@
 		8173BEA913A6AA0D001DC531 /* ASTRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTRootViewController.h; sourceTree = "<group>"; };
 		8173BEAA13A6AA0D001DC531 /* ASTRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTRootViewController.m; sourceTree = "<group>"; };
 		8173BEAB13A6AA0D001DC531 /* ASTRootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTRootViewController.xib; sourceTree = "<group>"; };
-		819BC41D13B123470000C17F /* restorePurchases2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = restorePurchases2.png; sourceTree = "<group>"; };
-		819BC41E13B123470000C17F /* restorePurchases2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "restorePurchases2@2x.png"; sourceTree = "<group>"; };
 		819BC43313B2415A0000C17F /* default-autorenewable-image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default-autorenewable-image.png"; sourceTree = "<group>"; };
 		819BC43413B2415A0000C17F /* default-autorenewable-image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default-autorenewable-image@2x.png"; sourceTree = "<group>"; };
 		819BC44013B2680E0000C17F /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -246,6 +246,14 @@
 		81C967B113BCF151003AEB0E /* blue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue@2x.png"; sourceTree = "<group>"; };
 		81C967B213BCF151003AEB0E /* purple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = purple.png; sourceTree = "<group>"; };
 		81C967B313BCF152003AEB0E /* purple@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "purple@2x.png"; sourceTree = "<group>"; };
+		81D2D49F13C788790049147F /* StoreKit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = StoreKit.png; sourceTree = "<group>"; };
+		81D2D4A013C788790049147F /* StoreKit@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "StoreKit@2x.png"; sourceTree = "<group>"; };
+		81D2D4AA13C78A500049147F /* check2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = check2.png; sourceTree = "<group>"; };
+		81D2D4AB13C78A500049147F /* check2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check2@2x.png"; sourceTree = "<group>"; };
+		81D2D4AE13C78A500049147F /* cross2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cross2.png; sourceTree = "<group>"; };
+		81D2D4AF13C78A500049147F /* cross2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cross2@2x.png"; sourceTree = "<group>"; };
+		81D2D4B813C78B7D0049147F /* restore.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = restore.png; sourceTree = "<group>"; };
+		81D2D4B913C78B7E0049147F /* restore@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "restore@2x.png"; sourceTree = "<group>"; };
 		81D315CE13BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreSubscriptionDetailViewController.h; sourceTree = "<group>"; };
 		81D315CF13BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreSubscriptionDetailViewController.m; sourceTree = "<group>"; };
 		81D315D013BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ASTStoreSubscriptionDetailViewController.xib; path = ../../Classes/ASTStoreSubscriptionDetailViewController.xib; sourceTree = "<group>"; };
@@ -421,6 +429,10 @@
 		8173BDF713A692AD001DC531 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				81D2D4AA13C78A500049147F /* check2.png */,
+				81D2D4AB13C78A500049147F /* check2@2x.png */,
+				81D2D4AE13C78A500049147F /* cross2.png */,
+				81D2D4AF13C78A500049147F /* cross2@2x.png */,
 				81C967B013BCF151003AEB0E /* blue.png */,
 				81C967B113BCF151003AEB0E /* blue@2x.png */,
 				81C967B213BCF151003AEB0E /* purple.png */,
@@ -436,10 +448,10 @@
 				8173BE0813A69329001DC531 /* DropShadow@2x.png */,
 				8173BE0913A69329001DC531 /* DropShadow.png */,
 				8173BE0A13A69329001DC531 /* DropShadow-iPad.png */,
-				819BC41D13B123470000C17F /* restorePurchases2.png */,
-				819BC41E13B123470000C17F /* restorePurchases2@2x.png */,
-				816BC7EA13C74797009CF822 /* AnystoneStoreKitLogo@2x.png */,
-				816BC7EB13C74797009CF822 /* AnystoneStoreKitLogo.png */,
+				81D2D4B813C78B7D0049147F /* restore.png */,
+				81D2D4B913C78B7E0049147F /* restore@2x.png */,
+				81D2D49F13C788790049147F /* StoreKit.png */,
+				81D2D4A013C788790049147F /* StoreKit@2x.png */,
 			);
 			path = Graphics;
 			sourceTree = "<group>";
@@ -699,8 +711,6 @@
 				81DB9EBA13A799DD003DA9A3 /* ASTStoreKitConfig.plist in Resources */,
 				81EAF89613ABDFFD0048940A /* default-nonconsumable-image@2x.png in Resources */,
 				81EAF89713ABDFFD0048940A /* default-nonconsumable-image.png in Resources */,
-				819BC41F13B123470000C17F /* restorePurchases2.png in Resources */,
-				819BC42013B123470000C17F /* restorePurchases2@2x.png in Resources */,
 				819BC43513B2415A0000C17F /* default-autorenewable-image.png in Resources */,
 				819BC43613B2415A0000C17F /* default-autorenewable-image@2x.png in Resources */,
 				819BC44413B2680E0000C17F /* README.mdown in Resources */,
@@ -711,8 +721,14 @@
 				81C967B813BCF153003AEB0E /* purple.png in Resources */,
 				81C967B913BCF153003AEB0E /* purple@2x.png in Resources */,
 				816BC7E813C74549009CF822 /* ASTStoreAboutViewController.xib in Resources */,
-				816BC7EC13C74797009CF822 /* AnystoneStoreKitLogo@2x.png in Resources */,
-				816BC7ED13C74797009CF822 /* AnystoneStoreKitLogo.png in Resources */,
+				81D2D4A113C788790049147F /* StoreKit.png in Resources */,
+				81D2D4A213C788790049147F /* StoreKit@2x.png in Resources */,
+				81D2D4B213C78A500049147F /* check2.png in Resources */,
+				81D2D4B313C78A500049147F /* check2@2x.png in Resources */,
+				81D2D4B613C78A500049147F /* cross2.png in Resources */,
+				81D2D4B713C78A500049147F /* cross2@2x.png in Resources */,
+				81D2D4BA13C78B7E0049147F /* restore.png in Resources */,
+				81D2D4BB13C78B7E0049147F /* restore@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

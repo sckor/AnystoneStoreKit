@@ -16,6 +16,7 @@
 enum ASTStoreAboutViewControllerRows 
 {
     ASTStoreAboutViewControllerRowAnystone = 0,
+    ASTStoreAboutViewControllerRowMeachWare,
     ASTStoreAboutViewControllerRowReachability,
     ASTStoreAboutViewControllerRowASIHTTPRequest,
     ASTStoreAboutViewControllerRowJSONKit,
@@ -98,7 +99,13 @@ enum ASTStoreAboutViewControllerRows
             return @"Anystone";
             break;
         }
-            
+
+        case ASTStoreAboutViewControllerRowMeachWare:
+        {
+            return @"MeachWare";
+            break;
+        }
+
         case ASTStoreAboutViewControllerRowReachability:
         {            
             return @"Reachability";
@@ -162,7 +169,13 @@ enum ASTStoreAboutViewControllerRows
     {
         case ASTStoreAboutViewControllerRowAnystone:
         {
-            aCell.detailTextLabel.text = @"Copyright © 2011, Anystone Technologies";
+            aCell.detailTextLabel.text = @"Copyright © 2011, Anystone Technologies.";
+            break;
+        }
+
+        case ASTStoreAboutViewControllerRowMeachWare:
+        {
+            aCell.detailTextLabel.text = @"Copyright © 2011, MeachWare.";
             break;
         }
 
@@ -258,7 +271,13 @@ enum ASTStoreAboutViewControllerRows
             urlString = @"http://www.anystonetech.com";
             break;
         }
-            
+ 
+        case ASTStoreAboutViewControllerRowMeachWare:
+        {
+            urlString = @"http://www.meachware.com";
+            break;
+        }
+
         case ASTStoreAboutViewControllerRowReachability:
         {      
             urlString = @"http://developer.apple.com/library/ios/samplecode/Reachability/index.html";
@@ -379,7 +398,7 @@ enum ASTStoreAboutViewControllerRows
     [self.gradientView setSimpleLayerGradient:[UIColor colorWithWhite:0.5 alpha:1.0] 
                                      endColor:[UIColor lightGrayColor]];
     
-    self.imageView.image = [UIImage imageNamed:@"AnystoneStoreKitLogo"];
+    self.imageView.image = [UIImage imageNamed:@"StoreKit"];
     
     self.reflectionImageView.image = [self.imageView reflectedImageWithHeight:14.0];
     self.reflectionImageView.alpha = 0.4;

@@ -179,7 +179,7 @@ enum ASTStoreViewControllerButtonsRows
 
     aProgressHUD.delegate = self;
     aProgressHUD.customView = [[[UIImageView alloc] 
-                                initWithImage:nil]
+                                initWithImage:[UIImage imageNamed:@"check2"]]
                                autorelease];
 
     aProgressHUD.mode = MBProgressHUDModeCustomView;
@@ -201,7 +201,7 @@ enum ASTStoreViewControllerButtonsRows
     
     aProgressHUD.delegate = self;
     aProgressHUD.customView = [[[UIImageView alloc] 
-                                initWithImage:nil]
+                                initWithImage:[UIImage imageNamed:@"cross2"]]
                                autorelease];
     
     aProgressHUD.removeFromSuperViewOnHide = YES;
@@ -329,7 +329,7 @@ enum ASTStoreViewControllerButtonsRows
         
         if( indexPath.row == ASTStoreViewControllerButtonsRowsRestore )
         {
-            imageView.image = [UIImage imageNamed:@"restorePurchases2"];
+            imageView.image = [UIImage imageNamed:@"restore"];
             title.text = NSLocalizedString(@"Restore Purchases...", nil);
         }
         /*

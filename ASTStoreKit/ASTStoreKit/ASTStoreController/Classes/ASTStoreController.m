@@ -1065,8 +1065,10 @@
                                                cancelButtonTitle:@"OK" 
                                                otherButtonTitles:nil] autorelease];
         [alert show];
-        
+
+        [self invokeDelegateStoreControllerProductIdentifierPurchased:productIdentifier];
         self.purchaseState = ASTStoreControllerPurchaseStateNone;
+        
     }
 }
 
@@ -1107,8 +1109,6 @@
         [self purchaseCompletionHandler:productIdentifier 
                      customerIdentifier:self.customerIdentifier 
               productPromoCodeAvailable:YES];
-
-
     }
     else if( self.serverPromoCodesEnabled )
     {
