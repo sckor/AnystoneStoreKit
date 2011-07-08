@@ -67,6 +67,7 @@
 @synthesize customerIdentifier = customerIdentifier_;
 @synthesize serverConsumablesEnabled = serverConsumablesEnabled_;
 @synthesize serverPromoCodesEnabled = serverPromoCodesEnabled_;
+@synthesize voucherSharingEnabled = voucherSharingEnabled_;
 @dynamic serviceURLPaths;
 @dynamic sharedSecret;
 
@@ -1326,6 +1327,7 @@
     self.serverConsumablesEnabled = config.serverConsumablesEnabled;
     self.serviceURLPaths = config.serviceURLPaths;
     self.sharedSecret = config.sharedSecret;
+    self.voucherSharingEnabled = config.voucherSharingEnabled;
     
     if( nil != config.productPlistFile )
     {

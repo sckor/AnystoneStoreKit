@@ -5,6 +5,10 @@
 //  Created by Sean Kormilo on 11-03-07.
 //  http://www.anystonetech.com
 
+//  Voucher Sharing developed by Gregory Meach on 11-05-02.
+//  http://meachware.com
+//  Copyright (c) 2010 Gregory Meach, MeachWare.
+
 //  Copyright (c) 2011 Anystone Technologies, Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -46,7 +50,7 @@ enum ASTStoreViewControllerSections
 enum ASTStoreViewControllerButtonsRows 
 {
     ASTStoreViewControllerButtonsRowsRestore = 0,
-    //    ASTStoreViewControllerButtonsRowsReceiveVoucher,
+    ASTStoreViewControllerButtonsRowsReceiveVoucher,
     ASTStoreViewControllerButtonsRowsMax
 };
 
@@ -59,6 +63,11 @@ enum ASTStoreViewControllerButtonsRows
 @property BOOL needsHideHUD;
 
 @property (nonatomic,retain) MBProgressHUD *progessHUD;
+
+@property (nonatomic, retain) GKSession *session;
+@property (nonatomic, retain) NSString *peerID;
+
+- (void)invalidateSession:(GKSession *)session;
 
 @end
 
@@ -78,6 +87,10 @@ enum ASTStoreViewControllerButtonsRows
 @synthesize autoRenewableProductIdentifiers = autoRenewableProductIdentifiers_;
 @synthesize nonconsumableProductIdentifiers = nonconsumableProductIdentifiers_;
 @synthesize progessHUD = progessHUD_;
+
+@synthesize session = _session;
+@synthesize peerID = _peerID;
+
 
 - (ASTStoreController*)storeController
 {
@@ -238,6 +251,208 @@ enum ASTStoreViewControllerButtonsRows
 
 }
 
+#pragma mark -
+#pragma mark Voucher Sharing
+- (IBAction)launchConnect:(id)sender
+{
+    if (self.session == nil) {
+        GKPeerPickerController *picker = [[GKPeerPickerController alloc] init];
+        picker.delegate = self;
+        [picker show];
+    } else {
+        [self invalidateSession:self.session];
+    }
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:ASTStoreViewControllerButtonsRowsReceiveVoucher 
+                                                inSection:ASTStoreViewControllerSectionButtons];
+    
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+- (void)confirmVoucherWithQty:(int)qty {    
+    if (self.session != nil) {
+        NSDictionary *packetDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                          kTransmitKey, @"key", 
+                                          [UIDevice currentDevice].name, @"sender", 
+                                          @"Voucher(s) Transferred", @"message",
+                                          [NSNumber numberWithInt:qty], @"qty",
+                                          nil];
+        
+        NSData *archivedData = [NSKeyedArchiver archivedDataWithRootObject:packetDictionary];
+        NSMutableData *packetData = [[NSMutableData alloc] init];
+        
+        int packetLength = archivedData.length;
+        
+        [packetData appendBytes:&packetLength length:sizeof(int)];
+        [packetData appendData:archivedData];        
+        
+        [self.session sendData:packetData 
+                       toPeers:[NSArray arrayWithObjects:self.peerID, nil] 
+                  withDataMode:GKSendDataReliable 
+                         error:nil];
+        
+        [packetData release];
+    }
+}
+
+- (void)rejectVoucherWithReason:(NSString *)reason {    
+    if (self.session != nil) {
+        if ([reason length] == 0)
+            reason = @"Not Defined";
+        NSDictionary *packetDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                          @"NotTheKey", @"key", 
+                                          [UIDevice currentDevice].name, @"sender", 
+                                          reason, @"message",
+                                          [NSNumber numberWithInt:0], @"qty",
+                                          nil];
+        
+        NSData *archivedData = [NSKeyedArchiver archivedDataWithRootObject:packetDictionary];
+        NSMutableData *packetData = [[NSMutableData alloc] init];
+        
+        int packetLength = archivedData.length;
+        
+        [packetData appendBytes:&packetLength length:sizeof(int)];
+        [packetData appendData:archivedData];        
+        
+        [self.session sendData:packetData 
+                       toPeers:[NSArray arrayWithObjects:self.peerID, nil] 
+                  withDataMode:GKSendDataReliable 
+                         error:nil];
+        
+        [packetData release];
+    }
+}
+
+#pragma mark -
+#pragma mark GKPeerPickerControllerDelegate methods
+- (GKSession *)peerPickerController:(GKPeerPickerController *)picker sessionForConnectionType:(GKPeerPickerConnectionType)type 
+{    
+    GKSession *theSession = [[GKSession alloc] initWithSessionID:kSessionID displayName:nil sessionMode:GKSessionModePeer]; 
+    return [theSession autorelease];             
+}
+
+- (void)peerPickerController:(GKPeerPickerController *)picker didConnectPeer:(NSString *)thePeerID toSession:(GKSession *)theSession 
+{    
+	self.session = theSession;
+	self.session.delegate = self; 
+    self.peerID = thePeerID; 
+    
+	[self.session setDataReceiveHandler:self withContext:NULL];
+	
+	[picker dismiss];
+	picker.delegate = nil;
+	[picker release];
+}
+
+- (void)peerPickerControllerDidCancel:(GKPeerPickerController *)picker { 
+	// Peer Picker automatically dismisses on user cancel. No need to programmatically dismiss.    
+	picker.delegate = nil;
+    [picker autorelease]; 
+	
+	// invalidate and release game session if one is around.
+	if(self.session != nil)	{
+		[self invalidateSession:self.session];
+	}
+} 
+
+#pragma mark -
+#pragma mark GKSessionDelegate methods
+- (void)session:(GKSession *)session didReceiveConnectionRequestFromPeer:(NSString *)peerID 
+{
+    NSLog(@"peerID:%@",[session displayNameForPeer:peerID]);
+    
+}
+
+- (void)session:(GKSession *)session peer:(NSString *)peerID didChangeState:(GKPeerConnectionState)state 
+{
+    NSLog(@"didChangeState was called from peerID: %@.", peerID);    
+    
+    switch (state) {			
+		case GKPeerStateAvailable:
+            // A peer became available by starting app, exiting settings, or ending a call.
+			break;
+		case GKPeerStateUnavailable:
+            // Peer is unavailable
+			break;
+        case GKPeerStateConnected:
+            NSLog(@"Peer %@ Connected", self.peerID);            
+            break;			
+        case GKPeerStateDisconnected:
+            NSLog(@"Peer %@ Disconnected", self.peerID);
+            [self invalidateSession:self.session];
+            break;  
+        case GKPeerStateConnecting:
+            // Peer is attempting to connect to the session.
+            break;
+    }
+}
+
+- (void)invalidateSession:(GKSession *)session {
+	if(session != nil) {
+		[session disconnectFromAllPeers]; 
+		session.available = NO; 
+		[session setDataReceiveHandler: nil withContext: NULL]; 
+		session.delegate = nil; 
+		self.session = nil;
+	}
+}
+
+- (void)receiveData:(NSData *)data fromPeer:(NSString *)peer inSession: (GKSession *)session context:(void *)context {
+    int length;
+    [data getBytes:&length length:sizeof(int)];
+    
+    if (length == data.length - sizeof(int)) {
+        uint8_t packetData[length];
+        
+        [data getBytes:packetData range:NSMakeRange(sizeof(int), length)];
+        NSDictionary *packet = [NSKeyedUnarchiver unarchiveObjectWithData:[NSData dataWithBytes:packetData length:length]];
+        
+        NSString *key = [packet objectForKey:@"key"];
+        NSString *version = [packet objectForKey:@"version"];
+        NSString *name = [packet objectForKey:@"sender"];
+        NSString *prodID = [packet objectForKey:@"prodID"];
+        NSString *message = [packet objectForKey:@"message"];
+        int qty = [[packet objectForKey:@"qty"]intValue];
+        //Version Check, special key in Info.plist; more like a build version
+        if ([version isEqualToString:[[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleVersionKey]]) {
+            //Security Check, sending device sends this key
+            if ([key isEqualToString:kReceiveKey]) {
+                NSString *messageText = [NSString stringWithFormat:@"Voucher Name:\n%@\nQty Rec'd: %i",message,qty];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:name 
+                                                                message:messageText 
+                                                               delegate:nil 
+                                                      cancelButtonTitle:@"Dismiss" 
+                                                      otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+                [self confirmVoucherWithQty:qty];
+                [[ASTStoreController sharedStoreController] produceProduct:prodID quantity:qty];
+                [self.tableView reloadData];
+            } else {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure!" 
+                                                                message:@"Transfer incomplete, please retry." 
+                                                               delegate:nil 
+                                                      cancelButtonTitle:@"Dismiss" 
+                                                      otherButtonTitles:nil];
+                [alert show];
+                [alert release];
+                [self rejectVoucherWithReason:@"Security Key Mismatch"];
+            }
+        } else {
+            NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleNameKey];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"System Error" 
+                                                            message:[NSString stringWithFormat:
+                                                                     @"You must use the same version of %@.\nSending:%@\nReceiving:%@",
+                                                                     appName,version,[[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleVersionKey]] 
+                                                           delegate:nil 
+                                                  cancelButtonTitle:@"Dismiss" 
+                                                  otherButtonTitles:nil];
+            [alert show];
+            [alert release];
+            [self rejectVoucherWithReason:@"App versions not the same"];            
+        }
+    }
+}
+
 #pragma mark - Table View Datasource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -245,7 +460,7 @@ enum ASTStoreViewControllerButtonsRows
     switch (section) 
     {
         case ASTStoreViewControllerSectionButtons:
-            return( ASTStoreViewControllerButtonsRowsMax );
+            return ([[ASTStoreController sharedStoreController] voucherSharingEnabled] ? ASTStoreViewControllerButtonsRowsMax : ASTStoreViewControllerButtonsRowsMax-1 );
             break;
             
         case ASTStoreViewControllerSectionConsumables:
@@ -332,12 +547,11 @@ enum ASTStoreViewControllerButtonsRows
             imageView.image = [UIImage imageNamed:@"restore"];
             title.text = NSLocalizedString(@"Restore Purchases...", nil);
         }
-        /*
-         else if( indexPath.row == ASTStoreViewControllerButtonsRowsReceiveVoucher )
-         {
-         title.text = NSLocalizedString(@"Receive Voucher...", nil);            
-         }
-         */
+        else if( indexPath.row == ASTStoreViewControllerButtonsRowsReceiveVoucher )
+        {
+            imageView.image = [UIImage imageNamed:@"restore"];
+            title.text = NSLocalizedString(@"Receive Voucher...", nil);            
+        }
 
         return;
     }
@@ -503,13 +717,10 @@ enum ASTStoreViewControllerButtonsRows
             {
                 [self restorePreviousPurchaseButtonPressed:nil];
             }
-            /*
-             else if( indexPath.row == ASTStoreViewControllerButtonsRowsReceiveVoucher )
-             {
-             
-             }
-             */
-            
+            else if( indexPath.row == ASTStoreViewControllerButtonsRowsReceiveVoucher )
+            {
+                [self launchConnect:nil];
+            }
             break;
         }
             
@@ -731,7 +942,6 @@ enum ASTStoreViewControllerButtonsRows
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    //self.storeController.delegate = nil;    
 }
 
 // The designated initializer. Override to perform setup that is required before the view is loaded.

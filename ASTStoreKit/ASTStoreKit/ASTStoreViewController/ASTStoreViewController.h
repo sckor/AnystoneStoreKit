@@ -5,6 +5,10 @@
 //  Created by Sean Kormilo on 11-03-07.
 //  http://www.anystonetech.com
 
+//  Voucher Sharing developed by Gregory Meach on 11-05-02.
+//  http://meachware.com
+//  Copyright (c) 2010 Gregory Meach, MeachWare.
+
 //  Copyright (c) 2011 Anystone Technologies, Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,7 +31,16 @@
 
 
 #import <UIKit/UIKit.h>
+#import <GameKit/GameKit.h>
 #import "ASTStoreController.h"
+
+#define kTransmitKey    @"somethingVerySecretAndCoolGoesHere"
+#define kReceiveKey     @"shouldBeASecret"
+#define kSessionID      @"com.anystone.aststorekit"
+
+// 0 = HIDE / 1 = SHOW
+#define kAllowVoucherTransfers      1
+
 
 @protocol ASTStoreViewControllerDelegate
 - (void)astStoreViewControllerDidFinish:(UIViewController *)controller;
@@ -38,6 +51,8 @@
     <
     UITableViewDataSource, 
     UITableViewDelegate,
+    GKPeerPickerControllerDelegate, 
+    GKSessionDelegate,
     ASTStoreControllerDelegate,
     ASTStoreViewControllerDelegate
     >
@@ -52,11 +67,16 @@
     
     id<ASTStoreViewControllerDelegate> delegate;
     BOOL isAniPad;
+    
+    GKSession *_session;
+    NSString *_peerID;
+
 }
 
 @property (nonatomic, assign) id<ASTStoreViewControllerDelegate> delegate;
 
 - (IBAction)restorePreviousPurchaseButtonPressed:(id)sender;
+- (IBAction)launchConnect:(id)sender;
 
 @property (retain) IBOutlet UIView *tableContainerView;
 @property (retain) IBOutlet UITableView *tableView;
