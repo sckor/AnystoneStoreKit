@@ -29,14 +29,17 @@
 #import <UIKit/UIKit.h>
 #import "ASTStoreController.h"
 
-@protocol ASTStoreViewControllerDelegate;
+@protocol ASTStoreViewControllerDelegate
+- (void)astStoreViewControllerDidFinish:(UIViewController *)controller;
+@end
 
 
 @interface ASTStoreViewController : UIViewController
     <
     UITableViewDataSource, 
     UITableViewDelegate,
-    ASTStoreControllerDelegate
+    ASTStoreControllerDelegate,
+    ASTStoreViewControllerDelegate
     >
 {
     UIView *tableContainerView_;
@@ -64,7 +67,4 @@
 
 @end
 
-@protocol ASTStoreViewControllerDelegate
-- (void)astStoreViewControllerDidFinish:(ASTStoreViewController *)controller;
-@end
 

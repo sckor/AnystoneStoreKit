@@ -30,9 +30,9 @@
 #import "MBProgressHUD.h"
 #import "ASTStoreViewController.h"
 #import "ASTStoreDetailViewController.h"
-#import "ASTWebViewController.h"
 #import "ASTStoreViewControllerCommon.h"
 #import "ASTStoreSubscriptionDetailViewController.h"
+#import "ASTStoreAboutViewController.h"
 
 enum ASTStoreViewControllerSections 
 {
@@ -159,7 +159,7 @@ enum ASTStoreViewControllerButtonsRows
 
 - (MBProgressHUD*)activityProgessHUDWithLabel:(NSString*)aLabel
 {
-    MBProgressHUD *aProgressHUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    MBProgressHUD *aProgressHUD = [[[MBProgressHUD alloc] initWithView:self.navigationController.view] autorelease];
     [self.navigationController.view addSubview:aProgressHUD];
     
     aProgressHUD.delegate = self;
@@ -174,12 +174,12 @@ enum ASTStoreViewControllerButtonsRows
 
 - (MBProgressHUD*)successProgessHUDWithLabel:(NSString*)aLabel
 {
-    MBProgressHUD *aProgressHUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    MBProgressHUD *aProgressHUD = [[[MBProgressHUD alloc] initWithView:self.navigationController.view] autorelease];
     [self.navigationController.view addSubview:aProgressHUD];
 
     aProgressHUD.delegate = self;
     aProgressHUD.customView = [[[UIImageView alloc] 
-                                initWithImage:nil]
+                                initWithImage:[UIImage imageNamed:@"check2"]]
                                autorelease];
 
     aProgressHUD.mode = MBProgressHUDModeCustomView;
@@ -196,12 +196,12 @@ enum ASTStoreViewControllerButtonsRows
 
 - (MBProgressHUD*)failProgessHUDWithLabel:(NSString*)aLabel
 {
-    MBProgressHUD *aProgressHUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    MBProgressHUD *aProgressHUD = [[[MBProgressHUD alloc] initWithView:self.navigationController.view] autorelease];
     [self.navigationController.view addSubview:aProgressHUD];
     
     aProgressHUD.delegate = self;
     aProgressHUD.customView = [[[UIImageView alloc] 
-                                initWithImage:nil]
+                                initWithImage:[UIImage imageNamed:@"cross2"]]
                                autorelease];
     
     aProgressHUD.removeFromSuperViewOnHide = YES;
@@ -329,7 +329,7 @@ enum ASTStoreViewControllerButtonsRows
         
         if( indexPath.row == ASTStoreViewControllerButtonsRowsRestore )
         {
-            imageView.image = [UIImage imageNamed:@"restorePurchases2"];
+            imageView.image = [UIImage imageNamed:@"restore"];
             title.text = NSLocalizedString(@"Restore Purchases...", nil);
         }
         /*
@@ -396,6 +396,13 @@ enum ASTStoreViewControllerButtonsRows
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
+    NSUInteger numRows = [self tableView:tableView numberOfRowsInSection:section];
+    
+    if( numRows == 0 )
+    {
+        return nil;
+    }
+    
     switch (section) 
     {
         case ASTStoreViewControllerSectionConsumables:
@@ -473,8 +480,8 @@ enum ASTStoreViewControllerButtonsRows
             ASTStoreDetailViewController *vc = [[[ASTStoreDetailViewController alloc] initWithNibName:nil bundle:nil] autorelease];
                         
             NSString *identifier = [self productIdentifierForIndexPath:indexPath];
-            
             vc.productIdentifier = identifier;
+            
             [self.navigationController pushViewController:vc animated:YES];
 
             break;
@@ -654,26 +661,14 @@ enum ASTStoreViewControllerButtonsRows
     [self updateDetailViewControllers];
 }
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex 
-{
-    switch ([alertView tag]) {
-        case 0:
-            if (buttonIndex == 1) {                
-                ASTWebViewController *targetViewController = [[ASTWebViewController alloc] initWithNibName:(isAniPad ? @"ASTWebView-iPad" : @"ASTWebView") bundle:nil];
-                targetViewController.location = [NSURL URLWithString:@"http://anystonetech.com"];
-               [self presentModalViewController:targetViewController animated:YES];
-                targetViewController.theTitle.text = @"Anystone";
-                [targetViewController release];
-            }
-            break;            
-        default:
-            break;
-    }
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
+}
+
+- (void)astStoreViewControllerDidFinish:(UIViewController *)controller
+{
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)dismissView:(id)sender 
@@ -683,14 +678,18 @@ enum ASTStoreViewControllerButtonsRows
 
 - (void)infoView:(id)sender 
 {
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Powered By:"
-                                                    message:@"Anystone Technologies\nASTStoreKit"
-                                                   delegate:self cancelButtonTitle:@"Close" 
-                                          otherButtonTitles:@"More...", nil];
-    [alert setTag:0];
-    [alert show];
-    [alert release];
+    ASTStoreAboutViewController *vc = [[[ASTStoreAboutViewController alloc] 
+                                        initWithNibName:nil bundle:nil] autorelease];
     
+    vc.delegate = self;
+    UINavigationController *navController = [[[UINavigationController alloc] 
+                                             initWithRootViewController:vc] autorelease];
+        
+    if( isAniPad )
+    {
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    }
+    [self presentModalViewController:navController animated:YES];
 }
 
 

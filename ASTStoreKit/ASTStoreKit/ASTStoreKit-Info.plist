@@ -5,13 +5,18 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>ASTExampleStore</string>
+	<string>ASTStore</string>
 	<key>CFBundleDocumentTypes</key>
 	<array/>
 	<key>CFBundleExecutable</key>
 	<string>ASTExampleStore</string>
 	<key>CFBundleIconFile</key>
 	<string></string>
+	<key>CFBundleIconFiles</key>
+	<array>
+		<string>StoreKit.png</string>
+		<string>StoreKit@2x.png</string>
+	</array>
 	<key>CFBundleIdentifier</key>
 	<string>com.anystonetech.ASTExampleStore</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -27,7 +32,7 @@
 	<key>CFBundleURLTypes</key>
 	<array/>
 	<key>CFBundleVersion</key>
-	<string>0.5</string>
+	<string>0.5.1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSMainNibFile</key>

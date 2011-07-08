@@ -70,6 +70,11 @@
 @dynamic serviceURLPaths;
 @dynamic sharedSecret;
 
++ (NSString*)version
+{
+    return @"v0.5.1";
+}
+
 #pragma mark Delegate Selector Stubs
 
 - (void)invokeDelegateStoreControllerProductDataStateChanged:(ASTStoreControllerProductDataState)newState
@@ -456,7 +461,7 @@
         return compResult;
     };
 
-    return cmptr;
+    return [cmptr copy];
 }
 
 - (NSComparator)familyQuantityComparator
@@ -480,7 +485,7 @@
         }
     };
     
-    return cmptr;
+    return [cmptr copy];
 }
 
 - (NSComparator)stringComparator
@@ -495,7 +500,7 @@
         return compResult;
     };
     
-    return cmptr;
+    return [cmptr copy];
 }
 
 - (NSArray*)productIdentifiersForProductType:(ASTStoreProductIdentifierType)type sortedUsingComparator:(NSComparator)cmptr
@@ -1060,8 +1065,10 @@
                                                cancelButtonTitle:@"OK" 
                                                otherButtonTitles:nil] autorelease];
         [alert show];
-        
+
+        [self invokeDelegateStoreControllerProductIdentifierPurchased:productIdentifier];
         self.purchaseState = ASTStoreControllerPurchaseStateNone;
+        
     }
 }
 
@@ -1102,8 +1109,6 @@
         [self purchaseCompletionHandler:productIdentifier 
                      customerIdentifier:self.customerIdentifier 
               productPromoCodeAvailable:YES];
-
-
     }
     else if( self.serverPromoCodesEnabled )
     {
