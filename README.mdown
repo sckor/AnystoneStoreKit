@@ -2,9 +2,9 @@
 
 ASTStoreKit is ready for general use and has been deployed in apps that are already in the App Store!
 
-##New! - ASTStoreKit Tutorials
-http://www.anystonetech.com/blog/2011/07/07/in-app-store-with-aststorekit-tutorial-part-1/
-http://www.anystonetech.com/blog/2011/07/07/in-app-store-with-aststorekit-tutorial-part-2/
+## New! - ASTStoreKit Tutorials
+* http://www.anystonetech.com/blog/2011/07/07/in-app-store-with-aststorekit-tutorial-part-1/
+* http://www.anystonetech.com/blog/2011/07/07/in-app-store-with-aststorekit-tutorial-part-2/
 
 ## Features
 * Built-in and fully functional store view controller
