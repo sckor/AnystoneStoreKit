@@ -2,6 +2,10 @@
 
 ASTStoreKit is ready for general use and has been deployed in apps that are already in the App Store!
 
+##New! - ASTStoreKit Tutorials
+http://www.anystonetech.com/blog/2011/07/07/in-app-store-with-aststorekit-tutorial-part-1/
+http://www.anystonetech.com/blog/2011/07/07/in-app-store-with-aststorekit-tutorial-part-2/
+
 ## Features
 * Built-in and fully functional store view controller
 * Configurable using plist files (no code changes required to the library itself)
@@ -103,6 +107,9 @@ The following frameworks must be added to the project:
 
 ## Startup
 The ASTStoreController is a singleton class. It is recommended that you initialize it in your AppDelegate so that it can process any outstanding transactions from the App Store as soon as possible.
+
+This is covered in part 2 of the ASTStoreKit tutorial:
+http://www.anystonetech.com/blog/2011/07/07/in-app-store-with-aststorekit-tutorial-part-2/
 
 1. In your AppDelegate.m add the following in the header import section:
 
