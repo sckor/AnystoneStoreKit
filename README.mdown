@@ -16,6 +16,11 @@ For some more information, have a look at:
 http://www.anystonetech.com/blog/2011/03/24/introducing-the-anystone-store-kit/
 
 ## Version History
+### Version 0.5.1
+* Added a new About View Controller which gives credit to the various authors
+* Fixed up some memory issues
+* Fix display of Store when no contents are present in a section
+
 ### Version 0.5
 * Refactored to remove shared library and allow for easier integration into projects
 * Merge changes over from Meechware
