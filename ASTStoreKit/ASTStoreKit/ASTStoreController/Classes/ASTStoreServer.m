@@ -356,7 +356,7 @@
         
     NSData *receiptAsJSONData = [receiptDictionary JSONData];
     
-    [serviceRequest setPostBody:[receiptAsJSONData mutableCopy]];
+    [serviceRequest setPostBody:[[receiptAsJSONData mutableCopy] autorelease]];
     
     [serviceRequest startSynchronous];
     

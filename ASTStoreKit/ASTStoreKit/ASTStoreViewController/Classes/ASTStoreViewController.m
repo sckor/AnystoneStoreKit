@@ -159,7 +159,7 @@ enum ASTStoreViewControllerButtonsRows
 
 - (MBProgressHUD*)activityProgessHUDWithLabel:(NSString*)aLabel
 {
-    MBProgressHUD *aProgressHUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    MBProgressHUD *aProgressHUD = [[[MBProgressHUD alloc] initWithView:self.navigationController.view] autorelease];
     [self.navigationController.view addSubview:aProgressHUD];
     
     aProgressHUD.delegate = self;
@@ -174,7 +174,7 @@ enum ASTStoreViewControllerButtonsRows
 
 - (MBProgressHUD*)successProgessHUDWithLabel:(NSString*)aLabel
 {
-    MBProgressHUD *aProgressHUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    MBProgressHUD *aProgressHUD = [[[MBProgressHUD alloc] initWithView:self.navigationController.view] autorelease];
     [self.navigationController.view addSubview:aProgressHUD];
 
     aProgressHUD.delegate = self;
@@ -196,7 +196,7 @@ enum ASTStoreViewControllerButtonsRows
 
 - (MBProgressHUD*)failProgessHUDWithLabel:(NSString*)aLabel
 {
-    MBProgressHUD *aProgressHUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    MBProgressHUD *aProgressHUD = [[[MBProgressHUD alloc] initWithView:self.navigationController.view] autorelease];
     [self.navigationController.view addSubview:aProgressHUD];
     
     aProgressHUD.delegate = self;

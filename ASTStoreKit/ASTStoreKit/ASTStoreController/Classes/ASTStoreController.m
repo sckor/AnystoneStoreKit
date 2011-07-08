@@ -456,7 +456,7 @@
         return compResult;
     };
 
-    return cmptr;
+    return [cmptr copy];
 }
 
 - (NSComparator)familyQuantityComparator
@@ -480,7 +480,7 @@
         }
     };
     
-    return cmptr;
+    return [cmptr copy];
 }
 
 - (NSComparator)stringComparator
@@ -495,7 +495,7 @@
         return compResult;
     };
     
-    return cmptr;
+    return [cmptr copy];
 }
 
 - (NSArray*)productIdentifiersForProductType:(ASTStoreProductIdentifierType)type sortedUsingComparator:(NSComparator)cmptr
