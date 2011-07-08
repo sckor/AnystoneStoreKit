@@ -1,4 +1,4 @@
-# About ASTStoreKit - Version 0.5
+# About ASTStoreKit - Version 0.5.1
 
 ASTStoreKit is ready for general use and has been deployed in apps that are already in the App Store!
 
