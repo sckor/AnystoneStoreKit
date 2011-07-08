@@ -30,9 +30,9 @@
 #import "MBProgressHUD.h"
 #import "ASTStoreViewController.h"
 #import "ASTStoreDetailViewController.h"
-#import "ASTWebViewController.h"
 #import "ASTStoreViewControllerCommon.h"
 #import "ASTStoreSubscriptionDetailViewController.h"
+#import "ASTStoreAboutViewController.h"
 
 enum ASTStoreViewControllerSections 
 {
@@ -661,26 +661,14 @@ enum ASTStoreViewControllerButtonsRows
     [self updateDetailViewControllers];
 }
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex 
-{
-    switch ([alertView tag]) {
-        case 0:
-            if (buttonIndex == 1) {                
-                ASTWebViewController *targetViewController = [[ASTWebViewController alloc] initWithNibName:(isAniPad ? @"ASTWebView-iPad" : @"ASTWebView") bundle:nil];
-                targetViewController.location = [NSURL URLWithString:@"http://anystonetech.com"];
-               [self presentModalViewController:targetViewController animated:YES];
-                targetViewController.theTitle.text = @"Anystone";
-                [targetViewController release];
-            }
-            break;            
-        default:
-            break;
-    }
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
+}
+
+- (void)astStoreViewControllerDidFinish:(UIViewController *)controller
+{
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)dismissView:(id)sender 
@@ -690,14 +678,14 @@ enum ASTStoreViewControllerButtonsRows
 
 - (void)infoView:(id)sender 
 {
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Powered By:"
-                                                    message:@"Anystone Technologies\nASTStoreKit"
-                                                   delegate:self cancelButtonTitle:@"Close" 
-                                          otherButtonTitles:@"More...", nil];
-    [alert setTag:0];
-    [alert show];
-    [alert release];
+    ASTStoreAboutViewController *vc = [[[ASTStoreAboutViewController alloc] 
+                                        initWithNibName:nil bundle:nil] autorelease];
     
+    vc.delegate = self;
+    UINavigationController *navController = [[[UINavigationController alloc] 
+                                             initWithRootViewController:vc] autorelease];
+        
+    [self presentModalViewController:navController animated:YES];
 }
 
 

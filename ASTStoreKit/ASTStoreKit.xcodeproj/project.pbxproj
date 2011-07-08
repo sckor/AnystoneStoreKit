@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		81482D5613BB789A00F843C0 /* ASTStoreSubscriptionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 81482D5513BB789A00F843C0 /* ASTStoreSubscriptionTableViewCell.xib */; };
+		816BC7E713C74549009CF822 /* ASTStoreAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 816BC7E513C74549009CF822 /* ASTStoreAboutViewController.m */; };
+		816BC7E813C74549009CF822 /* ASTStoreAboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 816BC7E613C74549009CF822 /* ASTStoreAboutViewController.xib */; };
+		816BC7EC13C74797009CF822 /* AnystoneStoreKitLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 816BC7EA13C74797009CF822 /* AnystoneStoreKitLogo@2x.png */; };
+		816BC7ED13C74797009CF822 /* AnystoneStoreKitLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 816BC7EB13C74797009CF822 /* AnystoneStoreKitLogo.png */; };
 		8173BDB813A69076001DC531 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8173BDB713A69076001DC531 /* UIKit.framework */; };
 		8173BDBA13A69076001DC531 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8173BDB913A69076001DC531 /* Foundation.framework */; };
 		8173BDBC13A69076001DC531 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8173BDBB13A69076001DC531 /* CoreGraphics.framework */; };
@@ -102,6 +106,11 @@
 
 /* Begin PBXFileReference section */
 		81482D5513BB789A00F843C0 /* ASTStoreSubscriptionTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreSubscriptionTableViewCell.xib; sourceTree = "<group>"; };
+		816BC7E413C74549009CF822 /* ASTStoreAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreAboutViewController.h; sourceTree = "<group>"; };
+		816BC7E513C74549009CF822 /* ASTStoreAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreAboutViewController.m; sourceTree = "<group>"; };
+		816BC7E613C74549009CF822 /* ASTStoreAboutViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ASTStoreAboutViewController.xib; path = ../../Classes/ASTStoreAboutViewController.xib; sourceTree = "<group>"; };
+		816BC7EA13C74797009CF822 /* AnystoneStoreKitLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AnystoneStoreKitLogo@2x.png"; sourceTree = "<group>"; };
+		816BC7EB13C74797009CF822 /* AnystoneStoreKitLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AnystoneStoreKitLogo.png; sourceTree = "<group>"; };
 		8173BDB313A69076001DC531 /* ASTExampleStore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ASTExampleStore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8173BDB713A69076001DC531 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		8173BDB913A69076001DC531 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -403,6 +412,8 @@
 				8173BE1C13A69386001DC531 /* ASTWebViewController.m */,
 				819C799A13B524A40049C203 /* UIView+SimpleLayerGradient.h */,
 				819C799B13B524A40049C203 /* UIView+SimpleLayerGradient.m */,
+				816BC7E413C74549009CF822 /* ASTStoreAboutViewController.h */,
+				816BC7E513C74549009CF822 /* ASTStoreAboutViewController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -427,6 +438,8 @@
 				8173BE0A13A69329001DC531 /* DropShadow-iPad.png */,
 				819BC41D13B123470000C17F /* restorePurchases2.png */,
 				819BC41E13B123470000C17F /* restorePurchases2@2x.png */,
+				816BC7EA13C74797009CF822 /* AnystoneStoreKitLogo@2x.png */,
+				816BC7EB13C74797009CF822 /* AnystoneStoreKitLogo.png */,
 			);
 			path = Graphics;
 			sourceTree = "<group>";
@@ -442,6 +455,7 @@
 				8173BDFD13A69300001DC531 /* ASTStoreViewController-iPad.xib */,
 				8173BDFE13A69300001DC531 /* ASTStoreTableViewCell.xib */,
 				81482D5513BB789A00F843C0 /* ASTStoreSubscriptionTableViewCell.xib */,
+				816BC7E613C74549009CF822 /* ASTStoreAboutViewController.xib */,
 			);
 			path = XIB;
 			sourceTree = "<group>";
@@ -696,6 +710,9 @@
 				81C967B713BCF153003AEB0E /* blue@2x.png in Resources */,
 				81C967B813BCF153003AEB0E /* purple.png in Resources */,
 				81C967B913BCF153003AEB0E /* purple@2x.png in Resources */,
+				816BC7E813C74549009CF822 /* ASTStoreAboutViewController.xib in Resources */,
+				816BC7EC13C74797009CF822 /* AnystoneStoreKitLogo@2x.png in Resources */,
+				816BC7ED13C74797009CF822 /* AnystoneStoreKitLogo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -748,6 +765,7 @@
 				819C799C13B524A40049C203 /* UIView+SimpleLayerGradient.m in Sources */,
 				81D315D113BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.m in Sources */,
 				81D315D613BA6FE5005F6DC8 /* ASTStoreViewControllerCommon.m in Sources */,
+				816BC7E713C74549009CF822 /* ASTStoreAboutViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
