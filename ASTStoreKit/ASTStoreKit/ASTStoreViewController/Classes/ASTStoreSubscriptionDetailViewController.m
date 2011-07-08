@@ -294,6 +294,8 @@
     self.reflectionImageView.layer.masksToBounds = YES;
 
     self.tableView.allowsSelection = NO;
+    self.title = self.storeProduct.title;
+
 }
 
 - (void)viewWillAppear:(BOOL)animated

@@ -159,6 +159,8 @@
     
     self.reflectionImageView.layer.cornerRadius = 10.0;
     self.reflectionImageView.layer.masksToBounds = YES;
+    
+    self.title = self.storeProduct.title;
 }
 
 - (void)viewWillAppear:(BOOL)animated

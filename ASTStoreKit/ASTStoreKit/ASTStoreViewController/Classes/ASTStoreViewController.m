@@ -480,8 +480,8 @@ enum ASTStoreViewControllerButtonsRows
             ASTStoreDetailViewController *vc = [[[ASTStoreDetailViewController alloc] initWithNibName:nil bundle:nil] autorelease];
                         
             NSString *identifier = [self productIdentifierForIndexPath:indexPath];
-            
             vc.productIdentifier = identifier;
+            
             [self.navigationController pushViewController:vc animated:YES];
 
             break;
