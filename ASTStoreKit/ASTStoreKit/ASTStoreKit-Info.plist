@@ -12,6 +12,11 @@
 	<string>ASTExampleStore</string>
 	<key>CFBundleIconFile</key>
 	<string></string>
+	<key>CFBundleIconFiles</key>
+	<array>
+		<string>AnystoneStoreKitLogo.png</string>
+		<string>AnystoneStoreKitLogo@2x.png</string>
+	</array>
 	<key>CFBundleIdentifier</key>
 	<string>com.anystonetech.ASTExampleStore</string>
 	<key>CFBundleInfoDictionaryVersion</key>

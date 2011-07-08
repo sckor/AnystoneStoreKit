@@ -277,7 +277,6 @@
 						<string key="NSFrame">{{60, 376}, {200, 32}}</string>
 						<reference key="NSSuperview" ref="994893813"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -435,6 +434,7 @@
 							<reference ref="273918419"/>
 						</array>
 						<reference key="parent" ref="0"/>
+						<string key="objectName">View</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">50</int>
