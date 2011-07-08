@@ -5,6 +5,10 @@
 //  Created by Sean Kormilo on 11-03-07.
 //  http://www.anystonetech.com
 
+//  Voucher Sharing developed by Gregory Meach on 11-05-02.
+//  http://meachware.com
+//  Copyright (c) 2010 Gregory Meach, MeachWare.
+
 //  Copyright (c) 2011 Anystone Technologies, Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
