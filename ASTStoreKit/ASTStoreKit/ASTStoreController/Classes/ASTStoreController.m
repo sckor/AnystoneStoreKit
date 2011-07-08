@@ -70,6 +70,11 @@
 @dynamic serviceURLPaths;
 @dynamic sharedSecret;
 
++ (NSString*)version
+{
+    return @"v0.5.1";
+}
+
 #pragma mark Delegate Selector Stubs
 
 - (void)invokeDelegateStoreControllerProductDataStateChanged:(ASTStoreControllerProductDataState)newState

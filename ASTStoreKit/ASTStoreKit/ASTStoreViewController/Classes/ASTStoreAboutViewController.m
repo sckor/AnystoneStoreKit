@@ -35,6 +35,7 @@ enum ASTStoreAboutViewControllerRows
 @synthesize imageView;
 @synthesize reflectionImageView;
 @synthesize tableView;
+@synthesize versionLabel;
 @synthesize cellBackgroundColor1 = cellBackgroundColor1_;
 @synthesize cellBackgroundColor2 = cellBackgroundColor2_;
 
@@ -325,6 +326,7 @@ enum ASTStoreAboutViewControllerRows
     [imageView release];
     [reflectionImageView release];
     [tableView release];
+    [versionLabel release];
     [super dealloc];
 }
 
@@ -366,6 +368,8 @@ enum ASTStoreAboutViewControllerRows
                                                action:@selector(doneButtonPressed:)] autorelease];
     
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
+    
+    self.versionLabel.text = [ASTStoreController version];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -389,6 +393,7 @@ enum ASTStoreAboutViewControllerRows
     [self setImageView:nil];
     [self setReflectionImageView:nil];
     [self setTableView:nil];
+    [self setVersionLabel:nil];
     [super viewDidUnload];
 }
 

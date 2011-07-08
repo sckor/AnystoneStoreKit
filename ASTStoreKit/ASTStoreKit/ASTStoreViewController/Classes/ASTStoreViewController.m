@@ -685,6 +685,10 @@ enum ASTStoreViewControllerButtonsRows
     UINavigationController *navController = [[[UINavigationController alloc] 
                                              initWithRootViewController:vc] autorelease];
         
+    if( isAniPad )
+    {
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    }
     [self presentModalViewController:navController animated:YES];
 }
 

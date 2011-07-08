@@ -106,6 +106,8 @@ typedef enum
 
 + (id)sharedStoreController;
 
++ (NSString*)version;
+
 #pragma mark Set List of Products To Manage
 //
 // Methods to set the list of products to manage

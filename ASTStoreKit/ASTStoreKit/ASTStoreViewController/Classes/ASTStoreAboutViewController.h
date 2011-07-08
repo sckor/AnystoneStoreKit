@@ -16,6 +16,7 @@
     UIImageView *imageView;
     UIImageView *reflectionImageView;
     UITableView *tableView;
+    UILabel *versionLabel;
 }
 
 @property (nonatomic, assign) id<ASTStoreViewControllerDelegate> delegate;
@@ -23,6 +24,7 @@
 @property (nonatomic, retain) IBOutlet UIImageView *imageView;
 @property (nonatomic, retain) IBOutlet UIImageView *reflectionImageView;
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
+@property (nonatomic, retain) IBOutlet UILabel *versionLabel;
 
 @property (nonatomic,retain) UIColor *cellBackgroundColor1;
 @property (nonatomic,retain) UIColor *cellBackgroundColor2;
