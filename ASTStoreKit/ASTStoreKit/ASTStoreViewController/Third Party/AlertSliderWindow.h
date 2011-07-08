@@ -1,16 +1,10 @@
 //
-//  ASTStoreViewControllerCommon.h
-//  ASTStoreKit
+//  AlertSliderWindow.h
 //
-//  Created by Sean Kormilo on 11-06-28.
-//
-//  ASTStoreViewControllerCommon.h
-//  ASTStoreKit
-//
-//  Created by Sean Kormilo on 11-06-28.
-//  http://www.anystonetech.com
+//  Created by Gregory Meach on 10-05-08.
+//  http://meachware.com
 
-//  Copyright (c) 2011 Anystone Technologies, Inc.
+//  Copyright (c) 2010 Gregory Meach, MeachWare.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -32,19 +26,19 @@
 
 #import <UIKit/UIKit.h>
 
-typedef enum
-{
-    ASTStoreViewControllerTableViewCellTagImageView = 1,
-    ASTStoreViewControllerTableViewCellTagTitleLabel = 2,
-    ASTStoreViewControllerTableViewCellTagDescriptionLabel = 3,
-    ASTStoreViewControllerTableViewCellTagExtraInfoLabel = 4,
-    ASTStoreViewControllerTableViewCellTagPriceLabel = 5,
-    ASTStoreViewControllerTableViewCellTagTopLineView = 6,
-    ASTStoreViewControllerTableViewCellTagBottomLineView = 7,
-    ASTStoreViewControllerTableViewCellTagDropShadowView = 8,
-    ASTStoreViewControllerTableViewCellTagPurchaseButton = 9
-} ASTStoreViewControllerTableViewCellTags;
 
+@interface AlertSliderWindow : UIAlertView <UIAlertViewDelegate> {
+	UILabel		*alertLabel;
+	UISlider	*alertSlider;
+	int			sliderValue;
+	int			pressedButton;
+}
 
-void updateCellBackgrounds(UITableViewCell* cell, NSIndexPath *indexPath, UIColor *cellBackgroundColor1, UIColor *cellBackgroundColor2);
-void setLabelForExpiresDate(NSDate *expiresDate, UILabel *expiresLabel, int isPurchased);
+@property (nonatomic, retain) UILabel *alertLabel;
+@property (nonatomic, retain) UISlider *alertSlider;
+@property int pressedButton;
+@property int sliderValue;
+
+- (id)initWithTitle:(NSString *)title yoffset:(int)yoffset setValue:(int)setValue minValue:(int)minValue maxValue:(int)maxValue message:(NSString *)message delegate:(id)delegate cancelButtonTitle:(NSString *)cancelButtonTitle okButtonTitle:(NSString *)okButtonTitle;
+
+@end

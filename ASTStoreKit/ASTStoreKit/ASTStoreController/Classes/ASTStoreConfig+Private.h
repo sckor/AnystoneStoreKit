@@ -38,6 +38,7 @@
 @property BOOL verifyReceipts;
 @property BOOL serverPromoCodesEnabled;
 @property BOOL serverConsumablesEnabled;
+@property BOOL voucherSharingEnabled;
 @property (copy) NSDictionary *serviceURLPaths;
 @property (copy) NSString *sharedSecret;
 

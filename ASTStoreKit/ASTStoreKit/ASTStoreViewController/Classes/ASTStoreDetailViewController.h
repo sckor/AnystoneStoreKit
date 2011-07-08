@@ -26,10 +26,18 @@
 //  THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
+#import <GameKit/GameKit.h>
+#import "AlertSliderWindow.h"
 #import "ASTStoreController.h"
 #import "GradientButton.h"
 
 @interface ASTStoreDetailViewController : UIViewController
+<
+GKPeerPickerControllerDelegate, 
+GKSessionDelegate,
+ASTStoreControllerDelegate,
+UIAlertViewDelegate
+>
 {
     UIImageView *purchaseImage_;
     UILabel *productTitle_;
@@ -43,7 +51,16 @@
     UIImageView *reflectionImageView;
     UIView *titleView;
     UIView *gradientView;
+    
+    GKSession *_session;
+    NSString *_peerID;
+    AlertSliderWindow *sliderAlert;
+
 }
+
+- (IBAction)purchaseButtonPressed:(id)sender;
+
+@property (nonatomic, retain) AlertSliderWindow *sliderAlert;
 
 - (void)updateViewData;
 

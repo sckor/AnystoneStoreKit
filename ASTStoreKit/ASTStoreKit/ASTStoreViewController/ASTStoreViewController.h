@@ -27,7 +27,16 @@
 
 
 #import <UIKit/UIKit.h>
+#import <GameKit/GameKit.h>
 #import "ASTStoreController.h"
+
+#define kTransmitKey    @"somethingVerySecretAndCoolGoesHere"
+#define kReceiveKey     @"shouldBeASecret"
+#define kSessionID      @"com.anystone.aststorekit"
+
+// 0 = HIDE / 1 = SHOW
+#define kAllowVoucherTransfers      1
+
 
 @protocol ASTStoreViewControllerDelegate
 - (void)astStoreViewControllerDidFinish:(UIViewController *)controller;
@@ -38,6 +47,8 @@
     <
     UITableViewDataSource, 
     UITableViewDelegate,
+    GKPeerPickerControllerDelegate, 
+    GKSessionDelegate,
     ASTStoreControllerDelegate,
     ASTStoreViewControllerDelegate
     >
@@ -52,11 +63,16 @@
     
     id<ASTStoreViewControllerDelegate> delegate;
     BOOL isAniPad;
+    
+    GKSession *_session;
+    NSString *_peerID;
+
 }
 
 @property (nonatomic, assign) id<ASTStoreViewControllerDelegate> delegate;
 
 - (IBAction)restorePreviousPurchaseButtonPressed:(id)sender;
+- (IBAction)launchConnect:(id)sender;
 
 @property (retain) IBOutlet UIView *tableContainerView;
 @property (retain) IBOutlet UITableView *tableView;
