@@ -41,7 +41,7 @@
 						<string key="NSFrameSize">{320, 60}</string>
 						<reference key="NSSuperview" ref="994893813"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="41449827"/>
+						<reference key="NSNextKeyView" ref="485087818"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
@@ -65,10 +65,6 @@
 								<int key="IBUITag">1</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<object class="NSCustomResource" key="IBUIImage" id="530764204">
-									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">subscription.png</string>
-								</object>
 							</object>
 							<object class="IBUIImageView" id="693037934">
 								<reference key="NSNextResponder" ref="485087818"/>
@@ -81,7 +77,6 @@
 								<int key="IBUITag">1</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<reference key="IBUIImage" ref="530764204"/>
 							</object>
 							<object class="IBUILabel" id="264410363">
 								<reference key="NSNextResponder" ref="485087818"/>
@@ -201,7 +196,7 @@
 						<string key="NSFrame">{{0, 81}, {320, 270}}</string>
 						<reference key="NSSuperview" ref="994893813"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="273918419"/>
+						<reference key="NSNextKeyView" ref="41449827"/>
 						<reference key="IBUIBackgroundColor" ref="165535614"/>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIMultipleTouchEnabled">YES</bool>
@@ -282,6 +277,7 @@
 						<string key="NSFrame">{{60, 376}, {200, 32}}</string>
 						<reference key="NSSuperview" ref="994893813"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -307,7 +303,7 @@
 				<string key="NSFrameSize">{320, 436}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="485087818"/>
+				<reference key="NSNextKeyView" ref="273918419"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
@@ -584,7 +580,6 @@
 						</object>
 					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="connectingActivityIndicatorView">UIActivityIndicatorView</string>
 						<string key="description">UITextView</string>
 						<string key="extraInfo">UILabel</string>
 						<string key="gradientView">UIView</string>
@@ -593,14 +588,9 @@
 						<string key="purchaseButton">GradientButton</string>
 						<string key="purchaseImage">UIImageView</string>
 						<string key="reflectionImageView">UIImageView</string>
-						<string key="statusLabel">UILabel</string>
 						<string key="titleView">UIView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="connectingActivityIndicatorView">
-							<string key="name">connectingActivityIndicatorView</string>
-							<string key="candidateClassName">UIActivityIndicatorView</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="description">
 							<string key="name">description</string>
 							<string key="candidateClassName">UITextView</string>
@@ -633,10 +623,6 @@
 							<string key="name">reflectionImageView</string>
 							<string key="candidateClassName">UIImageView</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="statusLabel">
-							<string key="name">statusLabel</string>
-							<string key="candidateClassName">UILabel</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="titleView">
 							<string key="name">titleView</string>
 							<string key="candidateClassName">UIView</string>
@@ -665,10 +651,6 @@
 		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
-		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="NS.key.0">subscription.png</string>
-			<string key="NS.object.0">{57, 57}</string>
-		</object>
 		<string key="IBCocoaTouchPluginVersion">301</string>
 	</data>
 </archive>

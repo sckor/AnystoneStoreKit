@@ -76,10 +76,6 @@
 								<int key="IBUITag">1</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<object class="NSCustomResource" key="IBUIImage" id="112283705">
-									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">subscription.png</string>
-								</object>
 							</object>
 							<object class="IBUIImageView" id="285586372">
 								<reference key="NSNextResponder" ref="568649887"/>
@@ -92,7 +88,6 @@
 								<int key="IBUITag">1</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<reference key="IBUIImage" ref="112283705"/>
 							</object>
 							<object class="IBUILabel" id="386224937">
 								<reference key="NSNextResponder" ref="568649887"/>
@@ -689,10 +684,6 @@
 		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
-		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="NS.key.0">subscription.png</string>
-			<string key="NS.object.0">{57, 57}</string>
-		</object>
 		<string key="IBCocoaTouchPluginVersion">301</string>
 	</data>
 </archive>

@@ -396,6 +396,13 @@ enum ASTStoreViewControllerButtonsRows
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
+    NSUInteger numRows = [self tableView:tableView numberOfRowsInSection:section];
+    
+    if( numRows == 0 )
+    {
+        return nil;
+    }
+    
     switch (section) 
     {
         case ASTStoreViewControllerSectionConsumables:
