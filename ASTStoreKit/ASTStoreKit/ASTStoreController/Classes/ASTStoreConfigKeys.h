@@ -27,8 +27,6 @@
 
 #define kASTStoreConfigPlist @"ASTStoreKitConfig"
 
-#define kASTStoreConfigVoucherSharingKey @"voucherSharingEnabled"
-
 #define kASTStoreConfigProductPlistFileKey @"productPlistFile"
 #define kASTStoreConfigRetryStoreConnectionIntervalKey @"retryStoreConnectionInterval"
 #define kASTStoreConfigServerURLKey @"serverURL"

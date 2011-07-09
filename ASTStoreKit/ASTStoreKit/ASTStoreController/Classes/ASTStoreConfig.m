@@ -21,7 +21,6 @@
 @synthesize serverConsumablesEnabled = serverConsumablesEnabled_;
 @synthesize serviceURLPaths = serviceURLPaths_;
 @synthesize sharedSecret = sharedSecret_;
-@synthesize voucherSharingEnabled = voucherSharingEnabled_;
 
 - (id)init 
 {
@@ -40,7 +39,6 @@
     verifyReceipts_ = NO;
     serverPromoCodesEnabled_ = NO;
     serverConsumablesEnabled_ = NO;
-    voucherSharingEnabled_ = NO;
     serviceURLPaths_ = nil;
     sharedSecret_ = nil;
     

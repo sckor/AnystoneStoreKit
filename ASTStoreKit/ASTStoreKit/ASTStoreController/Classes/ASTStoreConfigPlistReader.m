@@ -115,16 +115,6 @@
         storeConfig.serverConsumablesEnabled = [aNumber boolValue];
     }
 
-    aNumber = [plistDictionary objectForKey:kASTStoreConfigVoucherSharingKey];
-    if( nil == aNumber )
-    {
-        storeConfig.voucherSharingEnabled = NO;
-    }
-    else
-    {
-        storeConfig.voucherSharingEnabled = [aNumber boolValue];
-    }
-
     storeConfig.serviceURLPaths = [plistDictionary objectForKey:kASTStoreConfigServiceURLPaths];
     
     return storeConfig;

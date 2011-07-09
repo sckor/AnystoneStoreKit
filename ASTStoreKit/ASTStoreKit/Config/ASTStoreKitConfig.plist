@@ -4,6 +4,8 @@
 <dict>
 	<key>productPlistFile</key>
 	<string>sampleProductIdentifiers</string>
+	<key>sharedSecret</key>
+	<string></string>
 	<key>retryStoreConnectionInterval</key>
 	<integer>15</integer>
 	<key>serverConnectionTimeout</key>
@@ -25,13 +27,9 @@
 		<key>receiptValidation</key>
 		<string>service/receipt/validate</string>
 	</dict>
-	<key>sharedSecret</key>
-	<string></string>
 	<key>vendorUuid</key>
 	<string></string>
 	<key>verifyReceipts</key>
 	<false/>
-	<key>voucherSharingEnabled</key>
-	<true/>
 </dict>
 </plist>
