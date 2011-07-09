@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		37A670E213C7ABF500DCB7CF /* AlertSliderWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A670E113C7ABF500DCB7CF /* AlertSliderWindow.m */; };
+		37A670E513C7AF4800DCB7CF /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A670E413C7AF4800DCB7CF /* GameKit.framework */; };
 		81482D5613BB789A00F843C0 /* ASTStoreSubscriptionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 81482D5513BB789A00F843C0 /* ASTStoreSubscriptionTableViewCell.xib */; };
 		816BC7E713C74549009CF822 /* ASTStoreAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 816BC7E513C74549009CF822 /* ASTStoreAboutViewController.m */; };
 		816BC7E813C74549009CF822 /* ASTStoreAboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 816BC7E613C74549009CF822 /* ASTStoreAboutViewController.xib */; };
@@ -109,6 +111,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		37A670E013C7ABF500DCB7CF /* AlertSliderWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertSliderWindow.h; sourceTree = "<group>"; };
+		37A670E113C7ABF500DCB7CF /* AlertSliderWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlertSliderWindow.m; sourceTree = "<group>"; };
+		37A670E413C7AF4800DCB7CF /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		81482D5513BB789A00F843C0 /* ASTStoreSubscriptionTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ASTStoreSubscriptionTableViewCell.xib; sourceTree = "<group>"; };
 		816BC7E413C74549009CF822 /* ASTStoreAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTStoreAboutViewController.h; sourceTree = "<group>"; };
 		816BC7E513C74549009CF822 /* ASTStoreAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASTStoreAboutViewController.m; sourceTree = "<group>"; };
@@ -275,6 +280,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				37A670E513C7AF4800DCB7CF /* GameKit.framework in Frameworks */,
 				819C799E13B5256F0049C203 /* QuartzCore.framework in Frameworks */,
 				8173BEA213A6A6DB001DC531 /* Security.framework in Frameworks */,
 				8173BDBC13A69076001DC531 /* CoreGraphics.framework in Frameworks */,
@@ -311,6 +317,7 @@
 		8173BDB613A69076001DC531 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				37A670E413C7AF4800DCB7CF /* GameKit.framework */,
 				8173BE9813A6A6B5001DC531 /* libz.1.dylib */,
 				819C799D13B5256F0049C203 /* QuartzCore.framework */,
 				8173BEA113A6A6DB001DC531 /* Security.framework */,
@@ -622,6 +629,8 @@
 		819BC43F13B267E80000C17F /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
+				37A670E013C7ABF500DCB7CF /* AlertSliderWindow.h */,
+				37A670E113C7ABF500DCB7CF /* AlertSliderWindow.m */,
 				819BC44213B2680E0000C17F /* README.mdown */,
 				819BC44013B2680E0000C17F /* MBProgressHUD.h */,
 				819BC44113B2680E0000C17F /* MBProgressHUD.m */,
@@ -782,6 +791,7 @@
 				81D315D113BA5ED3005F6DC8 /* ASTStoreSubscriptionDetailViewController.m in Sources */,
 				81D315D613BA6FE5005F6DC8 /* ASTStoreViewControllerCommon.m in Sources */,
 				816BC7E713C74549009CF822 /* ASTStoreAboutViewController.m in Sources */,
+				37A670E213C7ABF500DCB7CF /* AlertSliderWindow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

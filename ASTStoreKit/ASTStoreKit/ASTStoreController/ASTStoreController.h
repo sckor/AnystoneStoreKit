@@ -294,6 +294,12 @@ typedef enum
 // See sharedStoreController docs above for the keys to set
 @property (copy) NSDictionary *serviceURLPaths;
 
+#pragma mark Voucher Sharing Support
+
+// If enabled, will allow consumable vouchers to be transferred from one iOS
+// device to another. Configurable security keys and automatic version checking
+@property BOOL voucherSharingEnabled;
+
 #pragma mark Server Promo Code Support
 
 // If enabled, will check the server to see if the UDID or customerIdentifier
@@ -301,7 +307,6 @@ typedef enum
 @property BOOL serverPromoCodesEnabled;
 
 #pragma mark Server Consumable Support
-
 
 // Select whether or not to use server management of consumables
 // Defaults to NO. When changed from NO to YES, will query current

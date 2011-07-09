@@ -5,6 +5,10 @@
 //  Created by Sean Kormilo on 11-03-16.
 //  http://www.anystonetech.com
 
+//  Voucher Sharing developed by Gregory Meach on 11-05-02.
+//  http://meachware.com
+//  Copyright (c) 2010 Gregory Meach, MeachWare.
+
 //  Copyright (c) 2011 Anystone Technologies, Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,10 +30,18 @@
 //  THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
+#import <GameKit/GameKit.h>
+#import "AlertSliderWindow.h"
 #import "ASTStoreController.h"
 #import "GradientButton.h"
 
 @interface ASTStoreDetailViewController : UIViewController
+<
+GKPeerPickerControllerDelegate, 
+GKSessionDelegate,
+ASTStoreControllerDelegate,
+UIAlertViewDelegate
+>
 {
     UIImageView *purchaseImage_;
     UILabel *productTitle_;
@@ -43,7 +55,16 @@
     UIImageView *reflectionImageView;
     UIView *titleView;
     UIView *gradientView;
+    
+    GKSession *_session;
+    NSString *_peerID;
+    AlertSliderWindow *sliderAlert;
+
 }
+
+- (IBAction)purchaseButtonPressed:(id)sender;
+
+@property (nonatomic, retain) AlertSliderWindow *sliderAlert;
 
 - (void)updateViewData;
 
