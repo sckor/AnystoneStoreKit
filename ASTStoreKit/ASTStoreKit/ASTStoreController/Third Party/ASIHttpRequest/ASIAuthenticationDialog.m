@@ -129,25 +129,25 @@ static const NSUInteger kDomainSection = 1;
 {
 	[self showTitle];
 	
-	UIDeviceOrientation o = [[UIApplication sharedApplication] statusBarOrientation];
-	CGFloat angle = 0;
-	switch (o) {
-		case UIDeviceOrientationLandscapeLeft: angle = 90; break;
-		case UIDeviceOrientationLandscapeRight: angle = -90; break;
-		case UIDeviceOrientationPortraitUpsideDown: angle = 180; break;
-		default: break;
-	}
-
-	CGRect f = [[UIScreen mainScreen] applicationFrame];
-
-	// Swap the frame height and width if necessary
- 	if (UIDeviceOrientationIsLandscape(o)) {
-		CGFloat t;
-		t = f.size.width;
-		f.size.width = f.size.height;
-		f.size.height = t;
-	}
-
+    UIInterfaceOrientation o = [[UIApplication sharedApplication] statusBarOrientation];
+    CGFloat angle = 0;
+    switch (o) {
+        case UIInterfaceOrientationLandscapeLeft: angle = 90; break;
+        case UIInterfaceOrientationLandscapeRight: angle = -90; break;
+        case UIInterfaceOrientationPortraitUpsideDown: angle = 180; break;
+        default: break;
+    }
+    
+    CGRect f = [[UIScreen mainScreen] applicationFrame];
+    
+    // Swap the frame height and width if necessary
+    if (UIInterfaceOrientationIsLandscape(o)) {
+        CGFloat t;
+        t = f.size.width;
+        f.size.width = f.size.height;
+        f.size.height = t;
+    }
+    
 	CGAffineTransform previousTransform = self.view.layer.affineTransform;
 	CGAffineTransform newTransform = CGAffineTransformMakeRotation(angle * M_PI / 180.0);
 
