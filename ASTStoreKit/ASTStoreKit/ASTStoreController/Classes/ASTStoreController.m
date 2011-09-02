@@ -47,6 +47,7 @@
 @property (nonatomic) ASTStoreControllerPurchaseState purchaseState;
 @property (readonly) ASTStoreServer *storeServer;
 @property BOOL restoringPurchases;
+@property NSUInteger verifyingCount;
 
 @end
 
@@ -67,12 +68,14 @@
 @synthesize customerIdentifier = customerIdentifier_;
 @synthesize serverConsumablesEnabled = serverConsumablesEnabled_;
 @synthesize serverPromoCodesEnabled = serverPromoCodesEnabled_;
+@synthesize verifyingCount = verifyingCount_;
+
 @dynamic serviceURLPaths;
 @dynamic sharedSecret;
 
 + (NSString*)version
 {
-    return @"v0.5.1";
+    return @"v0.5.2";
 }
 
 #pragma mark Delegate Selector Stubs
@@ -194,6 +197,8 @@
         {   
             purchaseState_ = aPurchaseState;
         }
+     
+        DLog(@"PurchaseState Changed:%d verifyingCount:%d", purchaseState_, self.verifyingCount);
         
         [self invokeDelegateStoreControllerPurchaseStateChanged:aPurchaseState];
     }
@@ -283,8 +288,6 @@
 
 - (void)setSharedSecret:(NSString *)sharedSecret
 {
-    
-    
     self.storeServer.sharedSecret = sharedSecret;
 }
 
@@ -865,6 +868,7 @@
         [self invokeDelegateStoreControllerProductIdentifierFailedPurchase:productData.productIdentifier withError:nil];
     }
     
+    
     if( nil != transaction )
     {
         if( self.restoringPurchases )
@@ -873,8 +877,11 @@
             // Will change state back to none as part of the restore complete callback
             self.purchaseState = ASTStoreControllerPurchaseStateProcessingPayment;
         }
-        else
+        else if( self.verifyingCount <= 1 )
         {
+            // Use <=1 here because the count will be decremented AFTER
+            // this method completes. Thus a count of 1 indicates this is
+            // the last verification method being run.
             self.purchaseState = ASTStoreControllerPurchaseStateNone;
         }
         
@@ -903,6 +910,7 @@
     
     if( productData.type == ASTStoreProductIdentifierTypeAutoRenewable )
     {
+        self.verifyingCount = self.verifyingCount + 1;
         self.purchaseState = ASTStoreControllerPurchaseStateVerifyingReceipt;
         
         NSString *base64Receipt = [ASIHTTPRequest base64forData:transaction.transactionReceipt];
@@ -918,17 +926,21 @@
                                       latestReceiptBase64Data:latestReceiptBase64Data 
                                                   transaction:transaction 
                                        withVerificationResult:result];
+            
+            self.verifyingCount = self.verifyingCount - 1;
         }];
     }
     else if(( self.serverUrl != nil ) && ( self.verifyReceipts ))
     {
+        self.verifyingCount = self.verifyingCount + 1;
         self.purchaseState = ASTStoreControllerPurchaseStateVerifyingReceipt;
-        
+
         [self.storeServer asyncVerifyTransaction:transaction 
                              withCompletionBlock:^(SKPaymentTransaction *transaction, 
                                                    ASTStoreServerResult result) 
          {
              [self completionHandlerForProductData:productData transaction:transaction withVerificationResult:result];
+             self.verifyingCount = self.verifyingCount - 1;
          }];
     }
     else
@@ -1362,6 +1374,7 @@
     customerIdentifier_ = nil;
     serverConsumablesEnabled_ = NO;
     serverPromoCodesEnabled_ = NO;
+    verifyingCount_ = 0;
     
     [ASTStoreFamilyData setFamilyDataDelegate:self];
     

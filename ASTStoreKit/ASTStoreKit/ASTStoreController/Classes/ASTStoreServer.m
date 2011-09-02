@@ -96,19 +96,6 @@
 
 #pragma mark Override Synthesized Methods
 
-- (dispatch_queue_t)subscriptionDispatchQueue
-{
-    if(  nil == subscriptionDispatchQueue_ )
-    {
-        subscriptionDispatchQueue_ = dispatch_queue_create("com.anystonetech.ASTStoreKit.StoreServer", NULL);
-        
-        self.subscriptionQueueEnabled = YES;
-        [self configureSubscriptionQueue];
-    }
-    
-    return subscriptionDispatchQueue_;
-}
-
 - (NSString*)bundleId
 {
     if( nil != bundleId_ )
@@ -880,7 +867,8 @@
     serviceURLPathReceiptValidation_ = nil;
     serviceURLPaths_ = nil;
     sharedSecret_ = nil;
-    subscriptionDispatchQueue_ = nil;
+    subscriptionDispatchQueue_ = dispatch_queue_create("com.anystonetech.ASTStoreKit.StoreServer", NULL);
+    dispatch_suspend( subscriptionDispatchQueue_ );
     subscriptionQueueEnabled_ = NO;
     
     DLog(@"Instantiated ASTStoreServer");
