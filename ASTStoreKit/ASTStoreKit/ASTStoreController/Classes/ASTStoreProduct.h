@@ -100,6 +100,13 @@
 // When set, will bypass the store and just process the purchase
 @property BOOL isFree;
 
+// Used to disable the purchase of a product if non-nil
+@property (copy) NSString *productDisabledString;
+
+// Use this if you want to provide a link to open the app store for purchasing
+// of equivalent functionality
+@property (copy) NSURL *appStoreURL;
+
 // Defaults to YES; Will be set to NO if iTunes returns that the product
 // is invalid upon querying for it
 @property  (readonly) BOOL isValid;

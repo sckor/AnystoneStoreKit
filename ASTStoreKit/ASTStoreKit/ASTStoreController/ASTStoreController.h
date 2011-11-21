@@ -142,6 +142,10 @@ typedef enum
 //       Optional Key: isFree boolean - should allow purchase without going to app store
 //       Optional Key: productImage - Image file name to use when displaying item. 
 //                                    Should be 57x57 and 114x114 @2x for Retina display
+//       Optional Key: appStoreURLString - A stringified URL that should open equivalent functionality in the app store
+//                     ie: provide an alternative to purchasing in app where some folks are not
+//                         comfortable with it and want to just buy app directly from the app store
+//                         probably only really useful for non-consumables
 
 
 // Read in products to manage from a plist included in the application bundle
@@ -261,7 +265,14 @@ typedef enum
 // AutoRenewable - does nothing, returns 0
 - (NSUInteger)consumeProduct:(NSString*)productIdentifier quantity:(NSUInteger)amountToConsume;
 
+#pragma mark Setting Product Flags
 
+// To flag that the product is not available for purchase, call this method with a 
+// non-nil string. The string should be localized and provide a reason why the product
+// purchase is disabled
+// Set the string to nil to re-enable the product
+- (void)setProductIdentifier:(NSString*)productIdentifier disabled:(NSString*)disabledString;
+- (NSString*)disabledStringForProductIdentifier:(NSString*)productIdentifier;
 
 #pragma mark Server Related
 // These are used if you want to enable access to Google App Engine support
@@ -309,9 +320,13 @@ typedef enum
 @property BOOL serverConsumablesEnabled;
 
 
-#pragma mark Delegate
+#pragma mark Delegates
 @property (assign) id <ASTStoreControllerDelegate> delegate;
 
+// This is reserved for use by a storefront where the storefront needs
+// access to the delegate information so a controller in the app can use the 
+// delegate property above
+@property (assign) id <ASTStoreControllerDelegate> delegateForStoreViewController;
 
 @end
 

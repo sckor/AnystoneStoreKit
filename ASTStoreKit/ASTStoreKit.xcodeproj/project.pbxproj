@@ -659,7 +659,7 @@
 		8173BDAA13A69076001DC531 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0410;
+				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = "Anystone Technologies, Inc.";
 			};
 			buildConfigurationList = 8173BDAD13A69076001DC531 /* Build configuration list for PBXProject "ASTStoreKit" */;

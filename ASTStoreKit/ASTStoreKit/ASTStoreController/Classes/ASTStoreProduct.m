@@ -40,6 +40,8 @@
 @synthesize productData = productData_;
 @synthesize isFree = isFree_;
 @synthesize productImageName = productImageName_;
+@synthesize productDisabledString = productDisabledString_;
+@synthesize appStoreURL = appStoreURL_;
 
 @dynamic expiresDate;
 @dynamic productImage;
@@ -327,6 +329,8 @@
     isValid_ = YES;
     isFree_ = NO;
     productImageName_ = nil;
+    productDisabledString_ = nil;
+    appStoreURL_ = nil;
     
     return self;
 }
@@ -365,6 +369,9 @@
 
 - (void)dealloc 
 {    
+    
+    [appStoreURL_ release], appStoreURL_ = nil;
+    [productDisabledString_ release], productDisabledString_ = nil;
     [productImageName_ release], productImageName_ = nil;
     
     [minimumVersion_ release];

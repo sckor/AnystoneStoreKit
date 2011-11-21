@@ -45,7 +45,7 @@
 
 #define kASTStoreProductInfoExtraInformationKey @"extraInformation"
 #define kASTStoreProductInfoProductImageKey @"productImage"
-
+#define kASTStoreProductInfoAppStoreURLStringKey @"appStoreURLString"
 
 #define kASTStoreProductInfoTypeFamilyIdentifierKey @"familyIdentifier"
 #define kASTStoreProductInfoTypeFamilyQuantityKey @"familyQuantity"

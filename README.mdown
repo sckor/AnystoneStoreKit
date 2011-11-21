@@ -1,4 +1,4 @@
-# About ASTStoreKit - Version 0.5.1
+# About ASTStoreKit - Version 0.5.3
 
 ASTStoreKit is ready for general use and has been deployed in apps that are already in the App Store!
 
@@ -20,6 +20,15 @@ For some more information, have a look at:
 http://www.anystonetech.com/blog/2011/03/24/introducing-the-anystone-store-kit/
 
 ## Version History
+### Version 0.5.3
+* Allow a product to be disabled at runtime (for example to allow dependencies between purchases)
+* Create a new storeController delegate to allow use of the built in StoreViewController but still be able to receive delegate invocations for other purposes
+* Add the option of including a "purchase from store" button with associated URL to purchase something from the App Store rather than just in app
+* Cleanup some compiler warnings
+
+### Version 0.5.2
+* Bugfixes around delegates being called at the correct time
+
 ### Version 0.5.1
 * Added a new About View Controller which gives credit to the various authors
 * Fixed up some memory issues

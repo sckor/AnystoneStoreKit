@@ -69,13 +69,14 @@
 @synthesize serverConsumablesEnabled = serverConsumablesEnabled_;
 @synthesize serverPromoCodesEnabled = serverPromoCodesEnabled_;
 @synthesize verifyingCount = verifyingCount_;
+@synthesize delegateForStoreViewController = delegateForStoreViewController_;
 
 @dynamic serviceURLPaths;
 @dynamic sharedSecret;
 
 + (NSString*)version
 {
-    return @"v0.5.2";
+    return @"v0.5.3";
 }
 
 #pragma mark Delegate Selector Stubs
@@ -86,6 +87,12 @@
     {
         [self.delegate astStoreControllerProductDataStateChanged:newState];
     }
+
+    if (self.delegateForStoreViewController && [self.delegateForStoreViewController respondsToSelector:@selector(astStoreControllerProductDataStateChanged:)])
+    {
+        [self.delegateForStoreViewController astStoreControllerProductDataStateChanged:newState];
+    }
+
 }
 
 - (void)invokeDelegateStoreControllerPurchaseStateChanged:(ASTStoreControllerPurchaseState)newState
@@ -93,6 +100,11 @@
     if (self.delegate && [self.delegate respondsToSelector: @selector(astStoreControllerPurchaseStateChanged:)])
     {
         [self.delegate astStoreControllerPurchaseStateChanged:newState];
+    }
+    
+    if (self.delegateForStoreViewController && [self.delegateForStoreViewController respondsToSelector: @selector(astStoreControllerPurchaseStateChanged:)])
+    {
+        [self.delegateForStoreViewController astStoreControllerPurchaseStateChanged:newState];
     }
 }
 
@@ -103,6 +115,11 @@
     {
         [self.delegate astStoreControllerProductIdentifierPurchased:productIdentifier];
     }
+
+    if (self.delegateForStoreViewController && [self.delegateForStoreViewController respondsToSelector:@selector(astStoreControllerProductIdentifierPurchased:)])
+    {
+        [self.delegateForStoreViewController astStoreControllerProductIdentifierPurchased:productIdentifier];
+    }
 }
 
 - (void)invokeDelegateStoreControllerProductIdentifierExpired:(NSString*)productIdentifier
@@ -111,6 +128,11 @@
     {
         [self.delegate astStoreControllerProductIdentifierExpired:productIdentifier];
     }
+
+    if (self.delegateForStoreViewController && [self.delegateForStoreViewController respondsToSelector:@selector(astStoreControllerProductIdentifierExpired:)])
+    {
+        [self.delegateForStoreViewController astStoreControllerProductIdentifierExpired:productIdentifier];
+    }
 }
 
 - (void)invokeDelegateStoreControllerProductIdentifierCancelledPurchase:(NSString*)productIdentifier
@@ -118,6 +140,11 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(astStoreControllerProductIdentifierCancelledPurchase:)])
     {
         [self.delegate astStoreControllerProductIdentifierCancelledPurchase:productIdentifier];
+    }
+
+    if (self.delegateForStoreViewController && [self.delegateForStoreViewController respondsToSelector:@selector(astStoreControllerProductIdentifierCancelledPurchase:)])
+    {
+        [self.delegateForStoreViewController astStoreControllerProductIdentifierCancelledPurchase:productIdentifier];
     }
 }
 
@@ -128,6 +155,11 @@
     {
         [self.delegate astStoreControllerProductIdentifierFailedPurchase:productIdentifier withError:error];
     }
+    
+    if (self.delegateForStoreViewController && [self.delegateForStoreViewController respondsToSelector:@selector(astStoreControllerProductIdentifierFailedPurchase:withError:)])
+    {
+        [self.delegateForStoreViewController astStoreControllerProductIdentifierFailedPurchase:productIdentifier withError:error];
+    }
 }
 
 - (void)invokeDelegateStoreControllerRestoreComplete
@@ -136,6 +168,11 @@
     {
         [self.delegate astStoreControllerRestoreComplete];
     }
+
+    if (self.delegateForStoreViewController && [self.delegateForStoreViewController respondsToSelector:@selector(astStoreControllerRestoreComplete)])
+    {
+        [self.delegateForStoreViewController astStoreControllerRestoreComplete];
+    }
 }
 
 - (void)invokeDelegateStoreControllerRestoreFailedWithError:(NSError*)error
@@ -143,6 +180,11 @@
     if (self.delegate && [self.delegate respondsToSelector: @selector(astStoreControllerRestoreFailedWithError:)])
     {
         [self.delegate astStoreControllerRestoreFailedWithError:error];
+    }
+
+    if (self.delegateForStoreViewController && [self.delegateForStoreViewController respondsToSelector: @selector(astStoreControllerRestoreFailedWithError:)])
+    {
+        [self.delegateForStoreViewController astStoreControllerRestoreFailedWithError:error];
     }
 }
 
@@ -407,7 +449,8 @@
 
 - (void)removeProductIdentifier:(NSString*)productIdentifier
 {
-    [self.storeProductDictionary removeObjectForKey:productIdentifier];
+    if( nil != productIdentifier )
+        [self.storeProductDictionary removeObjectForKey:productIdentifier];
 }
 
 - (void)resetProductIdentifier:(NSString*)productIdentifier
@@ -634,6 +677,31 @@
     return result;
 }
 
+#pragma mark Setting Product Flags
+
+- (void)setProductIdentifier:(NSString*)productIdentifier disabled:(NSString*)disabledString
+{
+    ASTStoreProduct *storeProduct = [self storeProductForIdentifier:productIdentifier];
+    
+    if( nil == storeProduct )
+    {
+        return;
+    }
+    
+    storeProduct.productDisabledString = disabledString;
+}
+
+- (NSString*)disabledStringForProductIdentifier:(NSString*)productIdentifier
+{
+    ASTStoreProduct *storeProduct = [self storeProductForIdentifier:productIdentifier];
+    
+    if( nil == storeProduct )
+    {
+        return nil;
+    }
+    
+    return ( storeProduct.productDisabledString );
+}
 
 #pragma mark SKProductRequest and SKRequest Delegate Methods
 

@@ -60,5 +60,9 @@
 
 @property (retain) NSString *productIdentifier;
 @property (nonatomic, retain) IBOutlet UIImageView *reflectionImageView;
+@property (retain, nonatomic) IBOutlet GradientButton *purchaseFromAppStoreButton;
+- (IBAction)purchaseFromAppStoreButtonPressed:(id)sender;
+@property (retain, nonatomic) IBOutlet UIView *purchaseFromAppStoreEtchView;
+@property (retain, nonatomic) IBOutlet UILabel *appStorePurchaseLabel;
 
 @end

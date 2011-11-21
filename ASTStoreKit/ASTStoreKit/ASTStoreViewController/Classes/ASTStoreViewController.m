@@ -356,9 +356,21 @@ enum ASTStoreViewControllerButtonsRows
     }
     else
     {
-        price.text = product.localizedPrice;
-        description.text = nil;
+        NSString *disabledString = product.productDisabledString;
+        
+        if( nil != disabledString )
+        {
+            price.text = product.localizedPrice;
+            description.text = disabledString;
+        }
+        else
+        {
+            price.text = product.localizedPrice;
+            description.text = nil;
+        }
     }
+    
+    
     
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     imageView.image = product.productImage;
@@ -722,7 +734,18 @@ enum ASTStoreViewControllerButtonsRows
 {
     [super viewWillAppear:animated];
         
-    self.storeController.delegate = self;
+    if( self.delegate == nil )
+    {
+        if( self.navigationItem.leftBarButtonItem != nil )
+        {
+            self.navigationItem.rightBarButtonItem = nil;
+            self.navigationItem.rightBarButtonItem = self.navigationItem.leftBarButtonItem;
+            self.navigationItem.leftBarButtonItem = nil;
+        }
+        
+    }
+    
+    self.storeController.delegateForStoreViewController = self;
         
     [self.storeController requestProductDataFromiTunes:NO];
     [self.tableView reloadData];
@@ -731,7 +754,6 @@ enum ASTStoreViewControllerButtonsRows
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    //self.storeController.delegate = nil;    
 }
 
 // The designated initializer. Override to perform setup that is required before the view is loaded.
@@ -777,7 +799,7 @@ enum ASTStoreViewControllerButtonsRows
     [connectingActivityIndicatorView_ release];
     connectingActivityIndicatorView_ = nil;
     
-    self.storeController.delegate = nil;
+    self.storeController.delegateForStoreViewController = nil;
     
     delegate = nil;
     

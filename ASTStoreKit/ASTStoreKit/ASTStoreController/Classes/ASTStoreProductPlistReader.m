@@ -186,6 +186,7 @@
         NSNumber *isHiddenAsNumber = [dict objectForKey:kASTStoreProductInfoIsHiddenKey];
         NSNumber *isFreeAsNumber = [dict objectForKey:kASTStoreProductInfoIsFreeKey];
         NSString *productImageName = [dict objectForKey:kASTStoreProductInfoProductImageKey];
+        NSString *appStoreURLString = [dict objectForKey:kASTStoreProductInfoAppStoreURLStringKey];
         
         if( title )
         {
@@ -244,6 +245,11 @@
         if( productImageName )
         {
             aProduct.productImageName = productImageName;
+        }
+        
+        if( appStoreURLString )
+        {
+            aProduct.appStoreURL = [NSURL URLWithString:appStoreURLString];
         }
         
         [tmpStoreProductArray addObject:aProduct];

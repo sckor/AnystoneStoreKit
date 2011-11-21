@@ -79,7 +79,7 @@
 
 @implementation UIImageView (ReflectedImage)
 
-CGImageRef CreateGradientImage(int pixelsWide, int pixelsHigh)
+static CGImageRef CreateGradientImage(int pixelsWide, int pixelsHigh)
 {
 	CGImageRef theCGImage = NULL;
     
@@ -115,7 +115,7 @@ CGImageRef CreateGradientImage(int pixelsWide, int pixelsHigh)
     return theCGImage;
 }
 
-CGContextRef MyCreateBitmapContext(int pixelsWide, int pixelsHigh)
+static CGContextRef MyCreateBitmapContext(int pixelsWide, int pixelsHigh)
 {
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 	

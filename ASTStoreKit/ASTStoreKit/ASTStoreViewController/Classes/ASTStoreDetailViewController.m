@@ -37,6 +37,8 @@
 @end
 
 @implementation ASTStoreDetailViewController
+@synthesize purchaseFromAppStoreEtchView;
+@synthesize appStorePurchaseLabel;
 
 @synthesize gradientView;
 @synthesize titleView;
@@ -50,6 +52,7 @@
 @synthesize productIdentifier = productIdentifier_;
 @synthesize onHand = onHand_;
 @synthesize reflectionImageView;
+@synthesize purchaseFromAppStoreButton;
 
 - (ASTStoreController*)storeController
 {
@@ -124,6 +127,19 @@
         
     [self.purchaseButton setTitle:purchaseTitle forState:UIControlStateNormal];
     [self.purchaseButton setTitle:purchaseTitle forState:UIControlStateHighlighted];
+    
+    if( self.storeProduct.productDisabledString )
+    {
+        if( self.purchaseButton.enabled )
+        {
+            purchaseTitle = [NSString stringWithFormat:NSLocalizedString(@"Only %@ (disabled)", @"Only %@ (disabled)"), [self.storeProduct localizedPrice]];
+            self.purchaseButton.enabled = NO;
+            self.extraInfo.text = self.storeProduct.productDisabledString;
+        }
+    }
+
+    [self.purchaseButton setTitle:purchaseTitle forState:UIControlStateNormal];
+    [self.purchaseButton setTitle:purchaseTitle forState:UIControlStateHighlighted];
 }
 
 
@@ -134,6 +150,11 @@
     [self.storeController purchaseProduct:self.productIdentifier];
 }
 
+- (IBAction)purchaseFromAppStoreButtonPressed:(id)sender 
+{
+    UIApplication *app = [UIApplication sharedApplication];
+    [app openURL:self.storeProduct.appStoreURL];
+}
 
 #pragma mark - View lifecycle
 
@@ -154,6 +175,8 @@
 - (void)viewDidLoad
 {
     [self.purchaseButton useBlueConfirmStyle];
+    [self.purchaseFromAppStoreButton useBlueConfirmStyle];
+    
     self.purchaseImage.layer.cornerRadius = 10.0; // Same as the radius that iOS uses
     self.purchaseImage.layer.masksToBounds = YES;
     
@@ -176,6 +199,21 @@
 
     self.reflectionImageView.image = [self.purchaseImage reflectedImageWithHeight:14.0];
     self.reflectionImageView.alpha = 0.4;    
+    
+    if(( nil == self.storeProduct.appStoreURL ) || 
+       ( self.storeProduct.isPurchased ))
+    {
+        self.purchaseFromAppStoreButton.enabled = NO;
+        self.purchaseFromAppStoreButton.alpha = 0.0;
+        self.purchaseFromAppStoreEtchView.alpha = 0.0;
+        self.appStorePurchaseLabel.alpha = 0.0;
+        
+        CGRect aFrame = self.description.frame;
+        CGRect buttonFrame = self.purchaseFromAppStoreButton.frame;
+        
+        aFrame.size.height = buttonFrame.origin.y + buttonFrame.size.height;
+        self.description.frame = aFrame;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -206,6 +244,9 @@
     [self setReflectionImageView:nil];
     [self setTitleView:nil];
     [self setGradientView:nil];
+    [self setPurchaseFromAppStoreButton:nil];
+    [self setPurchaseFromAppStoreEtchView:nil];
+    [self setAppStorePurchaseLabel:nil];
     [super viewDidUnload];
 }
 
@@ -224,6 +265,9 @@
     [reflectionImageView release];
     [titleView release];
     [gradientView release];
+    [purchaseFromAppStoreButton release];
+    [purchaseFromAppStoreEtchView release];
+    [appStorePurchaseLabel release];
     [super dealloc];
 }
 
@@ -231,6 +275,5 @@
 {
     [super didReceiveMemoryWarning];    
 }
-
 
 @end
