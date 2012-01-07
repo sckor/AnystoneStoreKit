@@ -44,11 +44,11 @@
 }
 
 -(void)viewDidUnload {
-	[super viewDidUnload];
 	self.navBar = nil;
 	self.webView = nil;
 	self.location = nil;
 	self.theTitle = nil;
+	[super viewDidUnload];
 }
 
 -(void)viewDidLoad {

@@ -39,6 +39,7 @@
 @implementation ASTStoreDetailViewController
 @synthesize purchaseFromAppStoreEtchView;
 @synthesize appStorePurchaseLabel;
+@synthesize inAppPurchaseLabel;
 
 @synthesize gradientView;
 @synthesize titleView;
@@ -184,6 +185,13 @@
     self.reflectionImageView.layer.masksToBounds = YES;
     
     self.title = self.storeProduct.title;
+    
+    self.appStorePurchaseLabel.text = NSLocalizedString(@"App Store Purchase", @"Area description for app store button");
+    self.inAppPurchaseLabel.text = NSLocalizedString(@"In App Purchase", @"Area description for in app purchase button");
+    
+    NSString *purchaseAppButtonLocalizedTitle = NSLocalizedString(@"Buy from App Store", @"Buy from app store button");
+    [self.purchaseFromAppStoreButton setTitle:purchaseAppButtonLocalizedTitle forState:UIControlStateNormal];
+    [self.purchaseFromAppStoreButton setTitle:purchaseAppButtonLocalizedTitle forState:UIControlStateHighlighted];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -247,6 +255,7 @@
     [self setPurchaseFromAppStoreButton:nil];
     [self setPurchaseFromAppStoreEtchView:nil];
     [self setAppStorePurchaseLabel:nil];
+    [self setInAppPurchaseLabel:nil];
     [super viewDidUnload];
 }
 
@@ -268,6 +277,7 @@
     [purchaseFromAppStoreButton release];
     [purchaseFromAppStoreEtchView release];
     [appStorePurchaseLabel release];
+    [inAppPurchaseLabel release];
     [super dealloc];
 }
 

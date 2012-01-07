@@ -64,5 +64,6 @@
 - (IBAction)purchaseFromAppStoreButtonPressed:(id)sender;
 @property (retain, nonatomic) IBOutlet UIView *purchaseFromAppStoreEtchView;
 @property (retain, nonatomic) IBOutlet UILabel *appStorePurchaseLabel;
+@property (retain, nonatomic) IBOutlet UILabel *inAppPurchaseLabel;
 
 @end

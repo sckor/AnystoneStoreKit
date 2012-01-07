@@ -348,7 +348,7 @@
 					<object class="IBUIButton" id="85154043">
 						<reference key="NSNextResponder" ref="994893813"/>
 						<int key="NSvFlags">266</int>
-						<string key="NSFrame">{{60, 387}, {200, 32}}</string>
+						<string key="NSFrame">{{29, 387}, {263, 32}}</string>
 						<reference key="NSSuperview" ref="994893813"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView"/>
@@ -416,7 +416,7 @@
 					<object class="IBUIButton" id="844720477">
 						<reference key="NSNextResponder" ref="994893813"/>
 						<int key="NSvFlags">266</int>
-						<string key="NSFrame">{{60, 323}, {200, 35}}</string>
+						<string key="NSFrame">{{29, 323}, {263, 35}}</string>
 						<reference key="NSSuperview" ref="994893813"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="41449827"/>
@@ -447,10 +447,9 @@
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 			<object class="IBUILabel" id="124451905">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">266</int>
 				<string key="NSFrameSize">{320, 20}</string>
-				<reference key="NSSuperview"/>
 				<bool key="IBUIOpaque">NO</bool>
 				<bool key="IBUIClipsSubviews">YES</bool>
 				<int key="IBUIContentMode">7</int>
@@ -577,6 +576,14 @@
 						<reference key="destination" ref="592226784"/>
 					</object>
 					<int key="connectionID">112</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">inAppPurchaseLabel</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="135265374"/>
+					</object>
+					<int key="connectionID">113</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -815,7 +822,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">112</int>
+			<int key="maxID">113</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -837,9 +844,11 @@
 						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="appStorePurchaseLabel">UILabel</string>
 						<string key="description">UITextView</string>
 						<string key="extraInfo">UILabel</string>
 						<string key="gradientView">UIView</string>
+						<string key="inAppPurchaseLabel">UILabel</string>
 						<string key="onHand">UILabel</string>
 						<string key="productTitle">UILabel</string>
 						<string key="purchaseButton">GradientButton</string>
@@ -850,6 +859,10 @@
 						<string key="titleView">UIView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="appStorePurchaseLabel">
+							<string key="name">appStorePurchaseLabel</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="description">
 							<string key="name">description</string>
 							<string key="candidateClassName">UITextView</string>
@@ -861,6 +874,10 @@
 						<object class="IBToOneOutletInfo" key="gradientView">
 							<string key="name">gradientView</string>
 							<string key="candidateClassName">UIView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="inAppPurchaseLabel">
+							<string key="name">inAppPurchaseLabel</string>
+							<string key="candidateClassName">UILabel</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="onHand">
 							<string key="name">onHand</string>

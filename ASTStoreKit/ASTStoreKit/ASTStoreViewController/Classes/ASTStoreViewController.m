@@ -352,7 +352,7 @@ enum ASTStoreViewControllerButtonsRows
     if( isPurchased )
     {
         price.text = nil;
-        description.text = NSLocalizedString(@"Purchased - Thank you!", nil);
+        description.text = NSLocalizedString(@"Purchased - Thank You!", nil);
     }
     else
     {
@@ -598,6 +598,13 @@ enum ASTStoreViewControllerButtonsRows
 - (void)astStoreControllerProductIdentifierPurchased:(NSString*)productIdentifier
 {
     DLog(@"purchased:%@", productIdentifier);
+    
+    if( [self.navigationController.topViewController isKindOfClass:[ASTStoreDetailViewController class]] )
+    {
+        // Need to pop to prevent the view controller under the more tab from getting stuck
+        [self.navigationController popViewControllerAnimated:YES];        
+    }
+
     [self.tableView reloadData];
     [self updateDetailViewControllers];
     self.progessHUD = [self successProgessHUDWithLabel:NSLocalizedString(@"Purchase Complete", nil)];
@@ -710,7 +717,7 @@ enum ASTStoreViewControllerButtonsRows
     [super viewDidLoad];
 
     UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIImage *storeKitImage = [UIImage imageNamed:@"storekit_navbar_button_black_effect"];
+    UIImage *storeKitImage = [UIImage imageNamed:@"storekit_navbar_button_black"];
 
     infoButton.frame = CGRectMake(0, 0, storeKitImage.size.width, storeKitImage.size.height);
     
@@ -770,11 +777,13 @@ enum ASTStoreViewControllerButtonsRows
 
 - (void)viewDidUnload
 {
-    [super viewDidUnload];
+    self.storeController.delegateForStoreViewController = nil;
     
     self.tableContainerView = nil;
     self.tableView = nil;
     self.storeCell = nil;
+
+    [super viewDidUnload];
 }
 
 #pragma  mark - Memory Management
