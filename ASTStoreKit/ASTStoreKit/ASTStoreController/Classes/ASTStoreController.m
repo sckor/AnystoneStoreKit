@@ -76,7 +76,7 @@
 
 + (NSString*)version
 {
-    return @"v0.5.3";
+    return @"v0.5.4";
 }
 
 #pragma mark Delegate Selector Stubs
