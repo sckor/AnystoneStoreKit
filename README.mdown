@@ -22,6 +22,8 @@ http://www.anystonetech.com/blog/2011/03/24/introducing-the-anystone-store-kit/
 ## Version History
 ### Version 0.5.5
 * Cleanup some deprecated identifiers in iOS5.x
+* Remove UDID auto generation - users who make use of UDIDs will have to provide their own to the kit (most will not need this)
+* Add ability to setup a disabled product and provide a description as to why it was disabled
 * Minor bugs squashed
 
 ### Version 0.5.3
