@@ -6,7 +6,7 @@
 
 // This code is distributed under the terms and conditions of the MIT license. 
 
-// Copyright (c) 2009 Matej Bukovinski
+// Copyright (c) 2011 Matej Bukovinski
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -84,7 +84,11 @@ typedef enum {
 	float width;
 	float height;
 	
+	CGSize minSize;
+	
 	float margin;
+	
+	BOOL dimBackground;
 	
 	BOOL taskInProgress;
 	float graceTime;
@@ -219,6 +223,11 @@ typedef enum {
  */
 @property (assign) float margin;
 
+/** 
+ * Cover the HUD background view with a radial gradient. 
+ */
+@property (assign) BOOL dimBackground;
+
 /*
  * Grace period is the time (in seconds) that the invoked method may be run without 
  * showing the HUD. If the task finishes befor the grace time runs out, the HUD will
@@ -268,6 +277,11 @@ typedef enum {
  * The progress of the progress indicator, from 0.0 to 1.0. Defaults to 0.0. 
  */
 @property (assign) float progress;
+
+/**
+ * The minimum size of the HUD bezel. Defaults to CGSizeZero.
+ */
+@property (assign) CGSize minSize;
 
 /** 
  * Display the HUD. You need to make sure that the main thread completes its run loop soon after this method call so
@@ -328,7 +342,13 @@ typedef enum {
 /** 
  * Called after the HUD was fully hidden from the screen. 
  */
-- (void)hudWasHidden:(MBProgressHUD*)aHud;
+- (void)hudWasHidden:(MBProgressHUD *)hud;
+
+/**
+ * @deprecated use hudWasHidden: instead
+ * @see hudWasHidden:
+ */
+- (void)hudWasHidden __attribute__ ((deprecated)); 
 
 @end
 
@@ -350,3 +370,4 @@ typedef enum {
 @end
 
 /////////////////////////////////////////////////////////////////////////////////////////////
+

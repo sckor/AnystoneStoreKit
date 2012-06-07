@@ -34,6 +34,8 @@ static BOOL ILSimSKIsKnownStorefront(NSString* sf) {
 		[ILSimSKAllTierPricesByStorefront() objectForKey:sf] != nil;
 }
 
+NSString* ILSimSKCurrentStorefront( void );
+
 NSString* ILSimSKCurrentStorefront() {
 	if (!storefront) {
 		NSString* e = [[[NSProcessInfo processInfo] environment] objectForKey:kILSimSKStorefrontCodeEnvironmentVariable];
@@ -54,6 +56,8 @@ void ILSimSKSetCurrentStorefront(NSString* s) {
 
 #define ILSimDec(mantissaValue, exponentValue) \
 	[NSDecimalNumber decimalNumberWithMantissa:(mantissaValue) exponent:(exponentValue) isNegative:NO]
+
+NSDictionary* ILSimSKAllTierPricesByStorefront(void);
 
 NSDictionary* ILSimSKAllTierPricesByStorefront() {
 	static NSDictionary* prices = nil; if (!prices)
@@ -956,6 +960,8 @@ NSDecimalNumber* ILSimSKPriceAtTierForCurrentStorefront(NSUInteger index) {
 
 	return [[ILSimSKAllTierPricesByStorefront() objectForKey:s] objectAtIndex:index];
 }
+
+NSLocale* ILSimSKLocaleForCurrentStorefront(void);
 
 NSLocale* ILSimSKLocaleForCurrentStorefront() {
 	NSString* l = nil, * s = ILSimSKCurrentStorefront();

@@ -66,4 +66,5 @@
 @property (retain, nonatomic) IBOutlet UILabel *appStorePurchaseLabel;
 @property (retain, nonatomic) IBOutlet UILabel *inAppPurchaseLabel;
 
+@property (retain, nonatomic) IBOutlet UITextView *disabledDescription;
 @end

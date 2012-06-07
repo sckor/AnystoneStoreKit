@@ -76,7 +76,7 @@
 
 + (NSString*)version
 {
-    return @"v0.5.4";
+    return @"v0.5.5";
 }
 
 #pragma mark Delegate Selector Stubs
@@ -703,6 +703,55 @@
     return ( storeProduct.productDisabledString );
 }
 
+- (void)setProductIdentifier:(NSString*)productIdentifier appStoreURL:(NSURL*)appStoreURL
+{
+    ASTStoreProduct *storeProduct = [self storeProductForIdentifier:productIdentifier];
+    
+    if( nil == storeProduct )
+    {
+        return;
+    }
+
+    storeProduct.appStoreURL = appStoreURL;
+}
+
+- (NSURL*)appStoreURLForProductIdentifier:(NSString*)productIdentifier
+{
+    ASTStoreProduct *storeProduct = [self storeProductForIdentifier:productIdentifier];
+    
+    if( nil == storeProduct )
+    {
+        return nil;
+    }
+    
+    return ( storeProduct.appStoreURL );
+}
+
+- (void)setProductIdentifier:(NSString*)productIdentifier extraInformation:(NSString*)extraInformation
+{
+    ASTStoreProduct *storeProduct = [self storeProductForIdentifier:productIdentifier];
+    
+    if( nil == storeProduct )
+    {
+        return;
+    }
+    
+    storeProduct.extraInformation = extraInformation;
+}
+
+- (NSString*)extraInformationForProductIdentifier:(NSString*)productIdentifier
+{
+    ASTStoreProduct *storeProduct = [self storeProductForIdentifier:productIdentifier];
+    
+    if( nil == storeProduct )
+    {
+        return nil;
+    }
+    
+    return ( storeProduct.extraInformation );
+}
+
+
 #pragma mark SKProductRequest and SKRequest Delegate Methods
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
@@ -1125,13 +1174,15 @@
 
 #pragma mark Purchase
 
-- (void)purchaseCompletionHandler:(NSString*)productIdentifier 
+- (void)purchaseCompletionHandler:(ASTStoreProduct*)storeProduct 
                customerIdentifier:(NSString*)customerIdentifier 
         productPromoCodeAvailable:(BOOL)productPromoCodeAvailable
 {
+    NSString *productIdentifier = storeProduct.productIdentifier;
+    
     if( NO == productPromoCodeAvailable )
     {
-        SKPayment *payment = [SKPayment paymentWithProductIdentifier:productIdentifier]; 
+        SKPayment *payment = [SKPayment paymentWithProduct:storeProduct.skProduct];
         [self.skPaymentQueue addPayment:payment];
     }
     else
@@ -1186,7 +1237,7 @@
     if( theProduct.isFree )
     {
         // Treat it like a valid promo code
-        [self purchaseCompletionHandler:productIdentifier 
+        [self purchaseCompletionHandler:theProduct 
                      customerIdentifier:self.customerIdentifier 
               productPromoCodeAvailable:YES];
     }
@@ -1198,14 +1249,14 @@
                                                                                  NSString *customerIdentifier,
                                                                                  BOOL result)
          {
-             [self purchaseCompletionHandler:productIdentifier 
+             [self purchaseCompletionHandler:theProduct 
                           customerIdentifier:customerIdentifier 
                    productPromoCodeAvailable:result];
          }];
     }
     else
     {
-        [self purchaseCompletionHandler:productIdentifier 
+        [self purchaseCompletionHandler:theProduct 
                      customerIdentifier:self.customerIdentifier 
               productPromoCodeAvailable:NO];
     }

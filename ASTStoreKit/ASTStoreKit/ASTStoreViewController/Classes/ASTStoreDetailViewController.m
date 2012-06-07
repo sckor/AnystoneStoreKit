@@ -40,6 +40,7 @@
 @synthesize purchaseFromAppStoreEtchView;
 @synthesize appStorePurchaseLabel;
 @synthesize inAppPurchaseLabel;
+@synthesize disabledDescription;
 
 @synthesize gradientView;
 @synthesize titleView;
@@ -125,18 +126,19 @@
     {
         self.onHand.text = nil;
     }
-        
-    [self.purchaseButton setTitle:purchaseTitle forState:UIControlStateNormal];
-    [self.purchaseButton setTitle:purchaseTitle forState:UIControlStateHighlighted];
+
+    NSString *pds = self.storeProduct.productDisabledString;
     
-    if( self.storeProduct.productDisabledString )
+    if(( pds ) && ( YES == self.purchaseButton.enabled ))
     {
-        if( self.purchaseButton.enabled )
-        {
-            purchaseTitle = [NSString stringWithFormat:NSLocalizedString(@"Only %@ (disabled)", @"Only %@ (disabled)"), [self.storeProduct localizedPrice]];
-            self.purchaseButton.enabled = NO;
-            self.extraInfo.text = self.storeProduct.productDisabledString;
-        }
+        self.purchaseButton.alpha = 0.0;
+        self.extraInfo.alpha = 0.0;
+        self.disabledDescription.alpha = 1.0;
+        self.disabledDescription.text = pds;
+    }
+    else
+    {
+        self.disabledDescription.alpha = 0.0;
     }
 
     [self.purchaseButton setTitle:purchaseTitle forState:UIControlStateNormal];
@@ -256,6 +258,7 @@
     [self setPurchaseFromAppStoreEtchView:nil];
     [self setAppStorePurchaseLabel:nil];
     [self setInAppPurchaseLabel:nil];
+    [self setDisabledDescription:nil];
     [super viewDidUnload];
 }
 
@@ -278,6 +281,7 @@
     [purchaseFromAppStoreEtchView release];
     [appStorePurchaseLabel release];
     [inAppPurchaseLabel release];
+    [disabledDescription release];
     [super dealloc];
 }
 

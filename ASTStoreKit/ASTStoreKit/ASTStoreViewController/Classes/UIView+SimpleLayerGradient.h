@@ -26,6 +26,7 @@
 //  THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import <QuartzCore/QuartzCore.h>
 
 
 @interface UIView (SimpleLayerGradient)
@@ -33,5 +34,6 @@
 - (void)setLayerGradient:(NSArray*)colorArray;
 - (void)setSimpleLayerGradient:(UIColor*)startColor endColor:(UIColor*)endColor;
 - (void)setLayerGradientCornerRadius:(CGFloat)radius;
+- (CAGradientLayer*)gradientLayerFromColorArray:(NSArray*)colorArray;
 
 @end

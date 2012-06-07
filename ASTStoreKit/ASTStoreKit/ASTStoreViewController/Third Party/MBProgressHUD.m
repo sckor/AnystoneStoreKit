@@ -18,6 +18,9 @@
 - (void)handleGraceTimer:(NSTimer *)theTimer;
 - (void)handleMinShowTimer:(NSTimer *)theTimer;
 - (void)setTransformForCurrentOrientation:(BOOL)animated;
+- (void)cleanUp;
+- (void)deviceOrientationDidChange:(NSNotification*)notification;
+- (void)launchExecution;
 - (void)deviceOrientationDidChange:(NSNotification *)notification;
 - (void)hideDelayed:(NSNumber *)animated;
 - (void)launchExecution;
@@ -51,7 +54,9 @@
 @synthesize height;
 @synthesize xOffset;
 @synthesize yOffset;
+@synthesize minSize;
 @synthesize margin;
+@synthesize dimBackground;
 
 @synthesize graceTime;
 @synthesize minShowTime;
@@ -187,7 +192,6 @@
 #define LABELFONTSIZE 16.0f
 #define LABELDETAILSFONTSIZE 12.0f
 
-
 #pragma mark -
 #pragma mark Class methods
 
@@ -253,10 +257,12 @@
         self.detailsLabelFont = [UIFont boldSystemFontOfSize:LABELDETAILSFONTSIZE];
         self.xOffset = 0.0f;
         self.yOffset = 0.0f;
+		self.dimBackground = NO;
 		self.margin = 20.0f;
 		self.graceTime = 0.0f;
 		self.minShowTime = 0.0f;
 		self.removeFromSuperViewOnHide = NO;
+		self.minSize = CGSizeZero;
 		
 		self.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
 		
@@ -397,6 +403,13 @@
             [self addSubview:detailsLabel];
         }
     }
+	
+	if (self.width < minSize.width) {
+		self.width = minSize.width;
+	} 
+	if (self.height < minSize.height) {
+		self.height = minSize.height;
+	}
 }
 
 #pragma mark -
@@ -488,7 +501,8 @@
     [pool release];
 }
 
-- (void)animationFinished:(NSString *)animationID finished:(BOOL)finished context:(void*)context {
+- (void)animationFinished:(NSString *)animationID finished:(BOOL)finished context:(void*)context 
+{
     [self done];
 }
 
@@ -498,8 +512,12 @@
     // If delegate was set make the callback
     self.alpha = 0.0f;
     
-	if(delegate != nil && [delegate respondsToSelector:@selector(hudWasHidden:)]) {
-		[delegate performSelector:@selector(hudWasHidden:) withObject:self];
+	if(delegate != nil) {
+        if ([delegate respondsToSelector:@selector(hudWasHidden:)]) {
+            [delegate performSelector:@selector(hudWasHidden:) withObject:self];
+        } else if ([delegate respondsToSelector:@selector(hudWasHidden)]) {
+            [delegate performSelector:@selector(hudWasHidden)];
+        }
 	}
 	
 	if (removeFromSuperViewOnHide) {
@@ -546,19 +564,23 @@
 - (void)hideUsingAnimation:(BOOL)animated {
     // Fade out
     if (animated) {
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDuration:0.30];
-        [UIView setAnimationDelegate:self];
-        [UIView setAnimationDidStopSelector:@selector(animationFinished: finished: context:)];
-        // 0.02 prevents the hud from passing through touches during the animation the hud will get completely hidden
-        // in the done method
-        if (animationType == MBProgressHUDAnimationZoom) {
-            self.transform = CGAffineTransformConcat(rotationTransform, CGAffineTransformMakeScale(0.5f, 0.5f));
-        }
-        self.alpha = 0.02f;
-        [UIView commitAnimations];
+        [UIView animateWithDuration:0.30 
+                         animations:
+         ^{
+             if (animationType == MBProgressHUDAnimationZoom) 
+             {
+                 self.transform = CGAffineTransformConcat(rotationTransform, CGAffineTransformMakeScale(0.5f, 0.5f));
+             }
+             
+             self.alpha = 0.02f;
+         }   
+                         completion:^(BOOL finished) 
+         {
+             [self done];
+         }];
     }
-    else {
+    else 
+    {
         self.alpha = 0.0f;
         [self done];
     }
@@ -568,6 +590,28 @@
 
 - (void)drawRect:(CGRect)rect {
 	
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    if (dimBackground) {
+        //Gradient colours
+        size_t gradLocationsNum = 2;
+        CGFloat gradLocations[2] = {0.0f, 1.0f};
+        CGFloat gradColors[8] = {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.75f}; 
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+        CGGradientRef gradient = CGGradientCreateWithColorComponents(colorSpace, gradColors, gradLocations, gradLocationsNum);
+		CGColorSpaceRelease(colorSpace);
+        
+        //Gradient center
+        CGPoint gradCenter= CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+        //Gradient radius
+        float gradRadius = MIN(self.bounds.size.width , self.bounds.size.height) ;
+        //Gradient draw
+        CGContextDrawRadialGradient (context, gradient, gradCenter,
+                                     0, gradCenter, gradRadius,
+                                     kCGGradientDrawsAfterEndLocation);
+		CGGradientRelease(gradient);
+    }    
+    
     // Center HUD
     CGRect allRect = self.bounds;
     // Draw rounded HUD bacgroud rect
@@ -576,7 +620,6 @@
 	// Corner radius
 	float radius = 10.0f;
 	
-	CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextBeginPath(context);
     CGContextSetGrayFillColor(context, 0.0f, self.opacity);
     CGContextMoveToPoint(context, CGRectGetMinX(boxRect) + radius, CGRectGetMinY(boxRect));
@@ -671,19 +714,19 @@
 #pragma mark Drawing
 
 - (void)drawRect:(CGRect)rect {
-	
+    
     CGRect allRect = self.bounds;
     CGRect circleRect = CGRectInset(allRect, 2.0f, 2.0f);
-	
+    
     CGContextRef context = UIGraphicsGetCurrentContext();
-	
+    
     // Draw background
     CGContextSetRGBStrokeColor(context, 1.0f, 1.0f, 1.0f, 1.0f); // white
     CGContextSetRGBFillColor(context, 1.0f, 1.0f, 1.0f, 0.1f); // translucent white
     CGContextSetLineWidth(context, 2.0f);
     CGContextFillEllipseInRect(context, circleRect);
     CGContextStrokeEllipseInRect(context, circleRect);
-	
+    
     // Draw progress
     CGPoint center = CGPointMake(allRect.size.width / 2, allRect.size.height / 2);
     CGFloat radius = (allRect.size.width - 4) / 2;
@@ -696,6 +739,6 @@
     CGContextFillPath(context);
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////
-
 @end
+
+/////////////////////////////////////////////////////////////////////////////////////////////

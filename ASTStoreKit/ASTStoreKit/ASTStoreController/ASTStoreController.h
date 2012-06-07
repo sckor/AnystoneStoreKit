@@ -274,6 +274,14 @@ typedef enum
 - (void)setProductIdentifier:(NSString*)productIdentifier disabled:(NSString*)disabledString;
 - (NSString*)disabledStringForProductIdentifier:(NSString*)productIdentifier;
 
+// Change or retrieve the app store URL associated with the product identifier
+- (void)setProductIdentifier:(NSString*)productIdentifier appStoreURL:(NSURL*)appStoreURL;
+- (NSURL*)appStoreURLForProductIdentifier:(NSString*)productIdentifier;
+
+// Change or retrieve the extra info associated with a product identifier
+- (void)setProductIdentifier:(NSString*)productIdentifier extraInformation:(NSString*)extraInformation;
+- (NSString*)extraInformationForProductIdentifier:(NSString*)productIdentifier;
+
 #pragma mark Server Related
 // These are used if you want to enable access to Google App Engine support
 // for receipt verification - server url should be set to 

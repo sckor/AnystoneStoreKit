@@ -109,18 +109,23 @@
     return bundleId_;
 }
 
+// Remove the automated creation of a UDID since this should be something
+// Unique per application and the app really is responsible now for creating
+// and managing it. In most cases,
+/*
 - (NSString*)udid
 {
     if( nil != udid_ )
     {
         return udid_;
     }
-    
+   
     udid_ = [[UIDevice currentDevice] uniqueIdentifier];
     [udid_ retain];
     
     return udid_;
 }
+*/
 
 - (NSString*)serviceURLPathProductList
 {

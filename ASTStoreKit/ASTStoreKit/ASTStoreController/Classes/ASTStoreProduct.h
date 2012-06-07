@@ -27,6 +27,7 @@
 
 
 #import <Foundation/Foundation.h>
+#import "ASTStoreKit.h"
 #import "ASTStoreProductTypes.h"
 
 @interface ASTStoreProduct : NSObject {}
@@ -136,5 +137,7 @@
 @property(nonatomic, readonly) NSDecimalNumber *price;
 @property(nonatomic, readonly) NSLocale *priceLocale;
 
+
+@property (readonly,retain) SKProduct *skProduct;
 
 @end

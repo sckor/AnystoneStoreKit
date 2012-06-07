@@ -360,7 +360,7 @@ enum ASTStoreViewControllerButtonsRows
         
         if( nil != disabledString )
         {
-            price.text = product.localizedPrice;
+            price.text = nil;
             description.text = disabledString;
         }
         else
@@ -599,12 +599,6 @@ enum ASTStoreViewControllerButtonsRows
 {
     DLog(@"purchased:%@", productIdentifier);
     
-    if( [self.navigationController.topViewController isKindOfClass:[ASTStoreDetailViewController class]] )
-    {
-        // Need to pop to prevent the view controller under the more tab from getting stuck
-        [self.navigationController popViewControllerAnimated:YES];        
-    }
-
     [self.tableView reloadData];
     [self updateDetailViewControllers];
     self.progessHUD = [self successProgessHUDWithLabel:NSLocalizedString(@"Purchase Complete", nil)];

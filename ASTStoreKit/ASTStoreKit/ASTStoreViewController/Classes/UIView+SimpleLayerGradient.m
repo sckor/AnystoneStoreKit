@@ -26,7 +26,6 @@
 //  THE SOFTWARE.
 
 #import "UIView+SimpleLayerGradient.h"
-#import <QuartzCore/QuartzCore.h>
 
 #define kUIViewEnhancementsGradientName @"UIViewEnhancementGradient"
 
@@ -40,13 +39,19 @@
 // Found from here:
 // http://stackoverflow.com/questions/422066/gradients-on-uiview-and-uilabels-on-iphone
 
-- (void)setLayerGradient:(NSArray*)colorArray
+- (CAGradientLayer*)gradientLayerFromColorArray:(NSArray*)colorArray
 {
     CAGradientLayer *aGradientLayer = [CAGradientLayer layer];
     aGradientLayer.frame = self.bounds;
     aGradientLayer.colors = colorArray;
     aGradientLayer.name = kUIViewEnhancementsGradientName;
     
+    return aGradientLayer;
+}
+
+- (void)setLayerGradient:(NSArray*)colorArray
+{
+    CAGradientLayer *aGradientLayer = [self gradientLayerFromColorArray:colorArray];    
     CAGradientLayer *existingGradientLayer = nil;
     
     for( CALayer *aLayer in self.layer.sublayers )
