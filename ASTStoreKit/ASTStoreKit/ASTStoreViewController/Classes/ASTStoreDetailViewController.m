@@ -87,7 +87,7 @@
     if( [self.storeController isProductPurchased:self.productIdentifier] )
     {
         purchaseTitle = NSLocalizedString(@"Purchased - Thank You!", nil);
-        self.purchaseButton.enabled = NO;
+        self.purchaseButton.enabled = YES;
     }
     else if( self.storeController.productDataState == ASTStoreControllerProductDataStateUpToDate )
     {
@@ -150,6 +150,11 @@
 
 - (IBAction)purchaseButtonPressed:(id)sender 
 {
+    {if( self.storeProduct.isPurchased )
+    {
+    [[self navigationController] popViewControllerAnimated: YES];
+    }
+    else
     [self.storeController purchaseProduct:self.productIdentifier];
 }
 
