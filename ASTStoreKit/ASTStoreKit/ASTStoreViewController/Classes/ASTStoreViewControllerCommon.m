@@ -99,8 +99,8 @@ void updateCellBackgrounds(UITableViewCell* cell, NSIndexPath *indexPath, UIColo
 void setLabelForExpiresDate(NSDate *expiresDate, UILabel *expiresLabel, int isPurchased)
 {
     NSString *expiryDateAsString = [NSDateFormatter localizedStringFromDate:expiresDate 
-                                                                  dateStyle:kCFDateFormatterMediumStyle 
-                                                                  timeStyle:kCFDateFormatterShortStyle];
+                                                                  dateStyle:NSDateFormatterMediumStyle 
+                                                                  timeStyle:NSDateFormatterShortStyle];
     NSString *expiresString = nil;
     
     expiresLabel.textColor = [UIColor blackColor];
