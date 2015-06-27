@@ -3,8 +3,8 @@
 ASTStoreKit is ready for general use and has been deployed in apps that are already in the App Store!
 
 ## New! - ASTStoreKit Tutorials
-* http://www.anystonetech.com/blog/2011/07/07/in-app-store-with-aststorekit-tutorial-part-1/
-* http://www.anystonetech.com/blog/2011/07/07/in-app-store-with-aststorekit-tutorial-part-2/
+* ~~http://www.anystonetech.com/blog/2011/07/07/in-app-store-with-aststorekit-tutorial-part-1/~~
+* ~~http://www.anystonetech.com/blog/2011/07/07/in-app-store-with-aststorekit-tutorial-part-2/~~
 
 ## Features
 * Built-in and fully functional store view controller
@@ -17,7 +17,7 @@ ASTStoreKit is ready for general use and has been deployed in apps that are alre
 * Encrypted family data storage for purchase quantities
 
 For some more information, have a look at:
-http://www.anystonetech.com/blog/2011/03/24/introducing-the-anystone-store-kit/
+~~http://www.anystonetech.com/blog/2011/03/24/introducing-the-anystone-store-kit/~~
 
 ## Version History
 ### Version 0.5.5
@@ -99,7 +99,7 @@ The project includes 3 major components which are layered to allow developers to
 The following instructions assume the use of Xcode 4. If you are using Xcode 3, the steps are similar, but different. ;)
 
 For a more graphical introduction to setting up ASTStoreKit for use in a project, have a look at:
-http://www.anystonetech.com/blog/2011/07/07/in-app-store-with-aststorekit-tutorial-part-1/
+~~http://www.anystonetech.com/blog/2011/07/07/in-app-store-with-aststorekit-tutorial-part-1/~~
 
 ## Project Configuration
 1. In Xcode 4, open the project you wish to add in app purchase functionality to
@@ -124,7 +124,7 @@ The following frameworks must be added to the project:
 The ASTStoreController is a singleton class. It is recommended that you initialize it in your AppDelegate so that it can process any outstanding transactions from the App Store as soon as possible.
 
 This is covered in part 2 of the ASTStoreKit tutorial:
-http://www.anystonetech.com/blog/2011/07/07/in-app-store-with-aststorekit-tutorial-part-2/
+~~http://www.anystonetech.com/blog/2011/07/07/in-app-store-with-aststorekit-tutorial-part-2/~~
 
 1. In your AppDelegate.m add the following in the header import section:
 
