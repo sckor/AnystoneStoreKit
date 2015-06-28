@@ -2,7 +2,7 @@
 
 ASTStoreKit is ready for general use and has been deployed in apps that are already in the App Store!
 
-The website which hosted the tutorials has been discontinues. My apologies.
+*The website which hosted the tutorials has been discontinued. My apologies.*
 
 ## New! - ASTStoreKit Tutorials
 * ~~http://www.anystonetech.com/blog/2011/07/07/in-app-store-with-aststorekit-tutorial-part-1/~~
